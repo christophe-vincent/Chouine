@@ -13,6 +13,22 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
+*.exe
+*.dll
+
+# ======
+# My files
+# =======
+*.zip
+*.keystore
+**/mobile/assets
+**/mobile/libs
+**/mobile/private
+**/pageweb
+*.xlsx
+**/build
+**/installeur/lib
+
 
 # =========================
 # Operating System Files
