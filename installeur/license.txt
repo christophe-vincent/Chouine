@@ -1,0 +1,56 @@
+Ce logiciel a été développé et est la propriété de Christophe Vincent (christophevinc@gmail.com)
+
+
+Outils utulisés pour créer ce logiciel:
+
+1. JMonKey Engine V3
+Copyright (c) 2003-2012 jMonkeyEngine
+All rights reserved.
+ 
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+ 
+Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+ 
+Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+ 
+Neither the name of 'jMonkeyEngine' nor the names of its contributors 
+may be used to endorse or promote products derived from this software 
+without specific prior written permission.
+ 
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+
+
+2. Leander font
+This Tension Type Free Font is free to use in any and all of your personal and commercial work.
+
+A donation is much appreciated, but not necessary (donations may be done through PayPal to: mtension@gmail.com). No donation is too small.
+
+You may install and use an unlimited number of copies of a Tension Type Free Font.
+
+Reproduction and Distribution. You may reproduce and distribute an unlimited number of copies of a Tension Type Free Font; provided that each copy shall be a true and complete copy, including all copyright and trademark notices (if applicable), and shall be accompanied by a copy of this text file. Copies of the Font may not be distributed for profit either on a standalone basis or included as part of your own product unless by prior permission of Tension Type.
+
+You may not rename, edit or create any derivative works from a Tension Type Free Font, other than subsetting when embedding them in documents unless you have permission from Tension Type.
+
+Embedding a Tension Type Free Font in a PDF document and web pages is allowed.
+
+Michael Tension and Tension Type are not responsible for any damage resulting from the use of this Tension Type Free Font.
+
+
+3. SVG-cards Open-Source
