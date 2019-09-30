@@ -28,7 +28,10 @@ public:
    static const Card::Value CHOUINE_CARDS[];
    static const set<AnnounceType> ANNOUNCES;
 
-	Announce(Card::Color _color, AnnounceType _type, bool _trump, CardList& _cards);
+	Announce(Card::Color _color, 
+            AnnounceType _type, 
+            bool _trump, 
+            CardList& _cards);
 	~Announce();
 
    void addCard(Card& _card);

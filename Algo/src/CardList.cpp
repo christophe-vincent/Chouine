@@ -2,18 +2,16 @@
 #include "CardList.h"
 #include "Announce.h"
 
-CardList::CardList():
-   m_isTrumpSeven(false)
+CardList::CardList() : m_isTrumpSeven(false)
 {
 }
 
-CardList::CardList(Card* _card) :
-   m_isTrumpSeven(false)
+CardList::CardList(Card *_card) : m_isTrumpSeven(false)
 {
    m_Cards.push_back(_card);
 }
 
-void CardList::add(Card* _card)
+void CardList::add(Card *_card)
 {
    if ((_card->isTrump()) && (_card->getValue() == Card::SEPT))
    {
@@ -22,8 +20,7 @@ void CardList::add(Card* _card)
    m_Cards.push_back(_card);
 }
 
-
-void CardList::remove(Card* _card)
+void CardList::remove(Card *_card)
 {
    auto it = find(m_Cards.begin(), m_Cards.end(), _card);
    if (it != m_Cards.end())
@@ -42,7 +39,7 @@ void CardList::shuffle()
 }
 
 // return first card and remove it from list (like we we pick a card)
-Card* CardList::pickCard()
+Card *CardList::pickCard()
 {
    if (m_Cards.size() == 0)
    {
@@ -53,10 +50,9 @@ Card* CardList::pickCard()
    return ret;
 }
 
-
-Card* CardList::searchCard(Card::Value _value)
+Card *CardList::searchCard(Card::Value _value)
 {
-   Card* ret = nullptr;
+   Card *ret = nullptr;
 
    auto it = m_Cards.begin();
    while ((it != m_Cards.end()) && (ret == nullptr))
@@ -83,9 +79,9 @@ void CardList::getTrumps(CardList &_list)
    }
 }
 
-Card * CardList::getSmallest()
+Card *CardList::getSmallest()
 {
-   Card* smallest;
+   Card *smallest;
    auto it = m_Cards.begin();
    smallest = *it;
    while (it != m_Cards.end())
@@ -99,7 +95,7 @@ Card * CardList::getSmallest()
    return *it;
 }
 
-void CardList::getColorSubset(Card::Color _color, CardList & _list)
+void CardList::getColorSubset(Card::Color _color, CardList &_list)
 {
    auto it = m_Cards.begin();
    while (it != m_Cards.end())
@@ -111,7 +107,6 @@ void CardList::getColorSubset(Card::Color _color, CardList & _list)
       it++;
    }
 }
-
 
 bool CardList::isContainsValue(Card::Value _value)
 {
@@ -135,7 +130,7 @@ bool CardList::isContainsCard(Card &_value)
 
    for (auto it = m_Cards.begin(); it != m_Cards.end(); it++)
    {
-      if ( (**it) == _value)
+      if ((**it) == _value)
       {
          ret = true;
          break;
@@ -173,13 +168,13 @@ CardList CardList::getCardsFromList(Card::Color _color)
    return ret;
 }
 
-Card* CardList::getCardFromList(Card::Color _color, Card::Value _value)
+Card *CardList::getCardFromList(Card::Color _color, Card::Value _value)
 {
-   Card* ret = nullptr;
+   Card *ret = nullptr;
 
    for (auto it = m_Cards.begin(); it != m_Cards.end(); it++)
    {
-      if ( ((*it)->getValue() == _value) && ((*it)->getColor() == _color) )
+      if (((*it)->getValue() == _value) && ((*it)->getColor() == _color))
       {
          ret = *it;
       }
@@ -203,11 +198,12 @@ int CardList::NumberOfValue(Card::Value _value)
    return ret;
 }
 
-Card* CardList::getHigherValue(Card::Value _value)
+Card *CardList::getHigherValue(Card::Value _value)
 {
-   Card* card = nullptr;
+   Card *card = nullptr;
    auto it = m_Cards.begin();
-   while ((it != m_Cards.end()) && (_value > (*it)->getValue())) it++;
+   while ((it != m_Cards.end()) && (_value > (*it)->getValue()))
+      it++;
 
    if ((it != m_Cards.end()) && (_value > (*it)->getValue()))
    {
@@ -217,11 +213,12 @@ Card* CardList::getHigherValue(Card::Value _value)
    return card;
 }
 
-Card* CardList::getHigherCard(Card& _card)
+Card *CardList::getHigherCard(Card &_card)
 {
-   Card* card = nullptr;
+   Card *card = nullptr;
    auto it = m_Cards.begin();
-   while ((it != m_Cards.end()) && (!(*it)->isBetter(_card))) it++;
+   while ((it != m_Cards.end()) && (!(*it)->isBetter(_card)))
+      it++;
 
    if ((it != m_Cards.end()) && (!(*it)->isBetter(_card)))
    {
@@ -242,14 +239,12 @@ int CardList::getPoints()
    return points;
 }
 
-void CardList::newCardStatistics(Card& _card)
+void CardList::newCardStatistics(Card &_card)
 {
-   set<Announce*> cardAnnounces;
+   set<Announce *> cardAnnounces;
    bool create = true;
 
-   if ((_card.getValue() == Card::SEPT)
-      || (_card.getValue() == Card::HUIT)
-      || (_card.getValue() == Card::NEUF))
+   if ((_card.getValue() == Card::SEPT) || (_card.getValue() == Card::HUIT) || (_card.getValue() == Card::NEUF))
    {
       return; // these cards are not used in announces
    }
@@ -260,10 +255,9 @@ void CardList::newCardStatistics(Card& _card)
    {
       // search in the list if this announce has already statistics
       create = true;
-      for (auto ann=m_AnnouncesStats.begin(); ann!=m_AnnouncesStats.end(); ann++)
+      for (auto ann = m_AnnouncesStats.begin(); ann != m_AnnouncesStats.end(); ann++)
       {
-         if ( ((*ann)->getColor() == _card.getColor())
-            && ((*ann)->getType() == *it))
+         if (((*ann)->getColor() == _card.getColor()) && ((*ann)->getType() == *it))
          {
             // great the annouce is already known
             (*ann)->addCard(_card);
@@ -275,18 +269,21 @@ void CardList::newCardStatistics(Card& _card)
       if (create)
       {
          // announce has not been created, create a new one
-         Announce* announce = new Announce(_card.getColor(), *it, _card.isTrump(), CardList(&_card));
+         CardList cl = CardList(&_card);
+         Announce *announce = new Announce(
+             _card.getColor(),
+             *it,
+             _card.isTrump(),
+             cl);
          m_AnnouncesStats.push_back(announce);
          //TODO _card->addProbableAnnounce(announce);
       }
    }
 }
 
-void CardList::removeCardStatistics(Card& _card)
+void CardList::removeCardStatistics(Card &_card)
 {
-   if ((_card.getValue() == Card::SEPT)
-      || (_card.getValue() == Card::HUIT)
-      || (_card.getValue() == Card::NEUF))
+   if ((_card.getValue() == Card::SEPT) || (_card.getValue() == Card::HUIT) || (_card.getValue() == Card::NEUF))
    {
       return; // these cards are not used in announces
    }
@@ -297,8 +294,7 @@ void CardList::removeCardStatistics(Card& _card)
       // search in the list if this announce has already statistics
       for (auto ann = m_AnnouncesStats.begin(); ann != m_AnnouncesStats.end(); ann++)
       {
-         if (((*ann)->getColor() == _card.getColor())
-            && ((*ann)->getType() == *it))
+         if (((*ann)->getColor() == _card.getColor()) && ((*ann)->getType() == *it))
          {
             // great the annouce is already known
             (*ann)->removeCard(_card);

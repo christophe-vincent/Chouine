@@ -2,6 +2,7 @@
 #ifndef _CARD_H_
 #define _CARD_H_
 #include <set>
+#include <string>
 using namespace std;
 
 enum class Status
@@ -19,15 +20,15 @@ public:
 	};
 
 	static const Color ALL_COLORS[];
-   static const int NB_COLORS;
+    static const int NB_COLORS;
 
 	enum Value
 	{
 		SEPT, HUIT, NEUF, VALET, DAME, ROI, DIX, AS
 	};
 
-	static const Value ALL_VALUES[];
-   static const int NB_VALUES;
+    static const Value ALL_VALUES[];
+    static const int NB_VALUES;
 
 	Card(Color _color, Value _value, bool _trump);
 	~Card();
@@ -50,9 +51,9 @@ public:
    //void removeProbableAnnounce(Announce* _announce);
 
    // true if given card is better
-   bool isBetter(Card& _card);
-   string colorName();
-	string displayName();
+    bool isBetter(Card& _card);
+    std::string colorName();
+    std::string displayName();
 
    
 private:
