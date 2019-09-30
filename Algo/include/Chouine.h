@@ -6,14 +6,14 @@
 #define _CHOUINE_H
 #include <array>
 
-//#include "Card.h"
+//#include "Carte.h"
 //#include "Announce.h"
-#include "Player.h"
+#include "Joueur.h"
 //#include "Pick.h"
 
-class Player;
+class Joueur;
 
-enum CardId
+enum CarteId
 {
     COEUR_7,
     COEUR_8,
@@ -56,83 +56,83 @@ public:
     static Chouine *getInstance();
 
     void newGame();
-    void setPlayerLevel(int _player, int _level);
+    void setJoueurLevel(int _player, int _level);
 
-    CardId getPlayerCard(int _player, int _card);
+    CarteId getJoueurCarte(int _player, int _card);
 
-    int getPlayerChoice(int _player);
-    bool setPlayerChoice(int _player, int _choice);
+    int getJoueurChoice(int _player);
+    bool setJoueurChoice(int _player, int _choice);
 
     /*string hasChange7Trump(int _player);
    string change7Trump(int _player);
    int Play();
    bool isGameOver();
-   int getPlayerAnnouncesPoints(int _player);
-   int getPlayerTotalPoints(int _player);
+   int getJoueurAnnouncesPoints(int _player);
+   int getJoueurTotalPoints(int _player);
    void testBruteForce();
    
    
-   int getPlayerLevel(int _player)
+   int getJoueurLevel(int _player)
    {
       if (_player > 1) return 0;
-      return m_Players[_player].getLevel();
+      return m_Joueurs[_player].getLevel();
    }   
-   set<Card*> GetPickList() { return m_Pick.GetCards(); }
-   set<Card*> GetPlayerCardList(int _player)
+   set<Carte*> GetPickList() { return m_Pick.GetCartes(); }
+   set<Carte*> GetJoueurCarteList(int _player)
    {
       if (_player > 1) return ;
-      return m_Players[_player].GetCards();
+      return m_Joueurs[_player].GetCartes();
    }
 
-   set<Card*> GetPlayerWinCardList(int _player)
+   set<Carte*> GetJoueurWinCarteList(int _player)
    {
       if (_player > 1) return nullptr;
-      return m_Players[_player].GetWinCards();
+      return m_Joueurs[_player].GetWinCartes();
    }
    */
-    Card::Color getTrumpColor();
-    /*  Card* GetTrumpCard() { return m_Pick.getTrumpCard(); }
-   Announce* getPlayerLatestAnnounce(int _player)
+    Carte::Couleur getTrumpCouleur();
+    /*  Carte* GetTrumpCarte() { return m_Pick.getTrumpCarte(); }
+   Announce* getJoueurLatestAnnounce(int _player)
    {
       if (_player > 1) return nullptr;
-      return m_Players[_player].getLatestAnnounce();
+      return m_Joueurs[_player].getLatestAnnounce();
    }
    
    int donnor() { return m_Donor; }
-   Announce setPlayerAnnounce(int _player, set<string> _cardNames)
+   Announce setJoueurAnnounce(int _player, set<string> _cardNames)
    {
       if (_player > 1) return nullptr;
-      return m_Players[_player].newAnnouce(_cardNames);
+      return m_Joueurs[_player].newAnnouce(_cardNames);
    }
    
-   int getPlayerPoints(int _player)
+   int getJoueurPoints(int _player)
    {
       if (_player > 1) return -1;
-      return m_Players[_player].Points();
+      return m_Joueurs[_player].Points();
    }
 
-   int getPlayer10Der(int _player)
+   int getJoueur10Der(int _player)
    {
       if (_player > 1) return -1;
-      return m_Players[_player].get10Der();
+      return m_Joueurs[_player].get10Der();
    }
 
-   set<Announce*> getPlayerAnnouces(int _player)
+   set<Announce*> getJoueurAnnouces(int _player)
    {
       if (_player > 1) return nullptr;
-      return m_Players[_player].getAnnouces();
+      return m_Joueurs[_player].getAnnouces();
    }*/
 
 private:
     Chouine();
     ~Chouine();
-    Card::Color m_Trump;
+    Carte::Couleur m_Trump;
     static Chouine *m_Instance;
-    array<Player *, 2> m_Players;
-    array<int, 2> m_PlayerLevel;
-    Card *m_PlayedCard;
-    CardList m_Pick;
-    int m_StartPlayer;
+    array<Joueur *, 2> m_Joueurs;
+    array<int, 2> m_JoueurLevel;
+    Carte *m_PlayedCarte;
+    CarteList m_Pick;
+    int m_StartJoueur;
     bool m_isChouine;
 };
 #endif

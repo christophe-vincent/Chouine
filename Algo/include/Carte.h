@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _CARD_H_
-#define _CARD_H_
+#ifndef _CARTE_H_
+#define _CARTE_H_
 #include <set>
 #include <string>
 using namespace std;
@@ -11,10 +11,10 @@ enum class Status
     TOO_MANY_CARDS
 };
 
-class Card
+class Carte
 {
 public:
-    enum Color
+    enum Couleur
     {
         COEUR,
         PIC,
@@ -24,10 +24,10 @@ public:
         UNDEF_COLOR
     };
 
-    static const Color ALL_COLORS[];
+    static const Couleur ALL_COLORS[];
     static const int NB_COLORS;
 
-    enum Value
+    enum Valeur
     {
         SEPT,
         HUIT,
@@ -39,16 +39,16 @@ public:
         AS
     };
 
-    static const Value ALL_VALUES[];
+    static const Valeur ALL_VALUES[];
     static const int NB_VALUES;
 
-    Card(Color _color, Value _value, bool _trump);
-    ~Card();
+    Carte(Couleur _couleur, Valeur _value, bool _trump);
+    ~Carte();
 
-    bool operator==(Card &_card);
+    bool operator==(Carte &_card);
 
-    Color getColor() { return m_Color; }
-    Value getValue() { return m_Value; }
+    Couleur getCouleur() { return m_Couleur; }
+    Valeur getValeur() { return m_Valeur; }
     bool isTrump() { return m_Trump; }
     void setTrump(bool _trump) { m_Trump = _trump; }
     //Announce* getAnnounce()                            { return m_Announce; }
@@ -63,13 +63,13 @@ public:
     //void removeProbableAnnounce(Announce* _announce);
 
     // true if given card is better
-    bool isBetter(Card &_card);
-    std::string colorName();
+    bool isBetter(Carte &_card);
+    std::string couleurName();
     std::string displayName();
 
 private:
-    Color m_Color;
-    Value m_Value;
+    Couleur m_Couleur;
+    Valeur m_Valeur;
     bool m_Trump;
     //Announce *m_Announce;
     //set<Announce*> m_ProbableAnnounce;

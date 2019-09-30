@@ -1,9 +1,9 @@
 #ifndef _PLAYERALGO_H_
 #define _PLAYERALGO_H_
 
-class PlayerAlgo
+class JoueurAlgo
 {
-    PlayerAlgo();
+    JoueurAlgo();
 };
 
 #endif

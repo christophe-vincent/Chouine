@@ -1,15 +1,15 @@
-#include "Card.h"
+#include "Carte.h"
 using namespace std;
 
-const Card::Color Card::ALL_COLORS[] =
+const Carte::Couleur Carte::ALL_COLORS[] =
     {
         CARREAU,
         COEUR,
         PIC,
         TREFLE};
-const int Card::NB_COLORS = 4;
+const int Carte::NB_COLORS = 4;
 
-const Card::Value Card::ALL_VALUES[] =
+const Carte::Valeur Carte::ALL_VALUES[] =
     {
         SEPT,
         HUIT,
@@ -19,15 +19,15 @@ const Card::Value Card::ALL_VALUES[] =
         ROI,
         DIX,
         AS};
-const int Card::NB_VALUES = 8;
+const int Carte::NB_VALUES = 8;
 
-Card::Card(Color _color, Value _value, bool _trump) : m_Color(_color), m_Value(_value), m_Trump(_trump)
+Carte::Carte(Couleur _couleur, Valeur _value, bool _trump) : m_Couleur(_couleur), m_Valeur(_value), m_Trump(_trump)
 {
     //m_Announce = nullptr;
     m_Score = 0;
 
     // set the announces the card may be involved
-    /*	switch (m_Value)
+    /*	switch (m_Valeur)
     {
     case AS:
         m_Announcetypes.insert(Announce::CHOUINE);
@@ -58,24 +58,24 @@ Card::Card(Color _color, Value _value, bool _trump) : m_Color(_color), m_Value(_
     }*/
 }
 
-Card::~Card()
+Carte::~Carte()
 {
 }
 
-bool Card::operator==(Card &_card)
+bool Carte::operator==(Carte &_card)
 {
-    if ((m_Value == _card.getValue()) && (m_Color == _card.getColor()))
+    if ((m_Valeur == _card.getValeur()) && (m_Couleur == _card.getCouleur()))
     {
         return true;
     }
     return false;
 }
 
-int Card::getPoints()
+int Carte::getPoints()
 {
     int points;
 
-    switch (m_Value)
+    switch (m_Valeur)
     {
     case SEPT:
     case HUIT:
@@ -103,7 +103,7 @@ int Card::getPoints()
     return points;
 }
 
-/*void Card::addProbableAnnounce(Announce *_announce)
+/*void Carte::addProbableAnnounce(Announce *_announce)
 {
     if (m_ProbableAnnounce.find(_announce) == m_ProbableAnnounce.end)
     {
@@ -111,7 +111,7 @@ int Card::getPoints()
     }
 }
 
-void Card::removeProbableAnnounce(Announce *_announce)
+void Carte::removeProbableAnnounce(Announce *_announce)
 {
    auto it = m_ProbableAnnounce.find(_announce);
     if (it != m_ProbableAnnounce.end)
@@ -120,14 +120,14 @@ void Card::removeProbableAnnounce(Announce *_announce)
     }
 }*/
 
-bool Card::isBetter(Card &_card)
+bool Carte::isBetter(Carte &_card)
 {
     bool ret;
 
-    if (m_Color == _card.getColor())
+    if (m_Couleur == _card.getCouleur())
     {
-        // same color for both
-        if (m_Value > _card.getValue())
+        // same couleur for both
+        if (m_Valeur > _card.getValeur())
         {
             ret = false;
         }
@@ -150,10 +150,10 @@ bool Card::isBetter(Card &_card)
     return ret;
 }
 
-string Card::colorName()
+string Carte::couleurName()
 {
     string name = "";
-    switch (m_Color)
+    switch (m_Couleur)
     {
     case COEUR:
         name += "Coeur";
@@ -173,11 +173,11 @@ string Card::colorName()
     return name;
 }
 
-string Card::displayName()
+string Carte::displayName()
 {
     string name;
 
-    switch (m_Value)
+    switch (m_Valeur)
     {
     case SEPT:
         name = "7 ";
@@ -208,7 +208,7 @@ string Card::displayName()
         break;
     }
 
-    name += colorName();
+    name += couleurName();
 
     return name;
 }

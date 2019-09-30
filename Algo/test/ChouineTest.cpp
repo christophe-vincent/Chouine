@@ -31,8 +31,8 @@ int main()
     Chouine *chouine = Chouine::getInstance();
 
     chouine->newGame();
-    chouine->setPlayerLevel(0, 5);
-    chouine->setPlayerLevel(0, 0);
+    chouine->setJoueurLevel(0, 5);
+    chouine->setJoueurLevel(0, 0);
 
     //chouine->
 
