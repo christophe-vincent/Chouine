@@ -2,5 +2,4 @@
 
 PlayerAlgo::PlayerAlgo()
 {
-
 }

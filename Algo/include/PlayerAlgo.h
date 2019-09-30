@@ -3,7 +3,7 @@
 
 class PlayerAlgo
 {
-   PlayerAlgo();
+    PlayerAlgo();
 };
 
 #endif

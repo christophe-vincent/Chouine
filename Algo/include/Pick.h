@@ -5,7 +5,7 @@
 class Pick : public CardList
 {
 public:
-   Pick();
+    Pick();
 };
 
 #endif

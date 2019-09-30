@@ -2,189 +2,187 @@
 #include <string>
 #include "Chouine.h"
 
-Chouine* Chouine::m_Instance = nullptr;
+Chouine *Chouine::m_Instance = nullptr;
 
-Chouine* Chouine::getInstance()
+Chouine *Chouine::getInstance()
 {
-   if (m_Instance == nullptr)
-   {
-      m_Instance = new Chouine();
-   }
-   return m_Instance;
+    if (m_Instance == nullptr)
+    {
+        m_Instance = new Chouine();
+    }
+    return m_Instance;
 }
 
 Chouine::Chouine()
 {
-   for (int i = 0; i<2; i++)
-   {
-      m_PlayerLevel[i] = 10;
-      m_Players[i] = nullptr;
-   }
-   m_isChouine = false;
-   m_PlayedCard = nullptr;
+    for (int i = 0; i < 2; i++)
+    {
+        m_PlayerLevel[i] = 10;
+        m_Players[i] = nullptr;
+    }
+    m_isChouine = false;
+    m_PlayedCard = nullptr;
 }
 
 Chouine::~Chouine()
 {
-   if (m_Players[0] != nullptr)
-   {
-      delete m_Players[0];
-   }
-   if (m_Players[1] != nullptr)
-   {
-      delete m_Players[1];
-   }
+    if (m_Players[0] != nullptr)
+    {
+        delete m_Players[0];
+    }
+    if (m_Players[1] != nullptr)
+    {
+        delete m_Players[1];
+    }
 }
 
 CardId Chouine::getPlayerCard(int _player, int _card)
 {
-   if (_player > 1) return NONE;
-   Card* c = m_Players[_player]->getCard(_card);
-   if (c == nullptr) return NONE;
-
+    if (_player > 1)
+        return NONE;
+    Card *c = m_Players[_player]->getCard(_card);
+    if (c == nullptr)
+        return NONE;
 }
-
 
 void Chouine::newGame()
 {
-   set<Card*> cards;
+    set<Card *> cards;
 
-   std::random_device rd;
-   std::mt19937 mt(rd());
-   std::uniform_int_distribution<int> dist(0, 3);
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_int_distribution<int> dist(0, 3);
 
-   m_Trump = Card::ALL_COLORS[dist(mt)];
+    m_Trump = Card::ALL_COLORS[dist(mt)];
 
-   m_StartPlayer = 0;
-   int otherPlayer = 1;
-   if (dist(mt) >= Card::NB_COLORS / 2)
-   {
-      m_StartPlayer = 1;
-      otherPlayer = 0;
-   }
+    m_StartPlayer = 0;
+    int otherPlayer = 1;
+    if (dist(mt) >= Card::NB_COLORS / 2)
+    {
+        m_StartPlayer = 1;
+        otherPlayer = 0;
+    }
 
-   // add all cards to pick
-   unsigned int id = 0;
-   for (auto c = 0; c < Card::NB_COLORS; c++)
-   {
-      for (auto v = 0; v < Card::NB_VALUES; v++)
-      {
-         m_Pick.add(new Card(
-            Card::ALL_COLORS[c], 
-            Card::ALL_VALUES[v],
-            m_Trump == Card::ALL_COLORS[c]));
-      }
-   }
+    // add all cards to pick
+    unsigned int id = 0;
+    for (auto c = 0; c < Card::NB_COLORS; c++)
+    {
+        for (auto v = 0; v < Card::NB_VALUES; v++)
+        {
+            m_Pick.add(new Card(
+                Card::ALL_COLORS[c],
+                Card::ALL_VALUES[v],
+                m_Trump == Card::ALL_COLORS[c]));
+        }
+    }
 
-   m_Pick.shuffle();
-   
-   // set level
-   m_Players[0] = new Player();
-   m_Players[1] = new Player();
-   m_Players[0]->setLevel(m_PlayerLevel[0]);
-   m_Players[1]->setLevel(m_PlayerLevel[1]);
+    m_Pick.shuffle();
 
-   m_PlayedCard = nullptr;
-   
-   // create card game
-   for (int i=0; i<Card::NB_COLORS; i++)
-   {
-      for (int j=0; j<Card::NB_VALUES; j++)
-      {
-         cards.insert(new Card(Card::ALL_COLORS[i], Card::ALL_VALUES[j], false));
-      }
-   }
+    // set level
+    m_Players[0] = new Player();
+    m_Players[1] = new Player();
+    m_Players[0]->setLevel(m_PlayerLevel[0]);
+    m_Players[1]->setLevel(m_PlayerLevel[1]);
 
-   for (int i = 0; i < Player::MAX_CARDS; i++)
-   {
-      Card* card = m_Pick.pickCard();
-      if (card != nullptr) m_Players[m_StartPlayer]->addCard(*card);
-      
-      card = m_Pick.pickCard();
-      if (card != nullptr) m_Players[otherPlayer]->addCard(*card);
-   }
+    m_PlayedCard = nullptr;
+
+    // create card game
+    for (int i = 0; i < Card::NB_COLORS; i++)
+    {
+        for (int j = 0; j < Card::NB_VALUES; j++)
+        {
+            cards.insert(new Card(Card::ALL_COLORS[i], Card::ALL_VALUES[j], false));
+        }
+    }
+
+    for (int i = 0; i < Player::MAX_CARDS; i++)
+    {
+        Card *card = m_Pick.pickCard();
+        if (card != nullptr)
+            m_Players[m_StartPlayer]->addCard(*card);
+
+        card = m_Pick.pickCard();
+        if (card != nullptr)
+            m_Players[otherPlayer]->addCard(*card);
+    }
 }
-
 
 void Chouine::setPlayerLevel(int _player, int _level)
 {
-   if (_player > 1)
-   {
-      return;
-   }
-   m_PlayerLevel[_player] = _level;
-   m_Players[_player]->setLevel(_level);
+    if (_player > 1)
+    {
+        return;
+    }
+    m_PlayerLevel[_player] = _level;
+    m_Players[_player]->setLevel(_level);
 }
-
 
 Card::Color Chouine::getTrumpColor()
-{ 
-   if (m_Pick.size() > 0)
-   {
-      return m_Pick.getLastCard()->getColor();
-   }
-   else
-   {
-      return Card::UNDEF_COLOR;
-   }
+{
+    if (m_Pick.size() > 0)
+    {
+        return m_Pick.getLastCard()->getColor();
+    }
+    else
+    {
+        return Card::UNDEF_COLOR;
+    }
 }
-
 
 int Chouine::getPlayerChoice(int _player)
 {
-   if (_player > 1)
-   {
-      return -1;
-   }
-   Card* playedCard;
-   int ret = -1;
+    if (_player > 1)
+    {
+        return -1;
+    }
+    Card *playedCard;
+    int ret = -1;
 
-   if (m_StartPlayer == _player)
-   {
-      // this player start to play, so we choose a card the first
-      ret = m_Players[_player]->SimulateMove(nullptr, m_Pick.size());
-      playedCard = m_Players[_player]->getCard(ret);
-   }
-   else
-   {
-      // other user has already played
-      if (m_PlayedCard == nullptr)
-      {
-         return -1; // error this should not happen
-      }
-      ret = m_Players[_player]->SimulateMove(m_PlayedCard, m_Pick.size());
-      playedCard = m_Players[_player]->getCard(ret);
-   }
+    if (m_StartPlayer == _player)
+    {
+        // this player start to play, so we choose a card the first
+        ret = m_Players[_player]->SimulateMove(nullptr, m_Pick.size());
+        playedCard = m_Players[_player]->getCard(ret);
+    }
+    else
+    {
+        // other user has already played
+        if (m_PlayedCard == nullptr)
+        {
+            return -1; // error this should not happen
+        }
+        ret = m_Players[_player]->SimulateMove(m_PlayedCard, m_Pick.size());
+        playedCard = m_Players[_player]->getCard(ret);
+    }
 
-   return ret;
+    return ret;
 }
 
 bool Chouine::setPlayerChoice(int _player, int _choice)
 {
-   if (_player > 1)
-   {
-      return false;
-   }
-   Card* card;
-   card = m_Players[_player]->getCard(_choice);
-   if (card == nullptr)
-   {
-      return false;
-   }
-   // check if user can play this card
-   if ((m_Pick.size() == 0) && (m_StartPlayer != _player))
-   {
-      if (!m_Players[_player]->isCardAllowed(*card, *m_PlayedCard))
-      {
-         return false;
-      }
-   }
-   
-   // TODO : lancer la résolution de la done ici
+    if (_player > 1)
+    {
+        return false;
+    }
+    Card *card;
+    card = m_Players[_player]->getCard(_choice);
+    if (card == nullptr)
+    {
+        return false;
+    }
+    // check if user can play this card
+    if ((m_Pick.size() == 0) && (m_StartPlayer != _player))
+    {
+        if (!m_Players[_player]->isCardAllowed(*card, *m_PlayedCard))
+        {
+            return false;
+        }
+    }
 
-   return true;
+    // TODO : lancer la rï¿½solution de la done ici
+
+    return true;
 }
-
 
 /*
 string Chouine::hasChange7Trump(int _player)
