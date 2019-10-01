@@ -4,10 +4,10 @@
 
 const int Joueur::MAX_CARDS = 5;
 
-Joueur::Joueur()
+Joueur::Joueur(Chouine& _chouine, int _niveau):
+m_Chouine(_chouine), m_Niveau(_niveau)
 {
     m_10Der = 0;
-    m_Level = 10; // max level
     m_LatestAnnonce = nullptr;
     m_Change7Trump = false;
     m_IsChouine = false;
@@ -15,6 +15,12 @@ Joueur::Joueur()
 
 Joueur::~Joueur()
 {
+}
+
+// retourne la main du joueur en chaine
+string Joueur::main()
+{
+    return m_Cartes.cartes();
 }
 
 Carte *Joueur::getCarte(unsigned int _index)
@@ -66,9 +72,8 @@ bool Joueur::replaceTrumpCarte(Carte *_newCarte)
 {
     int index = -1;
     Carte *card = nullptr;
-    Chouine *chouine = Chouine::getInstance();
 
-    card = m_Cartes.getCarteFromList(chouine->getTrumpCouleur(), Carte::SEPT);
+    card = m_Cartes.getCarteFromList(m_Chouine.couleurAtout(), Carte::SEPT);
 
     if (card != nullptr)
     {
@@ -132,7 +137,7 @@ Carte *Joueur::EmptyPickSimulation(CarteList &_cards)
 {
     Carte *playCarte;
 
-    if (m_Level > 5)
+    if (m_Niveau > 5)
     {
         // TODO
         playCarte = bruteForceAttack(_cards);
@@ -160,7 +165,7 @@ Carte *Joueur::EmptyPickSimulation(Carte &_userChoice)
         if (!_userChoice.isTrump())
         {
             CarteList trumpList;
-            m_Cartes.getCouleurSubset(Chouine::getInstance()->getTrumpCouleur(), trumpList);
+            m_Cartes.getCouleurSubset(m_Chouine.couleurAtout(), trumpList);
             playCarte = couleurList.getSmallest();
         }
     }

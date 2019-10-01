@@ -150,65 +150,65 @@ bool Carte::isBetter(Carte &_card)
     return ret;
 }
 
-string Carte::couleurName()
+string Carte::couleur()
 {
-    string name = "";
+    string couleur = "";
     switch (m_Couleur)
     {
     case COEUR:
-        name += "Coeur";
+        couleur += "COE";
         break;
     case CARREAU:
-        name += "Carreau";
+        couleur += "CAR";
         break;
     case TREFLE:
-        name += "Tr�fle";
+        couleur += "TRE";
         break;
     case PIC:
-        name += "Pic";
+        couleur += "PIC";
         break;
     default:
-        name += "ERROR";
+        couleur += "ERR";
     }
-    return name;
+    return couleur;
 }
 
-string Carte::displayName()
+string Carte::nom()
 {
-    string name;
+    string valeur;
 
     switch (m_Valeur)
     {
     case SEPT:
-        name = "7 ";
+        valeur = " 7_";
         break;
     case HUIT:
-        name = "8 ";
+        valeur = " 8_";
         break;
     case NEUF:
-        name = "9 ";
+        valeur = " 9_";
         break;
     case DIX:
-        name = "10 ";
+        valeur = "10_";
         break;
     case VALET:
-        name = "V ";
+        valeur = "Va_";
         break;
     case DAME:
-        name = "D ";
+        valeur = "Da_";
         break;
     case ROI:
-        name = "R ";
+        valeur = "Ro_";
         break;
     case AS:
-        name = "As ";
+        valeur = "As_";
         break;
     default:
-        name = "ERROR";
+        valeur = "ERR";
         break;
     }
 
-    name += couleurName();
+    valeur += couleur();
 
-    return name;
+    return valeur;
 }

@@ -15,7 +15,7 @@ public:
     void add(Carte *_card);
     void remove(Carte *_card);
     void shuffle();
-    Carte *pickCarte();
+    Carte *piocheCarte();
     Carte *searchCarte(Carte::Valeur _value);
     void getTrumps(CarteList &_list);
     Carte *getSmallest();
@@ -38,6 +38,7 @@ public:
     unsigned int size() { return (unsigned int)m_Cartes.size(); }
     Carte *getLastCarte() { return *m_Cartes.rbegin(); }
     Carte *operator[](size_t _idx) { return m_Cartes[_idx]; }
+    std::string cartes();
 
 private:
     vector<Carte *> m_Cartes;

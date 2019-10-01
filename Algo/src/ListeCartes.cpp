@@ -1,6 +1,9 @@
+#include <iostream>
 #include <algorithm>
 #include "ListeCartes.h"
 #include "Annonce.h"
+
+using namespace std;
 
 CarteList::CarteList() : m_isTrumpSeven(false)
 {
@@ -13,6 +16,7 @@ CarteList::CarteList(Carte *_card) : m_isTrumpSeven(false)
 
 void CarteList::add(Carte *_card)
 {
+    //cout << _card->nom() << endl;
     if ((_card->isTrump()) && (_card->getValeur() == Carte::SEPT))
     {
         m_isTrumpSeven = true;
@@ -39,13 +43,13 @@ void CarteList::shuffle()
 }
 
 // return first card and remove it from list (like we we pick a card)
-Carte *CarteList::pickCarte()
+Carte *CarteList::piocheCarte()
 {
     if (m_Cartes.size() == 0)
     {
         return nullptr;
     }
-    Carte *ret = *m_Cartes.begin();
+    Carte *ret = m_Cartes.back();
     m_Cartes.pop_back();
     return ret;
 }
@@ -302,4 +306,16 @@ void CarteList::removeCarteStatistics(Carte &_card)
             }
         }
     }
+}
+
+// retourne la liste des cartes en chaine de caractères
+std::string CarteList::cartes()
+{
+    string cartes;
+    for (auto it = m_Cartes.begin(); it != m_Cartes.end(); it++)
+    {
+        cartes += (*it)->nom() + " ";
+    }
+    return cartes;
+
 }

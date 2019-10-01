@@ -23,13 +23,13 @@ private:
 class Joueur
 {
 public:
-    Joueur();
+    Joueur(Chouine &_chouine, int _niveau);
     virtual ~Joueur();
 
     static const int MAX_CARDS;
 
-    void setLevel(int _level) { m_Level = _level; }
-    int getLevel() { return m_Level; }
+    void niveau(int _niveau) { m_Niveau = _niveau; }
+    int niveau() { return m_Niveau; }
     CarteList &getCartes() { return m_Cartes; }
     CarteList &getWinCartes() { return m_WinCartes; }
     Annonce *getLatestAnnonce() { return m_LatestAnnonce; }
@@ -39,6 +39,7 @@ public:
     int get10Der() { return m_10Der; }
     set<Annonce *> getAnnouces() { return m_Annonces; }
 
+    string main();
     Carte *getCarte(unsigned int _index);
     void enemyWinCartes(Carte *_c1, Carte *_c2);
     bool hasChange7Trump();
@@ -61,12 +62,13 @@ protected:
     bool m_Change7Trump;
 
 private:
+    Chouine &m_Chouine;
     CarteList m_Cartes;    // 5 cards to be played
     CarteList m_WinCartes; // cards win
     CarteList m_EnemyWinCartes;
     set<Annonce *> m_Annonces;
     Annonce *m_LatestAnnonce;
-    int m_Level;
+    int m_Niveau;
     int m_10Der;
 };
 

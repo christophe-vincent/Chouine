@@ -64,8 +64,8 @@ public:
 
     // true if given card is better
     bool isBetter(Carte &_card);
-    std::string couleurName();
-    std::string displayName();
+    std::string couleur();
+    std::string nom();
 
 private:
     Couleur m_Couleur;

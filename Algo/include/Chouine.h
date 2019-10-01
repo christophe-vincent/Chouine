@@ -53,14 +53,23 @@ enum CarteId
 class Chouine
 {
 public:
-    static Chouine *getInstance();
+    enum JOUEUR
+    {
+        JOUEUR_1 = 0,
+        JOUEUR_2 = 1
+    };
 
+public:
+    Chouine(int _niveauJoueur1, int _niveauJoueur2);
+    ~Chouine();
+    
     void newGame();
-    void setJoueurLevel(int _player, int _level);
 
+    Joueur& joueur(JOUEUR _id) { return *m_Joueurs[_id];};
+    
     CarteId getJoueurCarte(int _player, int _card);
 
-    int getJoueurChoice(int _player);
+    int choixJoueur(JOUEUR _player);
     bool setJoueurChoice(int _player, int _choice);
 
     /*string hasChange7Trump(int _player);
@@ -90,7 +99,7 @@ public:
       return m_Joueurs[_player].GetWinCartes();
    }
    */
-    Carte::Couleur getTrumpCouleur();
+    Carte::Couleur couleurAtout();
     /*  Carte* GetTrumpCarte() { return m_Pick.getTrumpCarte(); }
    Announce* getJoueurLatestAnnounce(int _player)
    {
@@ -124,14 +133,14 @@ public:
    }*/
 
 private:
-    Chouine();
-    ~Chouine();
     Carte::Couleur m_Trump;
     static Chouine *m_Instance;
+    Joueur m_Joueur1;
+    Joueur m_Joueur2;
     array<Joueur *, 2> m_Joueurs;
     array<int, 2> m_JoueurLevel;
     Carte *m_PlayedCarte;
-    CarteList m_Pick;
+    CarteList m_Pioche;
     int m_StartJoueur;
     bool m_isChouine;
 };
