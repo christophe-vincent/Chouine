@@ -68,6 +68,7 @@ public:
     Joueur& joueur(JOUEUR _id) { return *m_Joueurs[_id];};
     
     CarteId getJoueurCarte(int _player, int _card);
+    bool piocheVide();
 
     int choixJoueur(JOUEUR _player);
     bool setJoueurChoice(int _player, int _choice);

@@ -85,6 +85,13 @@ Carte::Couleur Chouine::couleurAtout()
     }
 }
 
+bool Chouine::piocheVide()
+{
+    bool ret;
+    (m_Pioche.size() > 0) ? ret = false : ret = true;
+    return ret;
+}
+
 int Chouine::choixJoueur(Chouine::JOUEUR _player)
 {
     if (_player > 1)
@@ -97,8 +104,7 @@ int Chouine::choixJoueur(Chouine::JOUEUR _player)
     if (m_StartJoueur == _player)
     {
         // ce joueur joue le premier
-        ret = m_Joueurs[_player]->SimulateMove(nullptr, m_Pioche.size());
-        playedCarte = m_Joueurs[_player]->getCarte(ret);
+        playedCarte = m_Joueurs[_player]->choisirCarte(nullptr);
     }
     else
     {
@@ -107,8 +113,7 @@ int Chouine::choixJoueur(Chouine::JOUEUR _player)
         {
             return -1; // hum...
         }
-        ret = m_Joueurs[_player]->SimulateMove(m_PlayedCarte, m_Pioche.size());
-        playedCarte = m_Joueurs[_player]->getCarte(ret);
+        playedCarte = m_Joueurs[_player]->choisirCarte(m_PlayedCarte);
     }
 
     return ret;

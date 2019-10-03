@@ -1,11 +1,12 @@
-#ifndef _PLAYER_H_
-#define _PLAYER_H_
+#ifndef _JOUEUR_H_
+#define _JOUEUR_H_
 #include <string>
 #include <set>
 #include <map>
 #include "Carte.h"
 #include "ListeCartes.h"
 #include "Annonce.h"
+#include "Algorithme.h"
 
 using namespace std;
 
@@ -30,28 +31,28 @@ public:
 
     void niveau(int _niveau) { m_Niveau = _niveau; }
     int niveau() { return m_Niveau; }
-    CarteList &getCartes() { return m_Cartes; }
-    CarteList &getWinCartes() { return m_WinCartes; }
+    CarteList &cartes() { return m_Cartes; }
+    CarteList &cartesGagnees() { return m_CartesGagnees; }
     Annonce *getLatestAnnonce() { return m_LatestAnnonce; }
     bool getIsChouine() { return m_IsChouine; }
     int CarteLeft() { return m_Cartes.size(); }
-    int getPoints() { return m_WinCartes.getPoints(); }
+    int getPoints() { return m_CartesGagnees.getPoints(); }
     int get10Der() { return m_10Der; }
     set<Annonce *> getAnnouces() { return m_Annonces; }
 
     string main();
     Carte *getCarte(unsigned int _index);
-    void enemyWinCartes(Carte *_c1, Carte *_c2);
+    void ajouterCartesGagneesAdversaire(Carte *_c1, Carte *_c2);
     bool hasChange7Trump();
     Status addCarte(Carte &_card);
     Annonce *newAnnonce(set<int> _list);
-    int SimulateMove(Carte *_enemyChoice, int _pickLeft);
+    Carte* choisirCarte(Carte *_enemyChoice);
     Carte *getSmallestTrump();
     int trumpNumber();
     bool replaceTrumpCarte(Carte *_newCarte);
     bool isCarteAllowed(Carte &_card, Carte &_otherCarte);
     Status PlayCarte(Carte &_card);
-    Status WinCartes(Carte &_card1, Carte &_card2);
+    Status ajouterCartesGagnees(Carte &_card1, Carte &_card2);
     Carte *bruteForceAttack(CarteList &_hisCartes);
 
 protected:
@@ -64,12 +65,13 @@ protected:
 private:
     Chouine &m_Chouine;
     CarteList m_Cartes;    // 5 cards to be played
-    CarteList m_WinCartes; // cards win
-    CarteList m_EnemyWinCartes;
+    CarteList m_CartesGagnees; // cards win
+    CarteList m_CartesGagneesAdversaire;
     set<Annonce *> m_Annonces;
     Annonce *m_LatestAnnonce;
     int m_Niveau;
     int m_10Der;
+    Algorithme m_Algo;
 };
 
 #endif
