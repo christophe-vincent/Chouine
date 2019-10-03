@@ -120,9 +120,8 @@ Carte* Joueur::choisirCarte(Carte *_carteAdversaire)
     }
     else
     {
-
-    }
-    
+        return m_Algo.choisirCarte();
+    }    
     return nullptr;
 }
 
@@ -132,7 +131,7 @@ Carte *Joueur::getSmallestTrump()
     CarteList list;
 
     m_Cartes.getTrumps(list);
-    return m_Cartes.getSmallest();
+    return m_Cartes.plusFaible();
 }
 
 int Joueur::trumpNumber()
@@ -153,7 +152,7 @@ Carte *Joueur::EmptyPickSimulation(CarteList &_cards)
     }
     else
     {
-        playCarte = m_Cartes.getSmallest();
+        playCarte = m_Cartes.plusFaible();
     }
 
     return playCarte;
@@ -175,7 +174,7 @@ Carte *Joueur::EmptyPickSimulation(Carte &_userChoice)
         {
             CarteList trumpList;
             m_Cartes.getCouleurSubset(m_Chouine.couleurAtout(), trumpList);
-            playCarte = couleurList.getSmallest();
+            playCarte = couleurList.plusFaible();
         }
     }
 

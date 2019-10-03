@@ -1,6 +1,11 @@
 #include "Carte.h"
 using namespace std;
 
+const std::array<string, 4> Carte::NOM_COULEURS =
+{
+    "carreau", "coeur", "pic", "trèfle"
+};
+
 const Carte::Couleur Carte::ALL_COLORS[] =
     {
         CARREAU,
@@ -69,6 +74,15 @@ bool Carte::operator==(Carte &_card)
         return true;
     }
     return false;
+}
+
+std::string Carte::couleur(Couleur _couleur)
+{
+    if (_couleur < NOM_COULEURS.size())
+    {
+        return NOM_COULEURS[_couleur];
+    }
+    return "erreur";
 }
 
 int Carte::getPoints()

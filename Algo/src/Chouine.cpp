@@ -11,7 +11,7 @@ m_Joueur1(*this, _niveauJoueur1), m_Joueur2(*this, _niveauJoueur2)
     m_Joueurs[0] = &m_Joueur1;
     m_Joueurs[1] = &m_Joueur2;
     m_isChouine = false;
-    m_PlayedCarte = nullptr;
+    m_CarteJouee = nullptr;
 }
 
 Chouine::~Chouine()
@@ -33,13 +33,13 @@ void Chouine::newGame()
     std::mt19937 mt(rd());
     std::uniform_int_distribution<int> dist(0, 3);
 
-    m_Trump = Carte::ALL_COLORS[dist(mt)];
+    m_Atout = Carte::ALL_COLORS[dist(mt)];
 
-    m_StartJoueur = 0;
+    m_GagnantPli = JOUEUR_1;
     int otherJoueur = 1;
     if (dist(mt) >= Carte::NB_COLORS / 2)
     {
-        m_StartJoueur = 1;
+        m_GagnantPli = JOUEUR_2;
         otherJoueur = 0;
     }
 
@@ -52,20 +52,20 @@ void Chouine::newGame()
             m_Pioche.add(new Carte(
                 Carte::ALL_COLORS[c],
                 Carte::ALL_VALUES[v],
-                m_Trump == Carte::ALL_COLORS[c]));
+                m_Atout == Carte::ALL_COLORS[c]));
         }
     }
 
     m_Pioche.shuffle();
     //cout << "Pioche : " << m_Pioche.cartes() << endl;
 
-    m_PlayedCarte = nullptr;
+    m_CarteJouee = nullptr;
 
     for (int i = 0; i < Joueur::MAX_CARDS; i++)
     {
         Carte *card = m_Pioche.piocheCarte();
         if (card != nullptr)
-            m_Joueurs[m_StartJoueur]->addCarte(*card);
+            m_Joueurs[m_GagnantPli]->addCarte(*card);
 
         card = m_Pioche.piocheCarte();
         if (card != nullptr)
@@ -92,28 +92,34 @@ bool Chouine::piocheVide()
     return ret;
 }
 
-int Chouine::choixJoueur(Chouine::JOUEUR _player)
+string Chouine::choixJoueur(Chouine::JOUEUR _player)
 {
+    string ret("erreur");
     if (_player > 1)
     {
-        return -1;
+        return ret;
     }
-    Carte *playedCarte;
-    int ret = -1;
+    Carte *carte = nullptr;
 
-    if (m_StartJoueur == _player)
+    if (m_GagnantPli == _player)
     {
         // ce joueur joue le premier
-        playedCarte = m_Joueurs[_player]->choisirCarte(nullptr);
+        carte = m_Joueurs[_player]->choisirCarte(nullptr);
+        m_CarteJouee = carte;
     }
     else
     {
         // l'autre joueur a déjà joué
-        if (m_PlayedCarte == nullptr)
+        if (m_CarteJouee == nullptr)
         {
-            return -1; // hum...
+            return ret; // hum...
         }
-        playedCarte = m_Joueurs[_player]->choisirCarte(m_PlayedCarte);
+        carte = m_Joueurs[_player]->choisirCarte(m_CarteJouee);
+    }
+
+    if (carte)
+    {
+        ret = carte->nom();
     }
 
     return ret;
@@ -132,9 +138,9 @@ bool Chouine::setJoueurChoice(int _player, int _choice)
         return false;
     }
     // check if user can play this card
-    if ((m_Pioche.size() == 0) && (m_StartJoueur != _player))
+    if ((m_Pioche.size() == 0) && (m_GagnantPli != _player))
     {
-        if (!m_Joueurs[_player]->isCarteAllowed(*card, *m_PlayedCarte))
+        if (!m_Joueurs[_player]->isCarteAllowed(*card, *m_CarteJouee))
         {
             return false;
         }

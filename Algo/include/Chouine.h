@@ -66,11 +66,12 @@ public:
     void newGame();
 
     Joueur& joueur(JOUEUR _id) { return *m_Joueurs[_id];};
+    JOUEUR gagnantPli() { return m_GagnantPli;};
     
     CarteId getJoueurCarte(int _player, int _card);
     bool piocheVide();
 
-    int choixJoueur(JOUEUR _player);
+    string choixJoueur(JOUEUR _player);
     bool setJoueurChoice(int _player, int _choice);
 
     /*string hasChange7Trump(int _player);
@@ -101,6 +102,7 @@ public:
    }
    */
     Carte::Couleur couleurAtout();
+    std::string atout() { return Carte::couleur(m_Atout);}
     /*  Carte* GetTrumpCarte() { return m_Pick.getTrumpCarte(); }
    Announce* getJoueurLatestAnnounce(int _player)
    {
@@ -134,15 +136,15 @@ public:
    }*/
 
 private:
-    Carte::Couleur m_Trump;
+    Carte::Couleur m_Atout;
     static Chouine *m_Instance;
     Joueur m_Joueur1;
     Joueur m_Joueur2;
     array<Joueur *, 2> m_Joueurs;
     array<int, 2> m_JoueurLevel;
-    Carte *m_PlayedCarte;
+    Carte *m_CarteJouee;
     CarteList m_Pioche;
-    int m_StartJoueur;
+    JOUEUR m_GagnantPli;
     bool m_isChouine;
 };
 #endif

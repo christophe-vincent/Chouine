@@ -18,7 +18,7 @@ public:
     Carte *piocheCarte();
     Carte *searchCarte(Carte::Valeur _value);
     void getTrumps(CarteList &_list);
-    Carte *getSmallest();
+    Carte *plusFaible();
     void getCouleurSubset(Carte::Couleur _couleur, CarteList &_list);
     bool isContainsValeur(Carte::Valeur _value);
     bool isContainsCarte(Carte &_value);
