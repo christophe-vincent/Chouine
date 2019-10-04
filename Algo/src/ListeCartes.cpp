@@ -83,20 +83,20 @@ void CarteList::getTrumps(CarteList &_list)
     }
 }
 
-Carte *CarteList::getSmallest()
+Carte *CarteList::plusFaible()
 {
-    Carte *smallest;
+    Carte *plusFaible;
     auto it = m_Cartes.begin();
-    smallest = *it;
+    plusFaible = *it;
     while (it != m_Cartes.end())
     {
-        if ((*it)->getPoints() < smallest->getPoints())
+        if ((*it)->getPoints() < plusFaible->getPoints())
         {
-            smallest = *it;
+            plusFaible = *it;
         }
         it++;
     }
-    return *it;
+    return plusFaible;
 }
 
 void CarteList::getCouleurSubset(Carte::Couleur _couleur, CarteList &_list)

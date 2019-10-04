@@ -3,6 +3,7 @@
 #define _CARTE_H_
 #include <set>
 #include <string>
+#include <array>
 using namespace std;
 
 enum class Status
@@ -23,6 +24,8 @@ public:
         BACK,
         UNDEF_COLOR
     };
+
+    static const std::array<string, 4> NOM_COULEURS;
 
     static const Couleur ALL_COLORS[];
     static const int NB_COLORS;
@@ -47,6 +50,7 @@ public:
 
     bool operator==(Carte &_card);
 
+    static std::string couleur(Couleur _couleur);
     Couleur getCouleur() { return m_Couleur; }
     Valeur getValeur() { return m_Valeur; }
     bool isTrump() { return m_Trump; }

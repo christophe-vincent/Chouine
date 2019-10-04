@@ -31,18 +31,27 @@ string getCardcolor(int _id)
 
 int main()
 {
-    Chouine chouine(0, 1);
+    Chouine chouine(0, 0);
 
     chouine.newGame();
     Joueur joueur1 = chouine.joueur(Chouine::JOUEUR_1);
     Joueur joueur2 = chouine.joueur(Chouine::JOUEUR_2);
     
+    cout << "Atout : " << chouine.atout() << endl;
     cout << "Joueur 1: " << joueur1.main() << endl;
     cout << "Joueur 2: " << joueur2.main() << endl; 
     
     cout << "TOUR 1" << endl;
-    chouine.choixJoueur(Chouine::JOUEUR_1);
-    chouine.choixJoueur(Chouine::JOUEUR_2);
+    if (chouine.gagnantPli() == Chouine::JOUEUR_1)
+    {
+        cout << "Choix Joueur 1 : " << chouine.choixJoueur(Chouine::JOUEUR_1) << endl;
+        cout << "Choix Joueur 2 : " << chouine.choixJoueur(Chouine::JOUEUR_2) << endl;
+    } else
+    {
+        cout << "Choix Joueur 2 : " << chouine.choixJoueur(Chouine::JOUEUR_2) << endl;
+        cout << "Choix Joueur 1 : " << chouine.choixJoueur(Chouine::JOUEUR_1) << endl;
+    }
+    
     cout << "Joueur 1: " << joueur1.main() << endl;
     cout << "Joueur 2: " << joueur2.main() << endl; 
     

@@ -1,11 +1,11 @@
 #include "Joueur.h"
-#include "JoueurAlgo.h"
 #include "Chouine.h"
+#include "Algorithme.h"
 
 const int Joueur::MAX_CARDS = 5;
 
 Joueur::Joueur(Chouine& _chouine, int _niveau):
-m_Chouine(_chouine), m_Niveau(_niveau)
+m_Chouine(_chouine), m_Algo(_niveau, *this), m_Niveau(_niveau)
 {
     m_10Der = 0;
     m_LatestAnnonce = nullptr;
@@ -32,10 +32,10 @@ Carte *Joueur::getCarte(unsigned int _index)
     return m_Cartes[_index];
 }
 
-void Joueur::enemyWinCartes(Carte *_c1, Carte *_c2)
+void Joueur::ajouterCartesGagneesAdversaire(Carte *_c1, Carte *_c2)
 {
-    m_EnemyWinCartes.add(_c1);
-    m_EnemyWinCartes.add(_c2);
+    m_CartesGagneesAdversaire.add(_c1);
+    m_CartesGagneesAdversaire.add(_c2);
 }
 
 bool Joueur::hasChange7Trump()
@@ -112,9 +112,17 @@ Annonce *Joueur::newAnnonce(set<int> _list)
     }
 }
 
-int Joueur::SimulateMove(Carte *_enemyChoice, int _pickLeft)
+Carte* Joueur::choisirCarte(Carte *_carteAdversaire)
 {
-    return -1;
+    if (m_Chouine.piocheVide())
+    {
+        // TODO
+    }
+    else
+    {
+        return m_Algo.choisirCarte();
+    }    
+    return nullptr;
 }
 
 Carte *Joueur::getSmallestTrump()
@@ -123,7 +131,7 @@ Carte *Joueur::getSmallestTrump()
     CarteList list;
 
     m_Cartes.getTrumps(list);
-    return m_Cartes.getSmallest();
+    return m_Cartes.plusFaible();
 }
 
 int Joueur::trumpNumber()
@@ -144,7 +152,7 @@ Carte *Joueur::EmptyPickSimulation(CarteList &_cards)
     }
     else
     {
-        playCarte = m_Cartes.getSmallest();
+        playCarte = m_Cartes.plusFaible();
     }
 
     return playCarte;
@@ -166,7 +174,7 @@ Carte *Joueur::EmptyPickSimulation(Carte &_userChoice)
         {
             CarteList trumpList;
             m_Cartes.getCouleurSubset(m_Chouine.couleurAtout(), trumpList);
-            playCarte = couleurList.getSmallest();
+            playCarte = couleurList.plusFaible();
         }
     }
 
@@ -208,14 +216,14 @@ Status Joueur::PlayCarte(Carte &_card)
     return Status::OK;
 }
 
-Status Joueur::WinCartes(Carte &_card1, Carte &_card2)
+Status Joueur::ajouterCartesGagnees(Carte &_card1, Carte &_card2)
 {
     if (m_Cartes.size() == 0)
     {
         m_10Der = 10;
     }
-    m_WinCartes.add(&_card1);
-    m_WinCartes.add(&_card2);
+    m_CartesGagnees.add(&_card1);
+    m_CartesGagnees.add(&_card2);
     return Status::OK;
 }
 
