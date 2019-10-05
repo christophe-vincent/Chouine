@@ -1,6 +1,7 @@
 #include <iostream>
 #include <random>
 #include <string>
+#include <chrono>
 #include "Chouine.h"
 
 using namespace std;
@@ -29,11 +30,9 @@ CarteId Chouine::getJoueurCarte(int _player, int _card)
 
 void Chouine::newGame()
 {
-    std::random_device rd;
-    std::mt19937 mt(rd());
+    auto seed = chrono::high_resolution_clock::now().time_since_epoch().count();
+    std::mt19937 mt(seed);
     std::uniform_int_distribution<int> dist(0, 3);
-
-    m_Atout = Carte::ALL_COLORS[dist(mt)];
 
     m_GagnantPli = JOUEUR_1;
     int otherJoueur = 1;
@@ -57,6 +56,7 @@ void Chouine::newGame()
     }
 
     m_Pioche.shuffle();
+    m_Atout = m_Pioche.getLastCarte()->couleur();
     //cout << "Pioche : " << m_Pioche.cartes() << endl;
 
     m_CarteJouee = nullptr;
@@ -70,18 +70,6 @@ void Chouine::newGame()
         card = m_Pioche.piocheCarte();
         if (card != nullptr)
             m_Joueurs[otherJoueur]->addCarte(*card);
-    }
-}
-
-Carte::Couleur Chouine::couleurAtout()
-{
-    if (m_Pioche.size() > 0)
-    {
-        return m_Pioche.getLastCarte()->getCouleur();
-    }
-    else
-    {
-        return Carte::UNDEF_COLOR;
     }
 }
 

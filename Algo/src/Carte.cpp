@@ -69,14 +69,14 @@ Carte::~Carte()
 
 bool Carte::operator==(Carte &_card)
 {
-    if ((m_Valeur == _card.getValeur()) && (m_Couleur == _card.getCouleur()))
+    if ((m_Valeur == _card.getValeur()) && (m_Couleur == _card.couleur()))
     {
         return true;
     }
     return false;
 }
 
-std::string Carte::couleur(Couleur _couleur)
+std::string Carte::nomCouleur(Couleur _couleur)
 {
     if (_couleur < NOM_COULEURS.size())
     {
@@ -138,7 +138,7 @@ bool Carte::isBetter(Carte &_card)
 {
     bool ret;
 
-    if (m_Couleur == _card.getCouleur())
+    if (m_Couleur == _card.couleur())
     {
         // same couleur for both
         if (m_Valeur > _card.getValeur())
@@ -164,7 +164,7 @@ bool Carte::isBetter(Carte &_card)
     return ret;
 }
 
-string Carte::couleur()
+string Carte::nomCouleur()
 {
     string couleur = "";
     switch (m_Couleur)
@@ -222,7 +222,7 @@ string Carte::nom()
         break;
     }
 
-    valeur += couleur();
+    valeur += nomCouleur();
 
     return valeur;
 }

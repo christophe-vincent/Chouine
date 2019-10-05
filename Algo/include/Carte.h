@@ -50,8 +50,8 @@ public:
 
     bool operator==(Carte &_card);
 
-    static std::string couleur(Couleur _couleur);
-    Couleur getCouleur() { return m_Couleur; }
+    static std::string nomCouleur(Couleur _couleur);
+    Couleur couleur() { return m_Couleur; }
     Valeur getValeur() { return m_Valeur; }
     bool isTrump() { return m_Trump; }
     void setTrump(bool _trump) { m_Trump = _trump; }
@@ -68,7 +68,7 @@ public:
 
     // true if given card is better
     bool isBetter(Carte &_card);
-    std::string couleur();
+    std::string nomCouleur();
     std::string nom();
 
 private:

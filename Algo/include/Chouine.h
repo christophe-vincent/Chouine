@@ -101,8 +101,8 @@ public:
       return m_Joueurs[_player].GetWinCartes();
    }
    */
-    Carte::Couleur couleurAtout();
-    std::string atout() { return Carte::couleur(m_Atout);}
+    Carte::Couleur couleurAtout() { return m_Atout; };
+    std::string atout() { return Carte::nomCouleur(m_Atout);}
     /*  Carte* GetTrumpCarte() { return m_Pick.getTrumpCarte(); }
    Announce* getJoueurLatestAnnounce(int _player)
    {

@@ -29,6 +29,15 @@ string getCardcolor(int _id)
     return ret;
 }
 
+bool testChoix(string _choix)
+{
+    if ( (_choix == "erreur") || (_choix == "fin"))
+    {
+        return true;
+    }
+    return false;
+}
+
 int main()
 {
     Chouine chouine(0, 0);
@@ -39,21 +48,33 @@ int main()
     
     cout << "Atout : " << chouine.atout() << endl;
     cout << "Joueur 1: " << joueur1.main() << endl;
-    cout << "Joueur 2: " << joueur2.main() << endl; 
+    cout << "Joueur 2: " << joueur2.main() << endl;
+    string choix;
+    bool stop = false;
+    int tour = 0;
     
-    cout << "TOUR 1" << endl;
-    if (chouine.gagnantPli() == Chouine::JOUEUR_1)
+    while (! stop)
     {
-        cout << "Choix Joueur 1 : " << chouine.choixJoueur(Chouine::JOUEUR_1) << endl;
-        cout << "Choix Joueur 2 : " << chouine.choixJoueur(Chouine::JOUEUR_2) << endl;
-    } else
-    {
-        cout << "Choix Joueur 2 : " << chouine.choixJoueur(Chouine::JOUEUR_2) << endl;
-        cout << "Choix Joueur 1 : " << chouine.choixJoueur(Chouine::JOUEUR_1) << endl;
+        tour ++;
+        cout << "TOUR " << tour << endl;
+        if (chouine.gagnantPli() == Chouine::JOUEUR_1)
+        {
+            choix = chouine.choixJoueur(Chouine::JOUEUR_1);
+            stop = testChoix(choix);
+            cout << "Choix Joueur 1 : " << choix << endl;
+            choix = chouine.choixJoueur(Chouine::JOUEUR_2);
+            stop |= testChoix(choix);
+            cout << "Choix Joueur 2 : " << choix << endl;
+        } else
+        {
+            choix = chouine.choixJoueur(Chouine::JOUEUR_2);
+            stop = testChoix(choix);
+            cout << "Choix Joueur 2 : " << choix << endl;
+            choix = chouine.choixJoueur(Chouine::JOUEUR_1);
+            stop |= testChoix(choix);
+            cout << "Choix Joueur 1 : " << choix << endl;        
+        }
     }
-    
-    cout << "Joueur 1: " << joueur1.main() << endl;
-    cout << "Joueur 2: " << joueur2.main() << endl; 
     
     return 0;
 }

@@ -164,7 +164,7 @@ Carte *Joueur::EmptyPickSimulation(Carte &_userChoice)
     CarteList couleurList;
 
     // we must play a higher card
-    m_Cartes.getCouleurSubset(_userChoice.getCouleur(), couleurList);
+    m_Cartes.getCouleurSubset(_userChoice.couleur(), couleurList);
 
     playCarte = couleurList.getHigherCarte(_userChoice);
     if (playCarte == nullptr)

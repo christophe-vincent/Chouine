@@ -1,4 +1,6 @@
 #include <iostream>
+#include <random>
+#include <chrono>
 #include <algorithm>
 #include "ListeCartes.h"
 #include "Annonce.h"
@@ -39,7 +41,10 @@ void CarteList::remove(Carte *_card)
 
 void CarteList::shuffle()
 {
-    random_shuffle(m_Cartes.begin(), m_Cartes.end());
+    auto seed = chrono::high_resolution_clock::now().time_since_epoch().count();
+    std::mt19937 mt(seed);
+    
+    std::shuffle(m_Cartes.begin(), m_Cartes.end(), mt);
 }
 
 // return first card and remove it from list (like we we pick a card)
@@ -104,7 +109,7 @@ void CarteList::getCouleurSubset(Carte::Couleur _couleur, CarteList &_list)
     auto it = m_Cartes.begin();
     while (it != m_Cartes.end())
     {
-        if ((*it)->getCouleur() == _couleur)
+        if ((*it)->couleur() == _couleur)
         {
             _list.add(*it);
         }
@@ -164,7 +169,7 @@ CarteList CarteList::getCartesFromList(Carte::Couleur _couleur)
 
     for (auto it = m_Cartes.begin(); it != m_Cartes.end(); it++)
     {
-        if ((*it)->getCouleur() == _couleur)
+        if ((*it)->couleur() == _couleur)
         {
             ret.add(*it);
         }
@@ -178,7 +183,7 @@ Carte *CarteList::getCarteFromList(Carte::Couleur _couleur, Carte::Valeur _value
 
     for (auto it = m_Cartes.begin(); it != m_Cartes.end(); it++)
     {
-        if (((*it)->getValeur() == _value) && ((*it)->getCouleur() == _couleur))
+        if (((*it)->getValeur() == _value) && ((*it)->couleur() == _couleur))
         {
             ret = *it;
         }
@@ -261,7 +266,7 @@ void CarteList::newCarteStatistics(Carte &_card)
         create = true;
         for (auto ann = m_AnnoncesStats.begin(); ann != m_AnnoncesStats.end(); ann++)
         {
-            if (((*ann)->couleur() == _card.getCouleur()) && ((*ann)->type() == *it))
+            if (((*ann)->couleur() == _card.couleur()) && ((*ann)->type() == *it))
             {
                 // great the annouce is already known
                 (*ann)->ajouterCarte(_card);
@@ -275,7 +280,7 @@ void CarteList::newCarteStatistics(Carte &_card)
             // announce has not been created, create a new one
             CarteList cl = CarteList(&_card);
             Annonce *announce = new Annonce(
-                _card.getCouleur(),
+                _card.couleur(),
                 *it,
                 _card.isTrump(),
                 cl);
@@ -298,7 +303,7 @@ void CarteList::removeCarteStatistics(Carte &_card)
         // search in the list if this announce has already statistics
         for (auto ann = m_AnnoncesStats.begin(); ann != m_AnnoncesStats.end(); ann++)
         {
-            if (((*ann)->couleur() == _card.getCouleur()) && ((*ann)->type() == *it))
+            if (((*ann)->couleur() == _card.couleur()) && ((*ann)->type() == *it))
             {
                 // great the annouce is already known
                 (*ann)->supprimerCarte(_card);
@@ -317,5 +322,4 @@ std::string CarteList::cartes()
         cartes += (*it)->nom() + " ";
     }
     return cartes;
-
 }

@@ -132,10 +132,10 @@ bool Annonce::chouine(CarteList &_list)
         return false;
 
     // first check that all carte have the same couleur
-    couleur = _list[0]->getCouleur();
+    couleur = _list[0]->couleur();
     for (unsigned int i = 1; i < _list.size(); i++)
     {
-        if (_list[i]->getCouleur() != couleur)
+        if (_list[i]->couleur() != couleur)
         {
             return false;
         }
@@ -168,7 +168,7 @@ set<Annonce *> Annonce::annonces(
 
     if (chouine(_list))
     {
-        ann = new Annonce(_list[0]->getCouleur(),
+        ann = new Annonce(_list[0]->couleur(),
                           TypeAnnonce::CHOUINE,
                           _list[0]->isTrump(),
                           _list);
