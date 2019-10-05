@@ -42,14 +42,14 @@ Annonce::~Annonce()
 
 void Annonce::ajouterCarte(Carte &_carte)
 {
-    m_Cartes.add(&_carte);
+    m_Cartes.ajouter(&_carte);
     // increase the score
     //TODO computeScore();
 }
 
 void Annonce::supprimerCarte(Carte &_carte)
 {
-    m_Cartes.remove(&_carte);
+    m_Cartes.supprimer(&_carte);
 }
 
 /*void Annonce::computeScore()
@@ -170,7 +170,7 @@ set<Annonce *> Annonce::annonces(
     {
         ann = new Annonce(_list[0]->couleur(),
                           TypeAnnonce::CHOUINE,
-                          _list[0]->isTrump(),
+                          _list[0]->atout(),
                           _list);
         *_isChouine = true;
         ret.insert(ann);
@@ -202,19 +202,19 @@ set<Annonce *> Annonce::annonces(
         if (quarante(couleurList))
         {
             ann = new Annonce(couleur, TypeAnnonce::QUARANTE,
-                              _list[0]->isTrump(), cartes);
+                              _list[0]->atout(), cartes);
             ret.insert(ann);
         }
         else if (tierce(couleurList))
         {
             ann = new Annonce(couleur, TypeAnnonce::TIERCE,
-                              _list[0]->isTrump(), cartes);
+                              _list[0]->atout(), cartes);
             ret.insert(ann);
         }
         else if (mariage(couleurList))
         {
             ann = new Annonce(couleur, TypeAnnonce::MARIAGE,
-                              _list[0]->isTrump(), cartes);
+                              _list[0]->atout(), cartes);
             ret.insert(ann);
         }
     }

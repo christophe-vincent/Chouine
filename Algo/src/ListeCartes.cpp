@@ -16,23 +16,23 @@ CarteList::CarteList(Carte *_card) : m_isTrumpSeven(false)
     m_Cartes.push_back(_card);
 }
 
-void CarteList::add(Carte *_card)
+void CarteList::ajouter(Carte *_card)
 {
     //cout << _card->nom() << endl;
-    if ((_card->isTrump()) && (_card->getValeur() == Carte::SEPT))
+    if ((_card->atout()) && (_card->getValeur() == Carte::SEPT))
     {
         m_isTrumpSeven = true;
     }
     m_Cartes.push_back(_card);
 }
 
-void CarteList::remove(Carte *_card)
+void CarteList::supprimer(Carte *_card)
 {
     auto it = find(m_Cartes.begin(), m_Cartes.end(), _card);
     if (it != m_Cartes.end())
     {
         m_Cartes.erase(it);
-        if ((_card->isTrump()) && (_card->getValeur() == Carte::SEPT))
+        if ((_card->atout()) && (_card->getValeur() == Carte::SEPT))
         {
             m_isTrumpSeven = false;
         }
@@ -80,9 +80,9 @@ void CarteList::getTrumps(CarteList &_list)
     auto it = m_Cartes.begin();
     while (it != m_Cartes.end())
     {
-        if ((*it)->isTrump())
+        if ((*it)->atout())
         {
-            _list.add(*it);
+            _list.ajouter(*it);
         }
         it++;
     }
@@ -111,7 +111,7 @@ void CarteList::getCouleurSubset(Carte::Couleur _couleur, CarteList &_list)
     {
         if ((*it)->couleur() == _couleur)
         {
-            _list.add(*it);
+            _list.ajouter(*it);
         }
         it++;
     }
@@ -157,7 +157,7 @@ CarteList CarteList::getCartesFromList(Carte::Valeur _value)
     {
         if ((*it)->getValeur() == _value)
         {
-            ret.add(*it);
+            ret.ajouter(*it);
         }
     }
     return ret;
@@ -171,7 +171,7 @@ CarteList CarteList::getCartesFromList(Carte::Couleur _couleur)
     {
         if ((*it)->couleur() == _couleur)
         {
-            ret.add(*it);
+            ret.ajouter(*it);
         }
     }
     return ret;
@@ -226,10 +226,10 @@ Carte *CarteList::getHigherCarte(Carte &_card)
 {
     Carte *card = nullptr;
     auto it = m_Cartes.begin();
-    while ((it != m_Cartes.end()) && (!(*it)->isBetter(_card)))
+    while ((it != m_Cartes.end()) && (!(*it)->compare(_card)))
         it++;
 
-    if ((it != m_Cartes.end()) && (!(*it)->isBetter(_card)))
+    if ((it != m_Cartes.end()) && (!(*it)->compare(_card)))
     {
         // we found the card !
         card = *it;
@@ -282,7 +282,7 @@ void CarteList::newCarteStatistics(Carte &_card)
             Annonce *announce = new Annonce(
                 _card.couleur(),
                 *it,
-                _card.isTrump(),
+                _card.atout(),
                 cl);
             m_AnnoncesStats.push_back(announce);
             //TODO _card->addProbableAnnonce(announce);

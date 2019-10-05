@@ -53,8 +53,8 @@ public:
     static std::string nomCouleur(Couleur _couleur);
     Couleur couleur() { return m_Couleur; }
     Valeur getValeur() { return m_Valeur; }
-    bool isTrump() { return m_Trump; }
-    void setTrump(bool _trump) { m_Trump = _trump; }
+    bool atout() { return m_Atout; }
+    void atout(bool _trump) { m_Atout = _trump; }
     //Announce* getAnnounce()                            { return m_Announce; }
     //void setAnnounce(Announce *_ann)                   { m_Announce = _ann; }
     //set<Announce*> getProbableAnnounces()              { return m_ProbableAnnounce; }
@@ -66,15 +66,15 @@ public:
     //void addProbableAnnounce(Announce* _announce);
     //void removeProbableAnnounce(Announce* _announce);
 
-    // true if given card is better
-    bool isBetter(Carte &_card);
+    // vrai si la carte en argument est plus forte
+    bool compare(Carte &_card);
     std::string nomCouleur();
     std::string nom();
 
 private:
     Couleur m_Couleur;
     Valeur m_Valeur;
-    bool m_Trump;
+    bool m_Atout;
     //Announce *m_Announce;
     //set<Announce*> m_ProbableAnnounce;
     //set<Announce::AnnounceType> m_Announcetypes;

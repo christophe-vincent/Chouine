@@ -39,6 +39,7 @@ public:
     int getPoints() { return m_CartesGagnees.getPoints(); }
     int get10Der() { return m_10Der; }
     set<Annonce *> getAnnouces() { return m_Annonces; }
+    Carte* carteJouee() { return m_CarteJouee; }
 
     string main();
     Carte *getCarte(unsigned int _index);
@@ -47,6 +48,9 @@ public:
     Status addCarte(Carte &_card);
     Annonce *newAnnonce(set<int> _list);
     Carte* choisirCarte(Carte *_enemyChoice);
+    void pliGagnant(Carte& _carteAdversaire);
+    void pliPerdant(Carte& _carteAdversaire);
+
     Carte *getSmallestTrump();
     int trumpNumber();
     bool replaceTrumpCarte(Carte *_newCarte);
@@ -72,6 +76,7 @@ private:
     int m_Niveau;
     int m_10Der;
     Algorithme m_Algo;
+    Carte *m_CarteJouee;
 };
 
 #endif

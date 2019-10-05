@@ -11,6 +11,7 @@ m_Chouine(_chouine), m_Algo(_niveau, *this), m_Niveau(_niveau)
     m_LatestAnnonce = nullptr;
     m_Change7Trump = false;
     m_IsChouine = false;
+    m_CarteJouee = nullptr;
 }
 
 Joueur::~Joueur()
@@ -34,8 +35,8 @@ Carte *Joueur::getCarte(unsigned int _index)
 
 void Joueur::ajouterCartesGagneesAdversaire(Carte *_c1, Carte *_c2)
 {
-    m_CartesGagneesAdversaire.add(_c1);
-    m_CartesGagneesAdversaire.add(_c2);
+    m_CartesGagneesAdversaire.ajouter(_c1);
+    m_CartesGagneesAdversaire.ajouter(_c2);
 }
 
 bool Joueur::hasChange7Trump()
@@ -59,11 +60,11 @@ Status Joueur::addCarte(Carte &_card)
 
     if (m_Cartes.size() == 0)
     {
-        m_Cartes.add(&_card);
+        m_Cartes.ajouter(&_card);
         return Status::OK;
     }
 
-    m_Cartes.add(&_card);
+    m_Cartes.ajouter(&_card);
 
     return Status::OK;
 }
@@ -78,7 +79,7 @@ bool Joueur::replaceTrumpCarte(Carte *_newCarte)
     if (card != nullptr)
     {
         // ok, the user has the trump 7
-        m_Cartes.remove(card);
+        m_Cartes.supprimer(card);
         m_Cartes.removeCarteStatistics(*_newCarte);
 
         // now insert the new card
@@ -97,7 +98,7 @@ Annonce *Joueur::newAnnonce(set<int> _list)
     // first find cards
     for (auto it = _list.begin(); it != _list.end(); it++)
     {
-        cards.add(m_Cartes[*it]);
+        cards.ajouter(m_Cartes[*it]);
     }
 
     announces = Annonce::annonces(cards, m_Annonces, &m_IsChouine);
@@ -120,9 +121,29 @@ Carte* Joueur::choisirCarte(Carte *_carteAdversaire)
     }
     else
     {
-        return m_Algo.choisirCarte();
+        m_CarteJouee = m_Algo.choisirCarte();
+        return m_CarteJouee;
     }    
     return nullptr;
+}
+
+
+void Joueur::pliGagnant(Carte& _carteAdversaire)
+{
+    m_CartesGagnees.ajouter(&_carteAdversaire);
+    m_CartesGagnees.ajouter(m_CarteJouee);
+    m_Cartes.supprimer(m_CarteJouee);
+    m_CarteJouee = nullptr;
+    m_Cartes.ajouter(m_Chouine.pioche().getLastCarte());
+}
+
+void Joueur::pliPerdant(Carte& _carteAdversaire)
+{
+    m_CartesGagneesAdversaire.ajouter(m_CarteJouee);
+    m_CartesGagneesAdversaire.ajouter(&_carteAdversaire);
+    m_Cartes.supprimer(m_CarteJouee);
+    m_CarteJouee = nullptr;
+    m_Cartes.ajouter(m_Chouine.pioche().getLastCarte());
 }
 
 Carte *Joueur::getSmallestTrump()
@@ -170,7 +191,7 @@ Carte *Joueur::EmptyPickSimulation(Carte &_userChoice)
     if (playCarte == nullptr)
     {
         // play trump if user card is not trump...
-        if (!_userChoice.isTrump())
+        if (!_userChoice.atout())
         {
             CarteList trumpList;
             m_Cartes.getCouleurSubset(m_Chouine.couleurAtout(), trumpList);
@@ -191,7 +212,7 @@ bool Joueur::isCarteAllowed(Carte &_card, Carte &_otherCarte)
         return true;
     }
 
-    if (_otherCarte.isBetter(_card))
+    if (_otherCarte.compare(_card))
     {
         // played card is better than other Joueur : it is allowed
         return true;
@@ -212,7 +233,7 @@ bool Joueur::isCarteAllowed(Carte &_card, Carte &_otherCarte)
 Status Joueur::PlayCarte(Carte &_card)
 {
     m_Cartes.removeCarteStatistics(_card);
-    m_Cartes.remove(&_card);
+    m_Cartes.supprimer(&_card);
     return Status::OK;
 }
 
@@ -222,8 +243,8 @@ Status Joueur::ajouterCartesGagnees(Carte &_card1, Carte &_card2)
     {
         m_10Der = 10;
     }
-    m_CartesGagnees.add(&_card1);
-    m_CartesGagnees.add(&_card2);
+    m_CartesGagnees.ajouter(&_card1);
+    m_CartesGagnees.ajouter(&_card2);
     return Status::OK;
 }
 

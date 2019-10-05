@@ -12,8 +12,8 @@ public:
     CarteList();
     CarteList(Carte *_card);
 
-    void add(Carte *_card);
-    void remove(Carte *_card);
+    void ajouter(Carte *_card);
+    void supprimer(Carte *_card);
     void shuffle();
     Carte *piocheCarte();
     Carte *searchCarte(Carte::Valeur _value);

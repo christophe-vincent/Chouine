@@ -26,7 +26,7 @@ const Carte::Valeur Carte::ALL_VALUES[] =
         AS};
 const int Carte::NB_VALUES = 8;
 
-Carte::Carte(Couleur _couleur, Valeur _value, bool _trump) : m_Couleur(_couleur), m_Valeur(_value), m_Trump(_trump)
+Carte::Carte(Couleur _couleur, Valeur _value, bool _trump) : m_Couleur(_couleur), m_Valeur(_value), m_Atout(_trump)
 {
     //m_Announce = nullptr;
     m_Score = 0;
@@ -134,7 +134,7 @@ void Carte::removeProbableAnnounce(Announce *_announce)
     }
 }*/
 
-bool Carte::isBetter(Carte &_card)
+bool Carte::compare(Carte &_card)
 {
     bool ret;
 
@@ -152,7 +152,7 @@ bool Carte::isBetter(Carte &_card)
     }
     else
     {
-        if (_card.isTrump())
+        if (_card.atout())
         {
             ret = true;
         }

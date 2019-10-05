@@ -74,6 +74,7 @@ int main()
             stop |= testChoix(choix);
             cout << "Choix Joueur 1 : " << choix << endl;        
         }
+        chouine.finPli();
     }
     
     return 0;

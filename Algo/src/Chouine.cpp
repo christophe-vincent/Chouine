@@ -6,8 +6,7 @@
 
 using namespace std;
 
-Chouine::Chouine(int _niveauJoueur1, int _niveauJoueur2):
-m_Joueur1(*this, _niveauJoueur1), m_Joueur2(*this, _niveauJoueur2)
+Chouine::Chouine(int _niveauJoueur1, int _niveauJoueur2) : m_Joueur1(*this, _niveauJoueur1), m_Joueur2(*this, _niveauJoueur2)
 {
     m_Joueurs[0] = &m_Joueur1;
     m_Joueurs[1] = &m_Joueur2;
@@ -48,7 +47,7 @@ void Chouine::newGame()
     {
         for (auto v = 0; v < Carte::NB_VALUES; v++)
         {
-            m_Pioche.add(new Carte(
+            m_Pioche.ajouter(new Carte(
                 Carte::ALL_COLORS[c],
                 Carte::ALL_VALUES[v],
                 m_Atout == Carte::ALL_COLORS[c]));
@@ -134,9 +133,26 @@ bool Chouine::setJoueurChoice(int _player, int _choice)
         }
     }
 
-    // TODO : lancer la r�solution de la done ici
+    // TODO : lancer la résolution de la done ici
 
     return true;
+}
+
+Chouine::JOUEUR Chouine::finPli()
+{
+    if (m_Joueur1.carteJouee()->compare(*m_Joueur2.carteJouee()))
+    {
+        m_GagnantPli = JOUEUR_2;
+        m_Joueur2.pliGagnant(*m_Joueur1.carteJouee());
+        m_Joueur1.pliPerdant(*m_Joueur2.carteJouee());
+    }
+    else
+    {
+        m_GagnantPli = JOUEUR_1;
+        m_Joueur1.pliGagnant(*m_Joueur2.carteJouee());
+        m_Joueur2.pliPerdant(*m_Joueur1.carteJouee());
+    }
+    return m_GagnantPli;
 }
 
 /*
@@ -174,7 +190,7 @@ string Chouine::change7Trump(int _player)
    return cardSeven.displayName();
 }
 
-// return the player index that win
+// TODO : A supprimer
 int Chouine::Play()
 {
    int winner;

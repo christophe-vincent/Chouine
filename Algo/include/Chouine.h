@@ -67,12 +67,15 @@ public:
 
     Joueur& joueur(JOUEUR _id) { return *m_Joueurs[_id];};
     JOUEUR gagnantPli() { return m_GagnantPli;};
+    CarteList pioche() { return m_Pioche; }
     
     CarteId getJoueurCarte(int _player, int _card);
     bool piocheVide();
 
     string choixJoueur(JOUEUR _player);
     bool setJoueurChoice(int _player, int _choice);
+    JOUEUR finPli();
+
 
     /*string hasChange7Trump(int _player);
    string change7Trump(int _player);
