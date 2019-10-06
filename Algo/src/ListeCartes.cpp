@@ -18,6 +18,7 @@ CarteList::CarteList(Carte *_card) : m_isTrumpSeven(false)
 
 void CarteList::ajouter(Carte *_card)
 {
+    if (_card == nullptr) return;
     //cout << _card->nom() << endl;
     if ((_card->atout()) && (_card->getValeur() == Carte::SEPT))
     {
@@ -28,6 +29,7 @@ void CarteList::ajouter(Carte *_card)
 
 void CarteList::supprimer(Carte *_card)
 {
+    if (_card == nullptr) return;
     auto it = find(m_Cartes.begin(), m_Cartes.end(), _card);
     if (it != m_Cartes.end())
     {

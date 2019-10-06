@@ -11,7 +11,6 @@ Chouine::Chouine(int _niveauJoueur1, int _niveauJoueur2) : m_Joueur1(*this, _niv
     m_Joueurs[0] = &m_Joueur1;
     m_Joueurs[1] = &m_Joueur2;
     m_isChouine = false;
-    m_CarteJouee = nullptr;
 }
 
 Chouine::~Chouine()
@@ -58,8 +57,6 @@ void Chouine::newGame()
     m_Atout = m_Pioche.getLastCarte()->couleur();
     //cout << "Pioche : " << m_Pioche.cartes() << endl;
 
-    m_CarteJouee = nullptr;
-
     for (int i = 0; i < Joueur::MAX_CARDS; i++)
     {
         Carte *card = m_Pioche.piocheCarte();
@@ -92,16 +89,21 @@ string Chouine::choixJoueur(Chouine::JOUEUR _player)
     {
         // ce joueur joue le premier
         carte = m_Joueurs[_player]->choisirCarte(nullptr);
-        m_CarteJouee = carte;
+        if (carte == nullptr)
+        {
+            return ret;
+        }
     }
     else
     {
+        JOUEUR adversaire = _player == JOUEUR_1 ? JOUEUR_2 : JOUEUR_1;
+        Carte* carteAdversaire = m_Joueurs[adversaire]->carteJouee();
         // l'autre joueur a déjà joué
-        if (m_CarteJouee == nullptr)
+        if (carteAdversaire == nullptr)
         {
             return ret; // hum...
         }
-        carte = m_Joueurs[_player]->choisirCarte(m_CarteJouee);
+        carte = m_Joueurs[_player]->choisirCarte(carteAdversaire);
     }
 
     if (carte)
@@ -118,7 +120,7 @@ bool Chouine::setJoueurChoice(int _player, int _choice)
     {
         return false;
     }
-    Carte *card;
+   /* Carte *card;
     card = m_Joueurs[_player]->getCarte(_choice);
     if (card == nullptr)
     {
@@ -134,7 +136,7 @@ bool Chouine::setJoueurChoice(int _player, int _choice)
     }
 
     // TODO : lancer la résolution de la done ici
-
+*/
     return true;
 }
 
@@ -143,17 +145,25 @@ Chouine::JOUEUR Chouine::finPli()
     if (m_Joueur1.carteJouee()->compare(*m_Joueur2.carteJouee()))
     {
         m_GagnantPli = JOUEUR_2;
+        Carte* carteJoueur2 = m_Joueur2.carteJouee();
         m_Joueur2.pliGagnant(*m_Joueur1.carteJouee());
-        m_Joueur1.pliPerdant(*m_Joueur2.carteJouee());
+        m_Joueur1.pliPerdant(*carteJoueur2);
     }
     else
     {
         m_GagnantPli = JOUEUR_1;
+        Carte* carteJoueur1 = m_Joueur1.carteJouee();
         m_Joueur1.pliGagnant(*m_Joueur2.carteJouee());
-        m_Joueur2.pliPerdant(*m_Joueur1.carteJouee());
+        m_Joueur2.pliPerdant(*carteJoueur1);
     }
     return m_GagnantPli;
 }
+
+bool Chouine::finPartie() 
+{ 
+    return (m_Pioche.size() + m_Joueur1.cartes().size() ) == 0 ? true : false;
+}
+
 
 /*
 string Chouine::hasChange7Trump(int _player)

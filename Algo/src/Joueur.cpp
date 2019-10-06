@@ -1,8 +1,11 @@
+#include <iostream>
 #include "Joueur.h"
 #include "Chouine.h"
 #include "Algorithme.h"
 
 const int Joueur::MAX_CARDS = 5;
+
+using namespace std;
 
 Joueur::Joueur(Chouine& _chouine, int _niveau):
 m_Chouine(_chouine), m_Algo(_niveau, *this), m_Niveau(_niveau)
@@ -117,11 +120,12 @@ Carte* Joueur::choisirCarte(Carte *_carteAdversaire)
 {
     if (m_Chouine.piocheVide())
     {
-        // TODO
+        m_CarteJouee = m_Algo.choisirCartePiocheVide(_carteAdversaire);
+        return m_CarteJouee;
     }
     else
     {
-        m_CarteJouee = m_Algo.choisirCarte();
+        m_CarteJouee = m_Algo.choisirCarte(_carteAdversaire);
         return m_CarteJouee;
     }    
     return nullptr;
@@ -134,7 +138,8 @@ void Joueur::pliGagnant(Carte& _carteAdversaire)
     m_CartesGagnees.ajouter(m_CarteJouee);
     m_Cartes.supprimer(m_CarteJouee);
     m_CarteJouee = nullptr;
-    m_Cartes.ajouter(m_Chouine.pioche().getLastCarte());
+    Carte* pioche = m_Chouine.pioche().piocheCarte();
+    m_Cartes.ajouter(pioche);    
 }
 
 void Joueur::pliPerdant(Carte& _carteAdversaire)
@@ -143,7 +148,8 @@ void Joueur::pliPerdant(Carte& _carteAdversaire)
     m_CartesGagneesAdversaire.ajouter(&_carteAdversaire);
     m_Cartes.supprimer(m_CarteJouee);
     m_CarteJouee = nullptr;
-    m_Cartes.ajouter(m_Chouine.pioche().getLastCarte());
+    Carte* pioche = m_Chouine.pioche().piocheCarte();
+    m_Cartes.ajouter(pioche);
 }
 
 Carte *Joueur::getSmallestTrump()

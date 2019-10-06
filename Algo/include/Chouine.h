@@ -67,7 +67,7 @@ public:
 
     Joueur& joueur(JOUEUR _id) { return *m_Joueurs[_id];};
     JOUEUR gagnantPli() { return m_GagnantPli;};
-    CarteList pioche() { return m_Pioche; }
+    CarteList& pioche() { return m_Pioche; }
     
     CarteId getJoueurCarte(int _player, int _card);
     bool piocheVide();
@@ -75,6 +75,7 @@ public:
     string choixJoueur(JOUEUR _player);
     bool setJoueurChoice(int _player, int _choice);
     JOUEUR finPli();
+    bool finPartie();
 
 
     /*string hasChange7Trump(int _player);
@@ -145,7 +146,6 @@ private:
     Joueur m_Joueur2;
     array<Joueur *, 2> m_Joueurs;
     array<int, 2> m_JoueurLevel;
-    Carte *m_CarteJouee;
     CarteList m_Pioche;
     JOUEUR m_GagnantPli;
     bool m_isChouine;

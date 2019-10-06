@@ -10,8 +10,12 @@ Carte* Algorithme::choisirCarte()
     return nullptr;
 }
 
-Carte* Algorithme::choisirCarte(Carte &_choixAdversaire)
+Carte* Algorithme::choisirCarte(Carte *_choixAdversaire)
 {
+    if (_choixAdversaire == nullptr)
+    {
+        return choisirCarte();
+    }
     if (m_Niveau == 0)
     {
         return m_Joueur.cartes().plusFaible();
@@ -21,11 +25,15 @@ Carte* Algorithme::choisirCarte(Carte &_choixAdversaire)
 
 Carte* Algorithme::choisirCartePiocheVide()
 {
-    return nullptr;
+    return m_Joueur.cartes().plusFaible();
 }
 
-Carte* Algorithme::choisirCartePiocheVide(Carte &_choixAdversaire)
+Carte* Algorithme::choisirCartePiocheVide(Carte *_choixAdversaire)
 {
-    return nullptr;
+    if (_choixAdversaire == nullptr)
+    {
+        return choisirCartePiocheVide();
+    }
+    return m_Joueur.cartes().plusFaible();
 }
     

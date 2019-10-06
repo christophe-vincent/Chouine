@@ -47,8 +47,7 @@ int main()
     Joueur joueur2 = chouine.joueur(Chouine::JOUEUR_2);
     
     cout << "Atout : " << chouine.atout() << endl;
-    cout << "Joueur 1: " << joueur1.main() << endl;
-    cout << "Joueur 2: " << joueur2.main() << endl;
+    
     string choix;
     bool stop = false;
     int tour = 0;
@@ -56,7 +55,11 @@ int main()
     while (! stop)
     {
         tour ++;
+        cout << endl;
         cout << "TOUR " << tour << endl;
+        cout << "Pioche  : " << chouine.pioche().cartes() << endl;
+        cout << "Joueur 1: " << joueur1.main() << endl;
+        cout << "Joueur 2: " << joueur2.main() << endl;
         if (chouine.gagnantPli() == Chouine::JOUEUR_1)
         {
             choix = chouine.choixJoueur(Chouine::JOUEUR_1);
@@ -74,7 +77,12 @@ int main()
             stop |= testChoix(choix);
             cout << "Choix Joueur 1 : " << choix << endl;        
         }
-        chouine.finPli();
+        if (! stop)
+        {
+            chouine.finPli();
+            stop = chouine.finPartie();
+        }
+        //if (tour > 3) stop = true;
     }
     
     return 0;

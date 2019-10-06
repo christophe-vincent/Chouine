@@ -11,9 +11,9 @@ public:
      m_Niveau(_niveau), m_Joueur(_joueur) {};
 
     Carte* choisirCarte();
-    Carte* choisirCarte(Carte &_choixAdversaire);
+    Carte* choisirCarte(Carte *_choixAdversaire);
     Carte* choisirCartePiocheVide();
-    Carte* choisirCartePiocheVide(Carte &_choixAdversaire);
+    Carte* choisirCartePiocheVide(Carte *_choixAdversaire);
     
 
 private:
