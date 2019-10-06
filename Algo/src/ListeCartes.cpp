@@ -106,6 +106,37 @@ Carte *CarteList::plusFaible()
     return plusFaible;
 }
 
+
+Carte* CarteList::choisirPlusForte(Carte* _carte)
+{
+    Carte* carte = nullptr; 
+
+    for (auto it=m_Cartes.begin(); it!=m_Cartes.end(); ++it)
+    {
+        if (_carte->compare(**it))
+        {
+            if (carte == nullptr)
+            {
+                carte = *it;
+            }
+            else
+            {
+                if ((*it)->compare(*carte))
+                {
+                    // la carte choisie precedement est plus forte
+                    carte = *it;
+                }
+            }            
+        }
+    }
+    if (carte == nullptr)
+    {
+        carte = plusFaible();
+    }
+    return carte;
+}
+
+
 void CarteList::getCouleurSubset(Carte::Couleur _couleur, CarteList &_list)
 {
     auto it = m_Cartes.begin();

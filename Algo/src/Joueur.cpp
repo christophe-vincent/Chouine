@@ -168,23 +168,6 @@ int Joueur::trumpNumber()
     return list.size();
 }
 
-Carte *Joueur::EmptyPickSimulation(CarteList &_cards)
-{
-    Carte *playCarte;
-
-    if (m_Niveau > 5)
-    {
-        // TODO
-        playCarte = bruteForceAttack(_cards);
-    }
-    else
-    {
-        playCarte = m_Cartes.plusFaible();
-    }
-
-    return playCarte;
-}
-
 Carte *Joueur::EmptyPickSimulation(Carte &_userChoice)
 {
     Carte *playCarte;

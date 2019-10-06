@@ -60,7 +60,6 @@ public:
     Carte *bruteForceAttack(CarteList &_hisCartes);
 
 protected:
-    Carte *EmptyPickSimulation(CarteList &_cards);
     Carte *EmptyPickSimulation(Carte &_userChoice);
 
     bool m_IsChouine;

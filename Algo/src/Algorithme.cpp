@@ -34,6 +34,8 @@ Carte* Algorithme::choisirCartePiocheVide(Carte *_choixAdversaire)
     {
         return choisirCartePiocheVide();
     }
-    return m_Joueur.cartes().plusFaible();
+
+    Carte* carte = m_Joueur.cartes().choisirPlusForte(_choixAdversaire);
+    return carte;
 }
     

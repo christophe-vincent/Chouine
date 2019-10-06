@@ -134,6 +134,7 @@ void Carte::removeProbableAnnounce(Announce *_announce)
     }
 }*/
 
+// Vrai si _carte est supérieure
 bool Carte::compare(Carte &_card)
 {
     bool ret;
@@ -182,7 +183,7 @@ string Carte::nomCouleur()
         couleur += "PIC";
         break;
     default:
-        couleur += "ERR";
+        couleur += "E";
     }
     return couleur;
 }
@@ -218,7 +219,7 @@ string Carte::nom()
         valeur = "As_";
         break;
     default:
-        valeur = "ERR";
+        valeur = "E_";
         break;
     }
 

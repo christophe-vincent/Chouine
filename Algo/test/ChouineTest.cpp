@@ -31,7 +31,7 @@ string getCardcolor(int _id)
 
 bool testChoix(string _choix)
 {
-    if ( (_choix == "erreur") || (_choix == "fin"))
+    if ( (_choix == "erreur") || (_choix == "fin") || (_choix == "E_E"))
     {
         return true;
     }
@@ -43,8 +43,8 @@ int main()
     Chouine chouine(0, 0);
 
     chouine.newGame();
-    Joueur joueur1 = chouine.joueur(Chouine::JOUEUR_1);
-    Joueur joueur2 = chouine.joueur(Chouine::JOUEUR_2);
+    Joueur& joueur1 = chouine.joueur(Chouine::JOUEUR_1);
+    Joueur& joueur2 = chouine.joueur(Chouine::JOUEUR_2);
     
     cout << "Atout : " << chouine.atout() << endl;
     
