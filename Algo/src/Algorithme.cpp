@@ -3,20 +3,24 @@
 
 Carte* Algorithme::choisirCarte()
 {
-    if (m_Niveau == 0)
-    {
-        return m_Joueur.cartes().plusFaible();
-    }
-    return nullptr;
+    return m_Joueur.cartes().plusFaible();
 }
 
 Carte* Algorithme::choisirCarte(Carte *_choixAdversaire)
 {
+    Carte *choix = nullptr;
     if (_choixAdversaire == nullptr)
     {
         return choisirCarte();
     }
-    if (m_Niveau == 0)
+    if (m_Niveau > 0)
+    {
+        if (_choixAdversaire->brisque())
+        {
+            choix = m_Joueur.cartes().choisirPlusForte(_choixAdversaire);
+        }
+    }
+    if (choix == nullptr)
     {
         return m_Joueur.cartes().plusFaible();
     }

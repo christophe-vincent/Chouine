@@ -165,6 +165,13 @@ bool Chouine::finPartie()
 }
 
 
+int Chouine::pointsJoueur(JOUEUR _joueur)
+{
+    return m_Joueurs[_joueur]->getPoints();
+}
+
+
+
 /*
 string Chouine::hasChange7Trump(int _player)
 {

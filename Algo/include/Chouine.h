@@ -77,6 +77,8 @@ public:
     JOUEUR finPli();
     bool finPartie();
 
+    int pointsJoueur(JOUEUR _joueur);
+
 
     /*string hasChange7Trump(int _player);
    string change7Trump(int _player);

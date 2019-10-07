@@ -38,9 +38,13 @@ bool testChoix(string _choix)
     return false;
 }
 
-int main()
+void partie(bool _trace,
+            unsigned int _niveauJoueur1,
+            unsigned int _niveauJoueur2, 
+            int& _pointsJoueur1, 
+            int& _pointsJoueur2)
 {
-    Chouine chouine(0, 0);
+    Chouine chouine(_niveauJoueur1, _niveauJoueur2);
 
     chouine.newGame();
     Joueur& joueur1 = chouine.joueur(Chouine::JOUEUR_1);
@@ -84,6 +88,19 @@ int main()
         }
         //if (tour > 3) stop = true;
     }
-    
+    _pointsJoueur1 = chouine.pointsJoueur(Chouine::JOUEUR_1);
+    _pointsJoueur2 = chouine.pointsJoueur(Chouine::JOUEUR_2);
+}
+
+
+int main()
+{
+    unsigned int niveau1 = 0;
+    unsigned int niveau2 = 1;
+    int points1;
+    int points2;
+    partie(true, niveau1, niveau2, points1, points2);
+    cout << "Points joueur 1 : " << points1 << endl;
+    cout << "Points joueur 2 : " << points2 << endl;
     return 0;
 }

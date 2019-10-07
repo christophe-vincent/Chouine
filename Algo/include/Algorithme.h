@@ -4,6 +4,10 @@
 class Joueur;
 class Carte;
 
+// Niveaux:
+// 0 : Carte la plus faible
+// 1 : Prend les brisque de l'adversaire
+
 class Algorithme
 {
 public:

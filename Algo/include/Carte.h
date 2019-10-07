@@ -55,6 +55,7 @@ public:
     Valeur getValeur() { return m_Valeur; }
     bool atout() { return m_Atout; }
     void atout(bool _trump) { m_Atout = _trump; }
+    bool brisque();
     //Announce* getAnnounce()                            { return m_Announce; }
     //void setAnnounce(Announce *_ann)                   { m_Announce = _ann; }
     //set<Announce*> getProbableAnnounces()              { return m_ProbableAnnounce; }

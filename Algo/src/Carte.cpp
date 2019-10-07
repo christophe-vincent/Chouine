@@ -85,6 +85,15 @@ std::string Carte::nomCouleur(Couleur _couleur)
     return "erreur";
 }
 
+bool Carte::brisque()
+{
+    if ( (m_Valeur == AS) || (m_Valeur == DIX) )
+    {
+        return true;
+    }
+    return false;
+}
+
 int Carte::getPoints()
 {
     int points;
