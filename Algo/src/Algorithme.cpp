@@ -17,14 +17,15 @@ Carte* Algorithme::choisirCarte(Carte *_choixAdversaire)
     {
         if (_choixAdversaire->brisque())
         {
+            printf("%p\n", &m_Joueur);
             choix = m_Joueur.cartes().choisirPlusForte(_choixAdversaire);
         }
     }
     if (choix == nullptr)
     {
-        return m_Joueur.cartes().plusFaible();
+        choix = m_Joueur.cartes().plusFaible();
     }
-    return nullptr;
+    return choix;
 }
 
 Carte* Algorithme::choisirCartePiocheVide()

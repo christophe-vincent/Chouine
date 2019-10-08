@@ -6,7 +6,9 @@
 
 using namespace std;
 
-Chouine::Chouine(int _niveauJoueur1, int _niveauJoueur2) : m_Joueur1(*this, _niveauJoueur1), m_Joueur2(*this, _niveauJoueur2)
+Chouine::Chouine(int _niveauJoueur1, int _niveauJoueur2) : 
+m_Joueur1(*this, _niveauJoueur1), 
+m_Joueur2(*this, _niveauJoueur2)
 {
     m_Joueurs[0] = &m_Joueur1;
     m_Joueurs[1] = &m_Joueur2;

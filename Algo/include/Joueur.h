@@ -41,7 +41,8 @@ public:
     set<Annonce *> getAnnouces() { return m_Annonces; }
     Carte* carteJouee() { return m_CarteJouee; }
 
-    string main();
+    string nomCartesMain();
+    string nomCartesGagnees();
     Carte *getCarte(unsigned int _index);
     void ajouterCartesGagneesAdversaire(Carte *_c1, Carte *_c2);
     bool hasChange7Trump();

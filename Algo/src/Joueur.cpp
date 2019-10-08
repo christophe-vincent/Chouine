@@ -22,10 +22,17 @@ Joueur::~Joueur()
 }
 
 // retourne la main du joueur en chaine
-string Joueur::main()
+string Joueur::nomCartesMain()
 {
     return m_Cartes.cartes();
 }
+
+// carte gagnees
+string Joueur::nomCartesGagnees()
+{
+    return m_CartesGagnees.cartes();
+}
+
 
 Carte *Joueur::getCarte(unsigned int _index)
 {

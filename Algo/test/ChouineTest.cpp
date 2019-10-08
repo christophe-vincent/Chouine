@@ -2,9 +2,25 @@
 //
 
 #include <iostream>
+#include <sstream>
 #include "Chouine.h"
 #include "Joueur.h"
 using namespace std;
+
+bool verbose = true;
+void log(){}
+
+
+template<typename First, typename ...Rest>
+void log(First && first, Rest && ...rest)
+{
+    if (verbose)
+    {
+        std::cout << std::forward<First>(first);
+        log(std::forward<Rest>(rest)...);
+    }
+}
+
 
 string getCardcolor(int _id)
 {
@@ -38,8 +54,7 @@ bool testChoix(string _choix)
     return false;
 }
 
-void partie(bool _trace,
-            unsigned int _niveauJoueur1,
+void partie(unsigned int _niveauJoueur1,
             unsigned int _niveauJoueur2, 
             int& _pointsJoueur1, 
             int& _pointsJoueur2)
@@ -50,7 +65,7 @@ void partie(bool _trace,
     Joueur& joueur1 = chouine.joueur(Chouine::JOUEUR_1);
     Joueur& joueur2 = chouine.joueur(Chouine::JOUEUR_2);
     
-    cout << "Atout : " << chouine.atout() << endl;
+    log("Atout : ", chouine.atout(), "\n");
     
     string choix;
     bool stop = false;
@@ -59,27 +74,26 @@ void partie(bool _trace,
     while (! stop)
     {
         tour ++;
-        cout << endl;
-        cout << "TOUR " << tour << endl;
-        cout << "Pioche  : " << chouine.pioche().cartes() << endl;
-        cout << "Joueur 1: " << joueur1.main() << endl;
-        cout << "Joueur 2: " << joueur2.main() << endl;
+        log("TOUR ", tour, "\n");
+        log("Pioche  : ", chouine.pioche().cartes(), "\n");
+        log("Joueur 1: ", joueur1.nomCartesMain(), "\n");
+        log("Joueur 2: ", joueur2.nomCartesMain(), "\n");
         if (chouine.gagnantPli() == Chouine::JOUEUR_1)
         {
             choix = chouine.choixJoueur(Chouine::JOUEUR_1);
             stop = testChoix(choix);
-            cout << "Choix Joueur 1 : " << choix << endl;
+            log("Choix Joueur 1 : ", choix, "\n");
             choix = chouine.choixJoueur(Chouine::JOUEUR_2);
             stop |= testChoix(choix);
-            cout << "Choix Joueur 2 : " << choix << endl;
+            log("Choix Joueur 2 : ", choix, "\n");
         } else
         {
             choix = chouine.choixJoueur(Chouine::JOUEUR_2);
             stop = testChoix(choix);
-            cout << "Choix Joueur 2 : " << choix << endl;
+            log("Choix Joueur 2 : ", choix, "\n");
             choix = chouine.choixJoueur(Chouine::JOUEUR_1);
             stop |= testChoix(choix);
-            cout << "Choix Joueur 1 : " << choix << endl;        
+            log("Choix Joueur 1 : ", choix, "\n");        
         }
         if (! stop)
         {
@@ -90,17 +104,29 @@ void partie(bool _trace,
     }
     _pointsJoueur1 = chouine.pointsJoueur(Chouine::JOUEUR_1);
     _pointsJoueur2 = chouine.pointsJoueur(Chouine::JOUEUR_2);
+    log("Cartes joueur 1 : ", joueur1.nomCartesGagnees(), "\n");
+    log("Cartes joueur 2 : ", joueur2.nomCartesGagnees(), "\n");
+    log("Points joueur 1 : ", _pointsJoueur1, "\n");
+    log("Points joueur 2 : ", _pointsJoueur2, "\n");
 }
 
 
 int main()
 {
     unsigned int niveau1 = 0;
-    unsigned int niveau2 = 1;
+    unsigned int niveau2 = 0;
     int points1;
     int points2;
-    partie(true, niveau1, niveau2, points1, points2);
-    cout << "Points joueur 1 : " << points1 << endl;
-    cout << "Points joueur 2 : " << points2 << endl;
+    int partiesJoueur1 = 0;
+    int partiesJoueur2 = 0;
+    int nbParties = 1;
+
+    for(int i=0; i<nbParties; i++)
+    {
+        partie(niveau1, niveau2, points1, points2);
+        points1 > points2 ? partiesJoueur1++ : partiesJoueur2++;
+    }
+    cout << "Parties gagnees joueur 1 : " << partiesJoueur1 << endl;
+    cout << "Parties gagnees joueur 2 : " << partiesJoueur2 << endl;
     return 0;
 }
