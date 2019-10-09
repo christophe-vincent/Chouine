@@ -41,7 +41,7 @@ void Chouine::newGame()
         m_GagnantPli = JOUEUR_2;
         otherJoueur = 0;
     }
-
+    
     // ajoute les cartes à la pioche
     unsigned int id = 0;
     for (auto c = 0; c < Carte::NB_COLORS; c++)
@@ -144,20 +144,42 @@ bool Chouine::setJoueurChoice(int _player, int _choice)
 
 Chouine::JOUEUR Chouine::finPli()
 {
-    if (m_Joueur1.carteJouee()->compare(*m_Joueur2.carteJouee()))
+    if (m_GagnantPli == JOUEUR_1)
     {
-        m_GagnantPli = JOUEUR_2;
-        Carte* carteJoueur2 = m_Joueur2.carteJouee();
-        m_Joueur2.pliGagnant(*m_Joueur1.carteJouee());
-        m_Joueur1.pliPerdant(*carteJoueur2);
+        if (m_Joueur1.carteJouee()->compare(*m_Joueur2.carteJouee()))
+        {
+            m_GagnantPli = JOUEUR_2;    
+        }
+        else
+        {
+            m_GagnantPli = JOUEUR_1;
+        }        
     }
-    else
+    else if (m_GagnantPli == JOUEUR_2)
     {
-        m_GagnantPli = JOUEUR_1;
+        if (m_Joueur2.carteJouee()->compare(*m_Joueur1.carteJouee()))
+        {
+            m_GagnantPli = JOUEUR_2;
+        }
+        else
+        {
+            m_GagnantPli = JOUEUR_1;
+        }        
+    }
+
+    if (m_GagnantPli == JOUEUR_1)
+    {
         Carte* carteJoueur1 = m_Joueur1.carteJouee();
         m_Joueur1.pliGagnant(*m_Joueur2.carteJouee());
         m_Joueur2.pliPerdant(*carteJoueur1);
     }
+    else
+    {
+        Carte* carteJoueur2 = m_Joueur2.carteJouee();
+        m_Joueur2.pliGagnant(*m_Joueur1.carteJouee());
+        m_Joueur1.pliPerdant(*carteJoueur2);
+    }  
+        
     return m_GagnantPli;
 }
 

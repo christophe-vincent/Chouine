@@ -7,7 +7,7 @@
 #include "Joueur.h"
 using namespace std;
 
-bool verbose = true;
+bool verbose = false;
 void log(){}
 
 
@@ -70,11 +70,12 @@ void partie(unsigned int _niveauJoueur1,
     string choix;
     bool stop = false;
     int tour = 0;
+    Chouine::JOUEUR gagnant;
     
     while (! stop)
     {
         tour ++;
-        log("TOUR ", tour, "\n");
+        log("\nTOUR ", tour, "\n");
         log("Pioche  : ", chouine.pioche().cartes(), "\n");
         log("Joueur 1: ", joueur1.nomCartesMain(), "\n");
         log("Joueur 2: ", joueur2.nomCartesMain(), "\n");
@@ -97,8 +98,12 @@ void partie(unsigned int _niveauJoueur1,
         }
         if (! stop)
         {
-            chouine.finPli();
+            gagnant = chouine.finPli();
             stop = chouine.finPartie();
+            log("Gagnant: ", gagnant+1, "\n");
+            log("Gagnant pli: ", chouine.gagnantPli()+1, "\n");
+            //log("Points joueur 1 : ", _pointsJoueur1, "\n");
+            //log("Points joueur 2 : ", _pointsJoueur2, "\n");
         }
         //if (tour > 3) stop = true;
     }
@@ -119,14 +124,20 @@ int main()
     int points2;
     int partiesJoueur1 = 0;
     int partiesJoueur2 = 0;
-    int nbParties = 1;
+    int pointsJoueur1 = 0;
+    int pointsJoueur2 = 0;
+    int nbParties = 10000;
 
     for(int i=0; i<nbParties; i++)
     {
         partie(niveau1, niveau2, points1, points2);
         points1 > points2 ? partiesJoueur1++ : partiesJoueur2++;
+        pointsJoueur1 += points1;
+        pointsJoueur2 += points2;
     }
-    cout << "Parties gagnees joueur 1 : " << partiesJoueur1 << endl;
-    cout << "Parties gagnees joueur 2 : " << partiesJoueur2 << endl;
+    cout << "Joueur 1: Parties " << partiesJoueur1;
+    cout << " points " << pointsJoueur1 << endl;
+    cout << "Joueur 2: Parties " << partiesJoueur2;
+    cout << " points " << pointsJoueur2 << endl;
     return 0;
 }

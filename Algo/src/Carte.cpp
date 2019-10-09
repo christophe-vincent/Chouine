@@ -150,7 +150,7 @@ bool Carte::compare(Carte &_card)
 
     if (m_Couleur == _card.couleur())
     {
-        // same couleur for both
+        // meme couleur
         if (m_Valeur > _card.getValeur())
         {
             ret = false;
