@@ -82,7 +82,7 @@ int partie(unsigned int _niveauJoueur1,
     {
         tour ++;
         log("\nTOUR ", tour, "\n");
-        log("Pioche  : ", chouine.pioche().cartes(), "\n");
+        log("Pioche  : ", chouine.pioche().nomCartes(), "\n");
         log("Joueur 1: ", joueur1.nomCartesMain(), "\n");
         log("Joueur 2: ", joueur2.nomCartesMain(), "\n");
         if (chouine.gagnantPli() == Chouine::JOUEUR_1)

@@ -3,15 +3,15 @@ using namespace std;
 
 const std::array<string, 4> Carte::NOM_COULEURS =
 {
-    "carreau", "coeur", "pic", "trèfle"
+    "coeur", "pic", "trèfle", "carreau"
 };
 
 const Carte::Couleur Carte::ALL_COLORS[] =
     {
-        CARREAU,
         COEUR,
         PIC,
-        TREFLE};
+        TREFLE,
+        CARREAU};
 const int Carte::NB_COLORS = 4;
 
 const Carte::Valeur Carte::ALL_VALUES[] =

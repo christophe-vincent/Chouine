@@ -34,12 +34,12 @@ public:
     void newCarteStatistics(Carte &_card);
     void removeCarteStatistics(Carte &_card);
 
-    //set<Carte*> getCartes() { return m_Cartes; }
+    vector<Carte*>& cartes() { return m_Cartes; }
     bool isTrumpSeven() { return m_isTrumpSeven; }
     unsigned int size() { return (unsigned int)m_Cartes.size(); }
-    Carte *getLastCarte() { return *m_Cartes.rbegin(); }
+    Carte *getLastCarte() { return m_Cartes.front(); }
     Carte *operator[](size_t _idx) { return m_Cartes[_idx]; }
-    std::string cartes();
+    std::string nomCartes();
 
 private:
     vector<Carte *> m_Cartes;

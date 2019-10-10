@@ -24,13 +24,13 @@ Joueur::~Joueur()
 // retourne la main du joueur en chaine
 string Joueur::nomCartesMain()
 {
-    return m_Cartes.cartes();
+    return m_Cartes.nomCartes();
 }
 
 // carte gagnees
 string Joueur::nomCartesGagnees()
 {
-    return m_CartesGagnees.cartes();
+    return m_CartesGagnees.nomCartes();
 }
 
 

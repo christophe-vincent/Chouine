@@ -347,7 +347,7 @@ void CarteList::removeCarteStatistics(Carte &_card)
 }
 
 // retourne la liste des cartes en chaine de caractères
-std::string CarteList::cartes()
+std::string CarteList::nomCartes()
 {
     string cartes;
     for (auto it = m_Cartes.begin(); it != m_Cartes.end(); it++)

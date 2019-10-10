@@ -51,13 +51,24 @@ void Chouine::newGame()
             m_Pioche.ajouter(new Carte(
                 Carte::ALL_COLORS[c],
                 Carte::ALL_VALUES[v],
-                m_Atout == Carte::ALL_COLORS[c]));
+                false));
         }
     }
 
     m_Pioche.shuffle();
     m_Atout = m_Pioche.getLastCarte()->couleur();
-    //cout << "Pioche : " << m_Pioche.cartes() << endl;
+
+    //cout << m_Pioche.nomCartes() << endl;
+    //cout << m_Pioche.getLastCarte()->nom() << endl;
+    
+    auto pioche = m_Pioche.cartes();    
+    for (auto it=pioche.begin(); it!=pioche.end(); ++it)
+    {
+        if ((*it)->couleur() == m_Atout)
+        {
+            (*it)->atout(true);
+        }
+    }
 
     for (int i = 0; i < Joueur::MAX_CARDS; i++)
     {
