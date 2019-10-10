@@ -45,16 +45,21 @@ string getCardcolor(int _id)
     return ret;
 }
 
-bool testChoix(string _choix)
+bool testChoix(string _choix, bool& _erreur)
 {
-    if ( (_choix == "erreur") || (_choix == "fin") || (_choix == "E_E"))
+    if ( (_choix == "erreur") || (_choix == "E_E"))
     {
-        return true;
+        _erreur = true;
+        if (_choix == "fin")
+        {
+            return true;
+        }        
     }
     return false;
 }
 
-void partie(unsigned int _niveauJoueur1,
+
+int partie(unsigned int _niveauJoueur1,
             unsigned int _niveauJoueur2, 
             int& _pointsJoueur1, 
             int& _pointsJoueur2)
@@ -70,6 +75,7 @@ void partie(unsigned int _niveauJoueur1,
     string choix;
     bool stop = false;
     int tour = 0;
+    bool erreur = false;
     Chouine::JOUEUR gagnant;
     
     while (! stop)
@@ -82,19 +88,24 @@ void partie(unsigned int _niveauJoueur1,
         if (chouine.gagnantPli() == Chouine::JOUEUR_1)
         {
             choix = chouine.choixJoueur(Chouine::JOUEUR_1);
-            stop = testChoix(choix);
+            stop = testChoix(choix, erreur);
             log("Choix Joueur 1 : ", choix, "\n");
             choix = chouine.choixJoueur(Chouine::JOUEUR_2);
-            stop |= testChoix(choix);
+            stop |= testChoix(choix, erreur);
             log("Choix Joueur 2 : ", choix, "\n");
         } else
         {
             choix = chouine.choixJoueur(Chouine::JOUEUR_2);
-            stop = testChoix(choix);
+            stop = testChoix(choix, erreur);
             log("Choix Joueur 2 : ", choix, "\n");
             choix = chouine.choixJoueur(Chouine::JOUEUR_1);
-            stop |= testChoix(choix);
+            stop |= testChoix(choix, erreur);
             log("Choix Joueur 1 : ", choix, "\n");        
+        }
+        if (erreur)
+        {
+            cout << "Erreur" << endl;
+            return 1;
         }
         if (! stop)
         {
@@ -113,6 +124,7 @@ void partie(unsigned int _niveauJoueur1,
     log("Cartes joueur 2 : ", joueur2.nomCartesGagnees(), "\n");
     log("Points joueur 1 : ", _pointsJoueur1, "\n");
     log("Points joueur 2 : ", _pointsJoueur2, "\n");
+    return 0;
 }
 
 
@@ -127,10 +139,15 @@ int main()
     int pointsJoueur1 = 0;
     int pointsJoueur2 = 0;
     int nbParties = 10000;
+    int ret;
 
     for(int i=0; i<nbParties; i++)
     {
-        partie(niveau1, niveau2, points1, points2);
+        ret = partie(niveau1, niveau2, points1, points2);
+        if (ret != 0)
+        {
+            break;
+        }
         points1 > points2 ? partiesJoueur1++ : partiesJoueur2++;
         pointsJoueur1 += points1;
         pointsJoueur2 += points2;
@@ -139,5 +156,5 @@ int main()
     cout << " points " << pointsJoueur1 << endl;
     cout << "Joueur 2: Parties " << partiesJoueur2;
     cout << " points " << pointsJoueur2 << endl;
-    return 0;
+    return ret;
 }
