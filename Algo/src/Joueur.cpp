@@ -208,7 +208,7 @@ bool Joueur::isCarteAllowed(Carte &_card, Carte &_otherCarte)
         return true;
     }
 
-    if (_otherCarte.compare(_card))
+    if (_otherCarte.gagnante(_card))
     {
         // played card is better than other Joueur : it is allowed
         return true;

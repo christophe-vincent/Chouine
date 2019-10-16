@@ -48,7 +48,9 @@ public:
     Carte(Couleur _couleur, Valeur _value, bool _trump);
     ~Carte();
 
-    bool operator==(Carte &_card);
+    bool operator ==(Carte &_card);
+    bool operator > (Carte &_card);
+    bool operator < (Carte &_card);
 
     static std::string nomCouleur(Couleur _couleur);
     Couleur couleur() { return m_Couleur; }
@@ -68,7 +70,7 @@ public:
     //void removeProbableAnnounce(Announce* _announce);
 
     // vrai si la carte en argument est plus forte
-    bool compare(Carte &_card);
+    bool gagnante(Carte &_card);
     std::string nomCouleur();
     std::string nom();
 

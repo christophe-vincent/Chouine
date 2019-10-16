@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Carte.h"
 using namespace std;
 
@@ -76,6 +77,19 @@ bool Carte::operator==(Carte &_card)
     return false;
 }
 
+bool Carte::operator>(Carte  &_card)
+{
+    //cout << m_Valeur << " > " << _card.getValeur() << " -> " << (m_Valeur > _card.getValeur()) << endl; 
+    return m_Valeur > _card.getValeur();
+}
+
+bool Carte::operator<(Carte  &_card)
+{
+    //cout << m_Valeur << " < " << _card.getValeur() << " -> " << (m_Valeur < _card.getValeur()) << endl; 
+    return m_Valeur < _card.getValeur();
+}
+
+
 std::string Carte::nomCouleur(Couleur _couleur)
 {
     if (_couleur < NOM_COULEURS.size())
@@ -144,7 +158,7 @@ void Carte::removeProbableAnnounce(Announce *_announce)
 }*/
 
 // Vrai si _carte est supérieure
-bool Carte::compare(Carte &_card)
+bool Carte::gagnante(Carte &_card)
 {
     bool ret;
 

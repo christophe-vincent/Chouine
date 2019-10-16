@@ -1,5 +1,8 @@
+#include <iostream>
 #include "Algorithme.h"
 #include "Joueur.h"
+
+using namespace std;
 
 Carte* Algorithme::choisirCarte()
 {
@@ -17,7 +20,6 @@ Carte* Algorithme::choisirCarte(Carte *_choixAdversaire)
     {
         if (_choixAdversaire->brisque())
         {
-            printf("%p\n", &m_Joueur);
             choix = m_Joueur.cartes().choisirPlusForte(_choixAdversaire);
         }
     }

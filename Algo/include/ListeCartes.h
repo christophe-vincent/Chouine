@@ -18,7 +18,7 @@ public:
     Carte *piocheCarte();
     Carte *searchCarte(Carte::Valeur _value);
     void getTrumps(CarteList &_list);
-    Carte *plusFaible();
+    Carte *plusFaible(bool _sansAtout=true);
     Carte* choisirPlusForte(Carte* _carte);
     void getCouleurSubset(Carte::Couleur _couleur, CarteList &_list);
     bool isContainsValeur(Carte::Valeur _value);

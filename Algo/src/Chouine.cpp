@@ -61,7 +61,7 @@ void Chouine::newGame()
     //cout << m_Pioche.nomCartes() << endl;
     //cout << m_Pioche.getLastCarte()->nom() << endl;
     
-    auto pioche = m_Pioche.cartes();    
+    auto pioche = m_Pioche.cartes();
     for (auto it=pioche.begin(); it!=pioche.end(); ++it)
     {
         if ((*it)->couleur() == m_Atout)
@@ -155,11 +155,12 @@ bool Chouine::setJoueurChoice(int _player, int _choice)
 
 Chouine::JOUEUR Chouine::finPli()
 {
+
     if (m_GagnantPli == JOUEUR_1)
     {
-        if (m_Joueur1.carteJouee()->compare(*m_Joueur2.carteJouee()))
+        if (m_Joueur1.carteJouee()->gagnante(*m_Joueur2.carteJouee()))
         {
-            m_GagnantPli = JOUEUR_2;    
+            m_GagnantPli = JOUEUR_2;
         }
         else
         {
@@ -168,13 +169,13 @@ Chouine::JOUEUR Chouine::finPli()
     }
     else if (m_GagnantPli == JOUEUR_2)
     {
-        if (m_Joueur2.carteJouee()->compare(*m_Joueur1.carteJouee()))
+        if (m_Joueur2.carteJouee()->gagnante(*m_Joueur1.carteJouee()))
         {
-            m_GagnantPli = JOUEUR_2;
+            m_GagnantPli = JOUEUR_1;
         }
         else
         {
-            m_GagnantPli = JOUEUR_1;
+            m_GagnantPli = JOUEUR_2;
         }        
     }
 

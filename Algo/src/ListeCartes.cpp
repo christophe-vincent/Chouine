@@ -90,18 +90,36 @@ void CarteList::getTrumps(CarteList &_list)
     }
 }
 
-Carte *CarteList::plusFaible()
+Carte *CarteList::plusFaible(bool _sansAtout)
 {
     Carte *plusFaible;
+    Carte *plusFaibleHorsAtout = nullptr;
     auto it = m_Cartes.begin();
     plusFaible = *it;
     while (it != m_Cartes.end())
     {
-        if ((*it)->getPoints() < plusFaible->getPoints())
+        if ( (plusFaibleHorsAtout == nullptr) && (!(*it)->atout()) )
+        {
+            // init de la carte la plus faible sane jouer d'atout
+            plusFaibleHorsAtout = *it;
+        }
+        if (!(*it)->atout())
+        {
+            if ((**it) < *plusFaibleHorsAtout)
+            {
+                //cout << (*it)->nom() << " < " << plusFaibleHorsAtout->nom() << endl;
+                plusFaibleHorsAtout = *it;
+            }
+        }
+        if ((**it) < *plusFaible)
         {
             plusFaible = *it;
         }
         it++;
+    }
+    if ((_sansAtout) && (plusFaibleHorsAtout != nullptr) )
+    {
+        return plusFaibleHorsAtout;
     }
     return plusFaible;
 }
@@ -113,7 +131,7 @@ Carte* CarteList::choisirPlusForte(Carte* _carte)
 
     for (auto it=m_Cartes.begin(); it!=m_Cartes.end(); ++it)
     {
-        if (_carte->compare(**it))
+        if (_carte->gagnante(**it))
         {
             if (carte == nullptr)
             {
@@ -121,7 +139,7 @@ Carte* CarteList::choisirPlusForte(Carte* _carte)
             }
             else
             {
-                if ((*it)->compare(*carte))
+                if ((*it)->gagnante(*carte))
                 {
                     // la carte choisie precedement est plus forte
                     carte = *it;
@@ -259,10 +277,10 @@ Carte *CarteList::getHigherCarte(Carte &_card)
 {
     Carte *card = nullptr;
     auto it = m_Cartes.begin();
-    while ((it != m_Cartes.end()) && (!(*it)->compare(_card)))
+    while ((it != m_Cartes.end()) && (!(*it)->gagnante(_card)))
         it++;
 
-    if ((it != m_Cartes.end()) && (!(*it)->compare(_card)))
+    if ((it != m_Cartes.end()) && (!(*it)->gagnante(_card)))
     {
         // we found the card !
         card = *it;
