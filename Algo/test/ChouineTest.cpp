@@ -7,9 +7,8 @@
 #include "Joueur.h"
 using namespace std;
 
-bool verbose = false;
+bool verbose = true;
 void log(){}
-
 
 template<typename First, typename ...Rest>
 void log(First && first, Rest && ...rest)
@@ -131,14 +130,14 @@ int partie(unsigned int _niveauJoueur1,
 int main()
 {
     unsigned int niveau1 = 0;
-    unsigned int niveau2 = 0;
+    unsigned int niveau2 = 1;
     int points1;
     int points2;
     int partiesJoueur1 = 0;
     int partiesJoueur2 = 0;
     int pointsJoueur1 = 0;
     int pointsJoueur2 = 0;
-    int nbParties = 10000;
+    int nbParties = 1;
     int ret;
 
     for(int i=0; i<nbParties; i++)

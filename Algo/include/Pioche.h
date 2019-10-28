@@ -2,7 +2,7 @@
 #define PICK_H
 #include "ListeCartes.h"
 
-class Pioche : public CarteList
+class Pioche : public ListeCartes
 {
 public:
     Pioche();

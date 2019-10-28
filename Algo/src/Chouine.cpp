@@ -74,11 +74,11 @@ void Chouine::newGame()
     {
         Carte *card = m_Pioche.piocheCarte();
         if (card != nullptr)
-            m_Joueurs[m_GagnantPli]->addCarte(*card);
+            m_Joueurs[m_GagnantPli]->ajouterCarte(*card);
 
         card = m_Pioche.piocheCarte();
         if (card != nullptr)
-            m_Joueurs[otherJoueur]->addCarte(*card);
+            m_Joueurs[otherJoueur]->ajouterCarte(*card);
     }
 }
 

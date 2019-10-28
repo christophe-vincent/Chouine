@@ -31,8 +31,8 @@ public:
 
     void niveau(int _niveau) { m_Niveau = _niveau; }
     int niveau() { return m_Niveau; }
-    CarteList &cartes() { return m_Cartes; }
-    CarteList &cartesGagnees() { return m_CartesGagnees; }
+    ListeCartes &cartes() { return m_Cartes; }
+    ListeCartes &cartesGagnees() { return m_CartesGagnees; }
     Annonce *getLatestAnnonce() { return m_LatestAnnonce; }
     bool getIsChouine() { return m_IsChouine; }
     int CarteLeft() { return m_Cartes.size(); }
@@ -46,8 +46,9 @@ public:
     Carte *getCarte(unsigned int _index);
     void ajouterCartesGagneesAdversaire(Carte *_c1, Carte *_c2);
     bool hasChange7Trump();
-    Status addCarte(Carte &_card);
-    Annonce *newAnnonce(set<int> _list);
+    Status ajouterCarte(Carte &_carte);
+    Status supprimerCarte(Carte *_carte);
+    void printAnnonces();
     Carte* choisirCarte(Carte *_enemyChoice);
     void pliGagnant(Carte& _carteAdversaire);
     void pliPerdant(Carte& _carteAdversaire);
@@ -58,7 +59,7 @@ public:
     bool isCarteAllowed(Carte &_card, Carte &_otherCarte);
     Status PlayCarte(Carte &_card);
     Status ajouterCartesGagnees(Carte &_card1, Carte &_card2);
-    Carte *bruteForceAttack(CarteList &_hisCartes);
+    Carte *bruteForceAttack(ListeCartes &_hisCartes);
 
 protected:
     Carte *EmptyPickSimulation(Carte &_userChoice);
@@ -68,9 +69,9 @@ protected:
 
 private:
     Chouine &m_Chouine;
-    CarteList m_Cartes;    // 5 cards to be played
-    CarteList m_CartesGagnees; // cards win
-    CarteList m_CartesGagneesAdversaire;
+    ListeCartes m_Cartes;    // 5 cards to be played
+    ListeCartes m_CartesGagnees; // cards win
+    ListeCartes m_CartesGagneesAdversaire;
     set<Annonce *> m_Annonces;
     Annonce *m_LatestAnnonce;
     int m_Niveau;

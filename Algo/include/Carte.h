@@ -80,7 +80,6 @@ private:
     bool m_Atout;
     //Announce *m_Announce;
     //set<Announce*> m_ProbableAnnounce;
-    //set<Announce::AnnounceType> m_Announcetypes;
     int m_Score;
 };
 

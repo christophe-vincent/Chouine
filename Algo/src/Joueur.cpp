@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string.h>
 #include "Joueur.h"
 #include "Chouine.h"
 #include "Algorithme.h"
@@ -15,6 +16,28 @@ m_Chouine(_chouine), m_Algo(_niveau, *this), m_Niveau(_niveau)
     m_Change7Trump = false;
     m_IsChouine = false;
     m_CarteJouee = nullptr;
+    // creation de toutes les annnonces possibles
+    Annonce *annonce;
+    for (unsigned int i=0; i<Carte::NB_COLORS; i++)
+    {
+        bool atout = false;
+        if (Carte::ALL_COLORS[i] == m_Chouine.couleurAtout())
+            atout = true;
+        annonce = new Annonce(Carte::ALL_COLORS[i], 
+                      Annonce::MARIAGE, atout);
+        m_Annonces.insert(annonce);
+        annonce = new Annonce(Carte::ALL_COLORS[i], 
+                      Annonce::TIERCE, atout);
+        m_Annonces.insert(annonce);
+        annonce = new Annonce(Carte::ALL_COLORS[i], 
+                      Annonce::QUARANTE, atout);
+        m_Annonces.insert(annonce);
+        annonce = new Annonce(Carte::ALL_COLORS[i], 
+                      Annonce::CHOUINE, atout);
+        m_Annonces.insert(annonce);
+    }
+    annonce = new Annonce(Annonce::QUINTE);
+    m_Annonces.insert(annonce);
 }
 
 Joueur::~Joueur()
@@ -59,24 +82,89 @@ bool Joueur::hasChange7Trump()
     return false;
 }
 
-Status Joueur::addCarte(Carte &_card)
+Status Joueur::ajouterCarte(Carte &_carte)
 {
     if (m_Cartes.size() >= MAX_CARDS)
     {
         return Status::TOO_MANY_CARDS;
     }
 
-    m_Cartes.newCarteStatistics(_card);
-
-    if (m_Cartes.size() == 0)
+    m_Cartes.ajouter(&_carte);
+    for (Annonce *annonce: m_Annonces)
     {
-        m_Cartes.ajouter(&_card);
-        return Status::OK;
+        annonce->ajouterCarte(_carte);
+        if (annonce->cartesManquantes() == 0)
+        {
+            //printAnnonces();
+            //exit(1);
+        }
     }
-
-    m_Cartes.ajouter(&_card);
+    printAnnonces();
 
     return Status::OK;
+}
+
+
+Status Joueur::supprimerCarte(Carte *_carte)
+{
+    m_Cartes.supprimer(_carte);
+    for (Annonce *annonce: m_Annonces)
+    {
+        annonce->supprimerCarte(_carte);
+    }
+    printAnnonces();
+}
+
+
+void Joueur::printAnnonces()
+{
+    for (Annonce *annonce: m_Annonces)
+    {
+        char ann;
+        switch (annonce->type())
+        {
+        case Annonce::MARIAGE :
+            ann='M';
+            break;
+        case Annonce::TIERCE :
+            ann='T';
+            break;
+        case Annonce::QUARANTE :
+            ann='Q';
+            break;
+        case Annonce::CHOUINE :
+            ann='C';
+            break;
+        case Annonce::QUINTE :
+            ann='5';
+            break;        
+        default:
+            break;
+        }
+        char couleur[3];
+        switch (annonce->couleur())
+        {
+        case Carte::PIC:
+            strcpy(couleur,  "Pi");
+            break;
+        case Carte::TREFLE:
+            strcpy(couleur,  "Tr");
+            break;
+        case Carte::CARREAU:
+            strcpy(couleur,  "Ca");
+            break;
+        case Carte::COEUR:
+            strcpy(couleur,  "Co");
+            break;        
+        default:
+            break;
+        }
+        printf("%c%s:%u ",
+               ann, 
+               couleur,
+               annonce->cartesManquantes());
+    }
+    printf("\n");
 }
 
 bool Joueur::replaceTrumpCarte(Carte *_newCarte)
@@ -88,40 +176,16 @@ bool Joueur::replaceTrumpCarte(Carte *_newCarte)
 
     if (card != nullptr)
     {
-        // ok, the user has the trump 7
+        // ok, on a le 7 d'atout
         m_Cartes.supprimer(card);
-        m_Cartes.removeCarteStatistics(*_newCarte);
-
-        // now insert the new card
-        addCarte(*_newCarte);
+        
+        ajouterCarte(*_newCarte);
         return true;
     }
 
     return false;
 }
 
-Annonce *Joueur::newAnnonce(set<int> _list)
-{
-    set<Annonce *> announces;
-    CarteList cards;
-
-    // first find cards
-    for (auto it = _list.begin(); it != _list.end(); it++)
-    {
-        cards.ajouter(m_Cartes[*it]);
-    }
-
-    announces = Annonce::annonces(cards, m_Annonces, &m_IsChouine);
-    if (announces.empty())
-    {
-        return nullptr;
-    }
-    else
-    {
-        m_Annonces.insert(*announces.begin());
-        return *announces.begin();
-    }
-}
 
 Carte* Joueur::choisirCarte(Carte *_carteAdversaire)
 {
@@ -143,26 +207,32 @@ void Joueur::pliGagnant(Carte& _carteAdversaire)
 {
     m_CartesGagnees.ajouter(&_carteAdversaire);
     m_CartesGagnees.ajouter(m_CarteJouee);
-    m_Cartes.supprimer(m_CarteJouee);
+    supprimerCarte(m_CarteJouee);
     m_CarteJouee = nullptr;
     Carte* pioche = m_Chouine.pioche().piocheCarte();
-    m_Cartes.ajouter(pioche);    
+    if (pioche != nullptr)
+    {
+        ajouterCarte(*pioche);
+    }
 }
 
 void Joueur::pliPerdant(Carte& _carteAdversaire)
 {
     m_CartesGagneesAdversaire.ajouter(m_CarteJouee);
     m_CartesGagneesAdversaire.ajouter(&_carteAdversaire);
-    m_Cartes.supprimer(m_CarteJouee);
+    supprimerCarte(m_CarteJouee);
     m_CarteJouee = nullptr;
     Carte* pioche = m_Chouine.pioche().piocheCarte();
-    m_Cartes.ajouter(pioche);
+    if (pioche != nullptr)
+    {
+        ajouterCarte(*pioche);
+    }
 }
 
 Carte *Joueur::getSmallestTrump()
 {
     int i = 0;
-    CarteList list;
+    ListeCartes list;
 
     m_Cartes.getTrumps(list);
     return m_Cartes.plusFaible();
@@ -170,7 +240,7 @@ Carte *Joueur::getSmallestTrump()
 
 int Joueur::trumpNumber()
 {
-    CarteList list;
+    ListeCartes list;
     m_Cartes.getTrumps(list);
     return list.size();
 }
@@ -178,7 +248,7 @@ int Joueur::trumpNumber()
 Carte *Joueur::EmptyPickSimulation(Carte &_userChoice)
 {
     Carte *playCarte;
-    CarteList couleurList;
+    ListeCartes couleurList;
 
     // we must play a higher card
     m_Cartes.getCouleurSubset(_userChoice.couleur(), couleurList);
@@ -189,7 +259,7 @@ Carte *Joueur::EmptyPickSimulation(Carte &_userChoice)
         // play trump if user card is not trump...
         if (!_userChoice.atout())
         {
-            CarteList trumpList;
+            ListeCartes trumpList;
             m_Cartes.getCouleurSubset(m_Chouine.couleurAtout(), trumpList);
             playCarte = couleurList.plusFaible();
         }
@@ -228,7 +298,6 @@ bool Joueur::isCarteAllowed(Carte &_card, Carte &_otherCarte)
 
 Status Joueur::PlayCarte(Carte &_card)
 {
-    m_Cartes.removeCarteStatistics(_card);
     m_Cartes.supprimer(&_card);
     return Status::OK;
 }
@@ -244,12 +313,12 @@ Status Joueur::ajouterCartesGagnees(Carte &_card1, Carte &_card2)
     return Status::OK;
 }
 
-Carte *Joueur::bruteForceAttack(CarteList &_hisCartes)
+Carte *Joueur::bruteForceAttack(ListeCartes &_hisCartes)
 {
     /*int level = 0;
    bool end = false;
-   CarteList donorCartes;
-   CarteList otherCartes;
+   ListeCartes donorCartes;
+   ListeCartes otherCartes;
    Node nodes;
    int* cardScore;
    int donorId; */

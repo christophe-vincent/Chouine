@@ -67,7 +67,7 @@ public:
 
     Joueur& joueur(JOUEUR _id) { return *m_Joueurs[_id];};
     JOUEUR gagnantPli() { return m_GagnantPli;};
-    CarteList& pioche() { return m_Pioche; }
+    ListeCartes& pioche() { return m_Pioche; }
     
     CarteId getJoueurCarte(int _player, int _card);
     bool piocheVide();
@@ -95,13 +95,13 @@ public:
       return m_Joueurs[_player].getLevel();
    }   
    set<Carte*> GetPickList() { return m_Pick.GetCartes(); }
-   set<Carte*> GetJoueurCarteList(int _player)
+   set<Carte*> GetJoueurListeCartes(int _player)
    {
       if (_player > 1) return ;
       return m_Joueurs[_player].GetCartes();
    }
 
-   set<Carte*> GetJoueurWinCarteList(int _player)
+   set<Carte*> GetJoueurWinListeCartes(int _player)
    {
       if (_player > 1) return nullptr;
       return m_Joueurs[_player].GetWinCartes();
@@ -148,7 +148,7 @@ private:
     Joueur m_Joueur2;
     array<Joueur *, 2> m_Joueurs;
     array<int, 2> m_JoueurLevel;
-    CarteList m_Pioche;
+    ListeCartes m_Pioche;
     JOUEUR m_GagnantPli;
     bool m_isChouine;
 };

@@ -2,32 +2,43 @@
 #include <random>
 #include <chrono>
 #include <algorithm>
+#include "Annonce.h"
 #include "ListeCartes.h"
 #include "Annonce.h"
 
 using namespace std;
 
-CarteList::CarteList() : m_isTrumpSeven(false)
+ListeCartes::ListeCartes() : m_isTrumpSeven(false)
 {
 }
 
-CarteList::CarteList(Carte *_card) : m_isTrumpSeven(false)
+ListeCartes::ListeCartes(Carte *_card) : m_isTrumpSeven(false)
 {
     m_Cartes.push_back(_card);
 }
 
-void CarteList::ajouter(Carte *_card)
+///////////////////////////////
+void ListeCartes::ajouter(Carte *_carte)
 {
-    if (_card == nullptr) return;
-    //cout << _card->nom() << endl;
-    if ((_card->atout()) && (_card->getValeur() == Carte::SEPT))
+    if (_carte == nullptr) return;
+    // si la carte est deja dans la liste, rien à faire
+    for (Carte* carte : m_Cartes)
+    {
+        if (_carte == carte)
+        {
+            return;
+        }
+    }
+    //cout << _carte->nom() << endl;
+    if ((_carte->atout()) && (_carte->getValeur() == Carte::SEPT))
     {
         m_isTrumpSeven = true;
     }
-    m_Cartes.push_back(_card);
+    m_Cartes.push_back(_carte);
 }
 
-void CarteList::supprimer(Carte *_card)
+///////////////////////////////
+void ListeCartes::supprimer(Carte *_card)
 {
     if (_card == nullptr) return;
     auto it = find(m_Cartes.begin(), m_Cartes.end(), _card);
@@ -41,7 +52,8 @@ void CarteList::supprimer(Carte *_card)
     }
 }
 
-void CarteList::shuffle()
+///////////////////////////////
+void ListeCartes::shuffle()
 {
     auto seed = chrono::high_resolution_clock::now().time_since_epoch().count();
     std::mt19937 mt(seed);
@@ -49,8 +61,9 @@ void CarteList::shuffle()
     std::shuffle(m_Cartes.begin(), m_Cartes.end(), mt);
 }
 
+///////////////////////////////
 // return first card and remove it from list (like we we pick a card)
-Carte *CarteList::piocheCarte()
+Carte *ListeCartes::piocheCarte()
 {
     if (m_Cartes.size() == 0)
     {
@@ -61,7 +74,8 @@ Carte *CarteList::piocheCarte()
     return ret;
 }
 
-Carte *CarteList::searchCarte(Carte::Valeur _value)
+///////////////////////////////
+Carte *ListeCartes::searchCarte(Carte::Valeur _value)
 {
     Carte *ret = nullptr;
 
@@ -77,7 +91,9 @@ Carte *CarteList::searchCarte(Carte::Valeur _value)
     return ret;
 }
 
-void CarteList::getTrumps(CarteList &_list)
+
+///////////////////////////////
+void ListeCartes::getTrumps(ListeCartes &_list)
 {
     auto it = m_Cartes.begin();
     while (it != m_Cartes.end())
@@ -90,7 +106,8 @@ void CarteList::getTrumps(CarteList &_list)
     }
 }
 
-Carte *CarteList::plusFaible(bool _sansAtout)
+///////////////////////////////
+Carte *ListeCartes::plusFaible(bool _sansAtout)
 {
     Carte *plusFaible;
     Carte *plusFaibleHorsAtout = nullptr;
@@ -125,7 +142,8 @@ Carte *CarteList::plusFaible(bool _sansAtout)
 }
 
 
-Carte* CarteList::choisirPlusForte(Carte* _carte)
+///////////////////////////////
+Carte* ListeCartes::choisirPlusForte(Carte* _carte)
 {
     Carte* carte = nullptr; 
 
@@ -155,7 +173,7 @@ Carte* CarteList::choisirPlusForte(Carte* _carte)
 }
 
 
-void CarteList::getCouleurSubset(Carte::Couleur _couleur, CarteList &_list)
+void ListeCartes::getCouleurSubset(Carte::Couleur _couleur, ListeCartes &_list)
 {
     auto it = m_Cartes.begin();
     while (it != m_Cartes.end())
@@ -168,7 +186,7 @@ void CarteList::getCouleurSubset(Carte::Couleur _couleur, CarteList &_list)
     }
 }
 
-bool CarteList::isContainsValeur(Carte::Valeur _value)
+bool ListeCartes::isContainsValeur(Carte::Valeur _value)
 {
     bool ret = false;
 
@@ -184,7 +202,7 @@ bool CarteList::isContainsValeur(Carte::Valeur _value)
     return ret;
 }
 
-bool CarteList::isContainsCarte(Carte &_value)
+bool ListeCartes::isContainsCarte(Carte &_value)
 {
     bool ret = false;
 
@@ -200,9 +218,9 @@ bool CarteList::isContainsCarte(Carte &_value)
     return ret;
 }
 
-CarteList CarteList::getCartesFromList(Carte::Valeur _value)
+ListeCartes ListeCartes::getCartesFromList(Carte::Valeur _value)
 {
-    CarteList ret;
+    ListeCartes ret;
 
     for (auto it = m_Cartes.begin(); it != m_Cartes.end(); it++)
     {
@@ -214,9 +232,9 @@ CarteList CarteList::getCartesFromList(Carte::Valeur _value)
     return ret;
 }
 
-CarteList CarteList::getCartesFromList(Carte::Couleur _couleur)
+ListeCartes ListeCartes::cartesMemeCouleur(Carte::Couleur _couleur)
 {
-    CarteList ret;
+    ListeCartes ret;
 
     for (auto it = m_Cartes.begin(); it != m_Cartes.end(); it++)
     {
@@ -228,7 +246,7 @@ CarteList CarteList::getCartesFromList(Carte::Couleur _couleur)
     return ret;
 }
 
-Carte *CarteList::getCarteFromList(Carte::Couleur _couleur, Carte::Valeur _value)
+Carte *ListeCartes::getCarteFromList(Carte::Couleur _couleur, Carte::Valeur _value)
 {
     Carte *ret = nullptr;
 
@@ -243,7 +261,7 @@ Carte *CarteList::getCarteFromList(Carte::Couleur _couleur, Carte::Valeur _value
     return ret;
 }
 
-int CarteList::NumberOfValeur(Carte::Valeur _value)
+int ListeCartes::NumberOfValeur(Carte::Valeur _value)
 {
     int ret = 0;
 
@@ -258,7 +276,7 @@ int CarteList::NumberOfValeur(Carte::Valeur _value)
     return ret;
 }
 
-Carte *CarteList::getHigherValeur(Carte::Valeur _value)
+Carte *ListeCartes::getHigherValeur(Carte::Valeur _value)
 {
     Carte *card = nullptr;
     auto it = m_Cartes.begin();
@@ -273,7 +291,7 @@ Carte *CarteList::getHigherValeur(Carte::Valeur _value)
     return card;
 }
 
-Carte *CarteList::getHigherCarte(Carte &_card)
+Carte *ListeCartes::getHigherCarte(Carte &_card)
 {
     Carte *card = nullptr;
     auto it = m_Cartes.begin();
@@ -288,7 +306,7 @@ Carte *CarteList::getHigherCarte(Carte &_card)
     return card;
 }
 
-int CarteList::getPoints()
+int ListeCartes::getPoints()
 {
     int points = 0;
 
@@ -299,78 +317,96 @@ int CarteList::getPoints()
     return points;
 }
 
-void CarteList::newCarteStatistics(Carte &_card)
-{
-    set<Annonce *> cardAnnonces;
-    bool create = true;
 
-    if ((_card.getValeur() == Carte::SEPT) || (_card.getValeur() == Carte::HUIT) || (_card.getValeur() == Carte::NEUF))
-    {
-        return; // these cards are not used in announces
-    }
-
-    // check all possible announces for this card
-
-    for (auto it = Annonce::ANNONCES.begin(); it != Annonce::ANNONCES.end(); it++)
-    {
-        // search in the list if this announce has already statistics
-        create = true;
-        for (auto ann = m_AnnoncesStats.begin(); ann != m_AnnoncesStats.end(); ann++)
-        {
-            if (((*ann)->couleur() == _card.couleur()) && ((*ann)->type() == *it))
-            {
-                // great the annouce is already known
-                (*ann)->ajouterCarte(_card);
-                //TODO _card->addProbableAnnonce(ann);
-                create = false;
-            }
-        }
-
-        if (create)
-        {
-            // announce has not been created, create a new one
-            CarteList cl = CarteList(&_card);
-            Annonce *announce = new Annonce(
-                _card.couleur(),
-                *it,
-                _card.atout(),
-                cl);
-            m_AnnoncesStats.push_back(announce);
-            //TODO _card->addProbableAnnonce(announce);
-        }
-    }
-}
-
-void CarteList::removeCarteStatistics(Carte &_card)
-{
-    if ((_card.getValeur() == Carte::SEPT) || (_card.getValeur() == Carte::HUIT) || (_card.getValeur() == Carte::NEUF))
-    {
-        return; // these cards are not used in announces
-    }
-
-    // check all possible announces for this card
-    for (auto it = Annonce::ANNONCES.begin(); it != Annonce::ANNONCES.end(); it++)
-    {
-        // search in the list if this announce has already statistics
-        for (auto ann = m_AnnoncesStats.begin(); ann != m_AnnoncesStats.end(); ann++)
-        {
-            if (((*ann)->couleur() == _card.couleur()) && ((*ann)->type() == *it))
-            {
-                // great the annouce is already known
-                (*ann)->supprimerCarte(_card);
-                //TODO _card.removeProbableAnnonce(ann);
-            }
-        }
-    }
-}
-
+///////////////////////////////
 // retourne la liste des cartes en chaine de caractères
-std::string CarteList::nomCartes()
+std::string ListeCartes::nomCartes()
 {
     string cartes;
     for (auto it = m_Cartes.begin(); it != m_Cartes.end(); it++)
     {
-        cartes += (*it)->nom() + " ";
+       cartes += (*it)->nom() + " ";
     }
     return cartes;
+}
+
+///////////////////////////////
+// Calcule le score de chacune des annonces
+void ListeCartes::scoreAnnonces()
+{
+    // boucle sur les couleurs
+    for (unsigned int i=0; i<4; i++)
+    {
+        ListeCartes cartesCouleur = cartesMemeCouleur(Carte::ALL_COLORS[i]);
+        // boucle sur toutes les annonces
+       /* for (auto it=Annonce::ANNONCES.begin();
+            it!=Annonce::ANNONCES.end(); ++it )
+        {
+            
+
+        }*/
+    }
+}
+
+
+void ListeCartes::miseAJourAnnonces()
+{
+    Annonce *ann;
+    ListeCartes couleurList;
+    ListeCartes cartes;
+    set<Carte::Couleur> couleurToCheck;
+/*
+    if (Annonce::chouine(*this))
+    {
+        ann = new Annonce(_list[0]->couleur(),
+                          TypeAnnonce::CHOUINE,
+                          _list[0]->atout(),
+                          _list);
+        *_isChouine = true;
+        ret.insert(ann);
+    }
+
+    if (quinte(_list))
+    {
+        // if quinte already announced, do not accept it
+        bool quintePresent = false;
+        for (Annonce *ca : _annoncesConnues)
+        {
+            if (ca->type() == TypeAnnonce::QUINTE)
+            {
+                quintePresent = true;
+            }
+        }
+        if (!quintePresent)
+        {
+            ann = new Annonce(Carte::BACK, TypeAnnonce::QUINTE, false, _list);
+            ret.insert(ann);
+        }
+        return ret;
+    }
+
+    for (Carte::Couleur couleur : couleurToCheck)
+    {
+        couleurList = _list.cartesMemeCouleur(couleur);
+
+        if (quarante(couleurList))
+        {
+            ann = new Annonce(couleur, TypeAnnonce::QUARANTE,
+                              _list[0]->atout(), cartes);
+            ret.insert(ann);
+        }
+        else if (tierce(couleurList))
+        {
+            ann = new Annonce(couleur, TypeAnnonce::TIERCE,
+                              _list[0]->atout(), cartes);
+            ret.insert(ann);
+        }
+        else if (mariage(couleurList))
+        {
+            ann = new Annonce(couleur, TypeAnnonce::MARIAGE,
+                              _list[0]->atout(), cartes);
+            ret.insert(ann);
+        }
+    }
+    */
 }

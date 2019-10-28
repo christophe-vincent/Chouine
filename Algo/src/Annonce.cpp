@@ -4,37 +4,33 @@ const Carte::Valeur Annonce::CARTES_MARIAGE[] =
     {
         Carte::DAME,
         Carte::ROI};
-const Carte::Valeur CARTES_TIERCE[] =
+const Carte::Valeur Annonce::CARTES_TIERCE[] =
     {
         Carte::VALET, 
         Carte::DAME, 
         Carte::ROI};
-const Carte::Valeur CARTES_QUARANTE[] =
+const Carte::Valeur Annonce::CARTES_QUARANTE[] =
     {
         Carte::ROI, 
         Carte::DAME, 
         Carte::VALET, 
         Carte::AS};
-const Carte::Valeur CARTES_CHOUINE[] =
+const Carte::Valeur Annonce::CARTES_CHOUINE[] =
     {
         Carte::ROI, 
         Carte::DAME, 
         Carte::VALET, 
         Carte::DIX,
-         Carte::AS};
+        Carte::AS};
 
-const set<Annonce::TypeAnnonce> Annonce::ANNONCES =
-    {MARIAGE, TIERCE, QUARANTE, QUINTE, CHOUINE};
+const Annonce::TypeAnnonce Annonce::ANNONCES[] =
+    {Annonce::MARIAGE, Annonce::TIERCE, 
+     Annonce::QUARANTE, Annonce::QUINTE,
+     Annonce::CHOUINE};
 
-Annonce::Annonce(
-    Carte::Couleur _couleur, 
-    TypeAnnonce _type, 
-    bool _atout, 
-    CarteList &_cartes) : 
-    m_Couleur(_couleur), m_Annonce(_type), m_IsTrump(_atout), m_Cartes(_cartes)
-{
-    //TODO computeScore();
-}
+const set<int> Annonce::POINTS_ANNONCES =
+    {20, 30, 40, 50, 1000};
+
 
 Annonce::~Annonce()
 {
@@ -42,14 +38,52 @@ Annonce::~Annonce()
 
 void Annonce::ajouterCarte(Carte &_carte)
 {
-    m_Cartes.ajouter(&_carte);
-    // increase the score
-    //TODO computeScore();
+    // verificationd e la couleur
+    if (m_Annonce != QUINTE)
+    {
+        if (_carte.couleur() != m_Couleur)
+        {
+            // pas la meme couleur, rien a faire
+            return;
+        }
+    }
+    // vérifier si la carte appartient bien à l'annnonce en question
+    if (_carte.getValeur() == Carte::VALET)
+    {
+        if ((m_Annonce == TIERCE) || (m_Annonce == QUARANTE) ||
+            (m_Annonce == CHOUINE) )
+        {
+            m_Cartes.ajouter(&_carte);
+        }
+    }
+    if ((_carte.getValeur() == Carte::ROI) || 
+        (_carte.getValeur() == Carte::DAME))
+    {
+        if (m_Annonce != QUINTE)
+        {
+            m_Cartes.ajouter(&_carte);
+        }
+    }
+    if (_carte.getValeur() == Carte::DIX)
+    {
+        if ((m_Annonce == QUARANTE) || (m_Annonce == QUINTE) || 
+            (m_Annonce == CHOUINE) )
+        {
+            m_Cartes.ajouter(&_carte);
+        }
+    }
+    if (_carte.getValeur() == Carte::AS)
+    {
+        if ((m_Annonce == QUINTE) || (m_Annonce == CHOUINE) )
+        {
+            m_Cartes.ajouter(&_carte);
+        }
+    }
 }
 
-void Annonce::supprimerCarte(Carte &_carte)
+void Annonce::supprimerCarte(Carte *_carte)
 {
-    m_Cartes.supprimer(&_carte);
+    m_Cartes.supprimer(_carte);
 }
 
 /*void Annonce::computeScore()
@@ -76,7 +110,7 @@ void Annonce::supprimerCarte(Carte &_carte)
    }
 }*/
 
-bool Annonce::mariage(CarteList &_list)
+bool Annonce::mariage(ListeCartes &_list)
 {
     if ((_list.isContainsValeur(Carte::DAME)) ||
         (_list.isContainsValeur(Carte::ROI)))
@@ -86,7 +120,7 @@ bool Annonce::mariage(CarteList &_list)
     return false;
 }
 
-bool Annonce::tierce(CarteList &_list)
+bool Annonce::tierce(ListeCartes &_list)
 {
     if ((_list.isContainsValeur(Carte::VALET)) ||
         (_list.isContainsValeur(Carte::DAME)) ||
@@ -97,7 +131,7 @@ bool Annonce::tierce(CarteList &_list)
     return false;
 }
 
-bool Annonce::quarante(CarteList &_list)
+bool Annonce::quarante(ListeCartes &_list)
 {
     if ((_list.isContainsValeur(Carte::VALET)) ||
         (_list.isContainsValeur(Carte::DAME)) ||
@@ -109,7 +143,7 @@ bool Annonce::quarante(CarteList &_list)
     return false;
 }
 
-bool Annonce::quinte(CarteList &_list)
+bool Annonce::quinte(ListeCartes &_list)
 {
     int nBrisques = 0;
 
@@ -123,7 +157,7 @@ bool Annonce::quinte(CarteList &_list)
     return nBrisques == 5;
 }
 
-bool Annonce::chouine(CarteList &_list)
+bool Annonce::chouine(ListeCartes &_list)
 {
     bool ret = true;
     Carte::Couleur couleur;
@@ -149,74 +183,30 @@ bool Annonce::chouine(CarteList &_list)
     return ret;
 }
 
-set<Annonce *> Annonce::annonces(
-    CarteList &_list, 
-    set<Annonce *> &_annoncesConnues, 
-    bool *_isChouine)
+
+unsigned int Annonce::cartesManquantes()
 {
-    Annonce *ann;
-    CarteList couleurList;
-    CarteList cartes;
-    set<Carte::Couleur> couleurToCheck;
-    *_isChouine = false;
-
-    set<Annonce *> ret;
-    if (_list.size() <= 1)
+    int ret = 0;
+    switch (m_Annonce)
     {
-        return ret;
+    case MARIAGE:
+        ret = sizeof(CARTES_MARIAGE) / sizeof(Carte::Valeur);
+        break;
+    case TIERCE:
+        ret = sizeof(CARTES_TIERCE) / sizeof(Carte::Valeur);
+        break;
+    case QUARANTE:
+        ret = sizeof(CARTES_QUARANTE) / sizeof(Carte::Valeur);
+        break;
+    case CHOUINE:
+        ret = sizeof(CARTES_CHOUINE) / sizeof(Carte::Valeur);
+        break;
+    case QUINTE:
+        ret = 5;
+        break;
+    
+    default:
+        break;
     }
-
-    if (chouine(_list))
-    {
-        ann = new Annonce(_list[0]->couleur(),
-                          TypeAnnonce::CHOUINE,
-                          _list[0]->atout(),
-                          _list);
-        *_isChouine = true;
-        ret.insert(ann);
-    }
-
-    if (quinte(_list))
-    {
-        // if quinte already announced, do not accept it
-        bool quintePresent = false;
-        for (Annonce *ca : _annoncesConnues)
-        {
-            if (ca->type() == TypeAnnonce::QUINTE)
-            {
-                quintePresent = true;
-            }
-        }
-        if (!quintePresent)
-        {
-            ann = new Annonce(Carte::BACK, TypeAnnonce::QUINTE, false, _list);
-            ret.insert(ann);
-        }
-        return ret;
-    }
-
-    for (Carte::Couleur couleur : couleurToCheck)
-    {
-        couleurList = _list.getCartesFromList(couleur);
-
-        if (quarante(couleurList))
-        {
-            ann = new Annonce(couleur, TypeAnnonce::QUARANTE,
-                              _list[0]->atout(), cartes);
-            ret.insert(ann);
-        }
-        else if (tierce(couleurList))
-        {
-            ann = new Annonce(couleur, TypeAnnonce::TIERCE,
-                              _list[0]->atout(), cartes);
-            ret.insert(ann);
-        }
-        else if (mariage(couleurList))
-        {
-            ann = new Annonce(couleur, TypeAnnonce::MARIAGE,
-                              _list[0]->atout(), cartes);
-            ret.insert(ann);
-        }
-    }
-    return ret;
+    return ret - m_Cartes.nombreCartes();
 }
