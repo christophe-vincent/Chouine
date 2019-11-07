@@ -11,18 +11,30 @@ func _ready():
     
 	var carte = Area2D.new()
 	carte.set_script(load("res://carte.gd"))
-	    
-	var powerUpImage                #the texture of the powerup will live here
-	powerUpImage = load("res://textures/carreau-7.svg")
-	var carte_img = Sprite.new()
-	carte_img.set_texture(powerUpImage)
-	carte_img.set_scale(scale)
-	var size = carte_img.texture.get_size()*scale
 	
-	carte.position = Vector2(100,100)
-	carte.
-	carte.add_child(carte_img)
+	var texture_carte                #the texture of the powerup will live here
+	texture_carte = load("res://textures/carreau-7.svg")
+	var carte_sprite = Sprite.new()
+	carte_sprite.set_texture(texture_carte)
+	carte_sprite.set_scale(scale)
+	var size = carte_sprite.texture.get_size()*scale
+	
+	carte.add_child(carte_sprite)
+	
+	#Create the collision shape
+	var shape = RectangleShape2D.new()
+	#resize the shape to be the same size as the sprite texture
+	shape.set_extents(Vector2(carte_sprite.get_texture().get_width()*scale[0]/2,
+							  carte_sprite.get_texture().get_height()*scale[1]/2))    
+	#create the collission object
+	var powerUpCollision = CollisionShape2D.new()
+	#attach the shape to the object
+	powerUpCollision.set_shape(shape)
+	#add it as a child
+	carte.add_child(powerUpCollision)
+	
 	add_child(carte)
+	carte.position = Vector2(100,100)
 	
 	pass # Replace with function body.
 

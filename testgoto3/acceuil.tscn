@@ -5,10 +5,10 @@
 [node name="Acceuil" type="Node2D"]
 
 [node name="Start" type="Button" parent="."]
-margin_left = 106.0
-margin_top = 94.0
-margin_right = 202.0
-margin_bottom = 130.0
+margin_left = 11.0
+margin_top = 10.0
+margin_right = 107.0
+margin_bottom = 46.0
 text = "Jouer"
 script = ExtResource( 1 )
 [connection signal="pressed" from="Start" to="Start" method="_on_Start_pressed"]

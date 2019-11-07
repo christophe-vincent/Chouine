@@ -15,20 +15,19 @@ var lifted = false
 func _unhandled_input(event):
     if event is InputEventMouseButton and not event.pressed:
         lifted = false
-        print("click")
+        #print("click")
     if lifted and event is InputEventMouseMotion:
         position += event.relative
 
 func _input_event(viewport, event, shape_idx):
+	#print(event)
+	if event is InputEventMouseButton:
+		if event.button_index == BUTTON_LEFT \
+	    and event.pressed:
+	        print("Clicked")
 	if event is InputEventMouseButton and event.pressed:
 		lifted = true
-            
-    
-func _input(event):
-    print(event.resource_name)
-    #if(event.type == InputEvent.MOUSE_BUTTON):
-    # && event.button_index == BUTTON_LEFT):
-    #print("Clicked!")
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

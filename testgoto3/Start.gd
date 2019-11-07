@@ -18,4 +18,5 @@ func _on_Start_pressed():
 	var jeu = load("res://Jeu.tscn")
 	var node = jeu.instance()
 	add_child(node)
+	
 	pass # Replace with function body.
