@@ -86,6 +86,11 @@ void Annonce::supprimerCarte(Carte *_carte)
     m_Cartes.supprimer(_carte);
 }
 
+bool Annonce::cartePresente(Carte &_carte)
+{
+    return m_Cartes.rechercheCarte(_carte);    
+}
+
 /*void Annonce::computeScore()
 {
    // score depends on the carte number

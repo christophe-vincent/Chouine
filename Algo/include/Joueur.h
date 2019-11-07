@@ -48,6 +48,7 @@ public:
     bool hasChange7Trump();
     Status ajouterCarte(Carte &_carte);
     Status supprimerCarte(Carte *_carte);
+    Annonce* rechercheAnnonce(Carte &_carte);
     void printAnnonces();
     Carte* choisirCarte(Carte *_enemyChoice);
     void pliGagnant(Carte& _carteAdversaire);

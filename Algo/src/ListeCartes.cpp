@@ -202,7 +202,7 @@ bool ListeCartes::isContainsValeur(Carte::Valeur _value)
     return ret;
 }
 
-bool ListeCartes::isContainsCarte(Carte &_value)
+bool ListeCartes::rechercheCarte(Carte &_value)
 {
     bool ret = false;
 

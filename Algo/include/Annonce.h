@@ -49,8 +49,20 @@ public:
             m_Atout(false) {}
     ~Annonce();
 
+    bool operator> (Carte & _carte)
+    {
+        return this->m_Points > _carte.getPoints();
+    }
+
+    bool operator < (Carte & _carte)
+    {
+        return this->m_Points < _carte.getPoints();
+    }    
+
     void ajouterCarte(Carte &_carte);
     void supprimerCarte(Carte *_carte);
+    bool cartePresente(Carte &_carte);
+
 
     static bool mariage(ListeCartes &_list);
     static bool tierce(ListeCartes &_list);

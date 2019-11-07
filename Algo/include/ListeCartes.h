@@ -23,7 +23,7 @@ public:
     Carte* choisirPlusForte(Carte* _carte);
     void getCouleurSubset(Carte::Couleur _couleur, ListeCartes &_list);
     bool isContainsValeur(Carte::Valeur _value);
-    bool isContainsCarte(Carte &_value);
+    bool rechercheCarte(Carte &_value);
     ListeCartes getCartesFromList(Carte::Valeur _value);
     ListeCartes cartesMemeCouleur(Carte::Couleur _couleur);
     Carte *getCarteFromList(Carte::Couleur _couleur, Carte::Valeur _value);

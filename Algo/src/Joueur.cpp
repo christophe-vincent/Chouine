@@ -116,6 +116,27 @@ Status Joueur::supprimerCarte(Carte *_carte)
 }
 
 
+// cherche si la carte fait partie d'une annonce
+Annonce* Joueur::rechercheAnnonce(Carte &_carte)
+{
+    Annonce* annoncePlusForte = nullptr;
+    for (Annonce *annonce: m_Annonces)
+    {
+        if (annonce->cartePresente(_carte))
+        {
+            if (annonce == nullptr)
+            {
+                annoncePlusForte = annonce;
+            }
+            else if (annonce > annoncePlusForte)
+            {
+                annoncePlusForte = annonce;                
+            }
+        }
+    }
+    return annoncePlusForte;
+}
+
 void Joueur::printAnnonces()
 {
     for (Annonce *annonce: m_Annonces)
@@ -189,17 +210,21 @@ bool Joueur::replaceTrumpCarte(Carte *_newCarte)
 
 Carte* Joueur::choisirCarte(Carte *_carteAdversaire)
 {
+    m_CarteJouee = nullptr;
     if (m_Chouine.piocheVide())
     {
         m_CarteJouee = m_Algo.choisirCartePiocheVide(_carteAdversaire);
-        return m_CarteJouee;
     }
     else
     {
         m_CarteJouee = m_Algo.choisirCarte(_carteAdversaire);
-        return m_CarteJouee;
-    }    
-    return nullptr;
+    }
+    Annonce *annonce = rechercheAnnonce(*_carteAdversaire);
+    if (annonce != nullptr)
+    {
+
+    }
+    return m_CarteJouee;
 }
 
 
