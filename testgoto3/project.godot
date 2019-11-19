@@ -18,3 +18,7 @@ _global_script_class_icons={
 config/name="test_godot3"
 run/main_scene="res://acceuil.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+global="*res://global.gd"
