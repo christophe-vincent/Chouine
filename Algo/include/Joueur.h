@@ -5,11 +5,9 @@
 #include <map>
 #include "Carte.h"
 #include "ListeCartes.h"
-#include "Annonce.h"
 #include "Algorithme.h"
 
-using namespace std;
-
+class Annonce;
 class Chouine;
 
 class Node
@@ -24,43 +22,56 @@ private:
 class Joueur
 {
 public:
-    Joueur(Chouine &_chouine, int _niveau);
+    Joueur(Chouine &_chouine, int _niveau, int _id);
     virtual ~Joueur();
 
     static const int MAX_CARDS;
 
+    int id() { return m_Id; }
+
+    // gestion du niveau du joueur
     void niveau(int _niveau) { m_Niveau = _niveau; }
     int niveau() { return m_Niveau; }
-    ListeCartes &cartes() { return m_Cartes; }
-    ListeCartes &cartesGagnees() { return m_CartesGagnees; }
-    Annonce *getLatestAnnonce() { return m_LatestAnnonce; }
-    bool getIsChouine() { return m_IsChouine; }
-    int CarteLeft() { return m_Cartes.size(); }
-    int getPoints() { return m_CartesGagnees.getPoints(); }
+
+    // retourne la list des cartes en main
+    ListeCartes &cartes() { return m_CartesMain; }
+
+    // nombre de cartes en main
+    int quantiteCartesMain() { return m_CartesMain.size(); }
+
     int get10Der() { return m_10Der; }
-    set<Annonce *> getAnnouces() { return m_Annonces; }
     Carte* carteJouee() { return m_CarteJouee; }
+    ListeCartes& cartesJouees() { return m_CartesJouees; }
 
-    string nomCartesMain();
-    string nomCartesGagnees();
-    Carte *getCarte(unsigned int _index);
-    void ajouterCartesGagneesAdversaire(Carte *_c1, Carte *_c2);
-    bool hasChange7Trump();
-    Status ajouterCarte(Carte &_carte);
-    Status supprimerCarte(Carte *_carte);
+    // retourne le nombre de points du joueur
+    int points();
+    
+    // retourne la carte
+    Carte *carteMain(unsigned int _index);
+
+    // ajoute une carte à la main
+    Status ajouterCarteMain(Carte &_carte);
+
+    // supprime une carte de la main
+    void supprimerCarte(Carte *_carte);
+
+    // Vérifie si une annonce doit être déclarée avant de jouer cette carte
     Annonce* rechercheAnnonce(Carte &_carte);
-    void printAnnonces();
-    Carte* choisirCarte(Carte *_enemyChoice);
-    void pliGagnant(Carte& _carteAdversaire);
-    void pliPerdant(Carte& _carteAdversaire);
 
-    Carte *getSmallestTrump();
-    int trumpNumber();
-    bool replaceTrumpCarte(Carte *_newCarte);
-    bool isCarteAllowed(Carte &_card, Carte &_otherCarte);
-    Status PlayCarte(Carte &_card);
-    Status ajouterCartesGagnees(Carte &_card1, Carte &_card2);
-    Carte *bruteForceAttack(ListeCartes &_hisCartes);
+    // choisir une carte à jouer
+    Carte* choisirCarte(Carte *_enemyChoice, std::string& _annonce);
+
+    // fin du pli
+    void finPli(bool _gagnant, Carte& _carteAdversaire);
+
+    // prend la carte d'atout avec le 7 d'atout
+    bool prendreCarteAtout(Carte *_newCarte);
+
+    // a t'on le droit de jouer cette carte quand la pioche est vide ?
+    bool carteAurotisee(Carte &_card, Carte &_otherCarte);
+    
+    std::string cartesMainToStr();
+    std::string cartesGagneesToStr();
 
 protected:
     Carte *EmptyPickSimulation(Carte &_userChoice);
@@ -69,16 +80,18 @@ protected:
     bool m_Change7Trump;
 
 private:
+    int m_Id;
     Chouine &m_Chouine;
-    ListeCartes m_Cartes;    // 5 cards to be played
+    ListeCartes m_CartesMain;    // 5 cartes de la main
     ListeCartes m_CartesGagnees; // cards win
-    ListeCartes m_CartesGagneesAdversaire;
-    set<Annonce *> m_Annonces;
+    ListeCartes m_CartesJouees;
     Annonce *m_LatestAnnonce;
     int m_Niveau;
     int m_10Der;
+    int m_PointsAnnonces;
     Algorithme m_Algo;
     Carte *m_CarteJouee;
+    std::map<Annonce*, int> m_Annonces;
 };
 
 #endif

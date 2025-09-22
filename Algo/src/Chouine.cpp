@@ -3,15 +3,20 @@
 #include <string>
 #include <chrono>
 #include "Chouine.h"
+#include "Annonce.h"
 
 using namespace std;
+static std::random_device rd;
+static std::mt19937 mt(rd());
+static std::uniform_int_distribution<int> dist(1, 2);
 
-Chouine::Chouine(int _niveauJoueur1, int _niveauJoueur2) : 
-m_Joueur1(*this, _niveauJoueur1), 
-m_Joueur2(*this, _niveauJoueur2)
+
+Chouine::Chouine(int _niveauJoueurA, int _niveauJoueurB) : 
+m_JoueurA(*this, _niveauJoueurA, JOUEUR_A), 
+m_JoueurB(*this, _niveauJoueurB, JOUEUR_B)
 {
-    m_Joueurs[0] = &m_Joueur1;
-    m_Joueurs[1] = &m_Joueur2;
+    m_Joueurs[0] = &m_JoueurA;
+    m_Joueurs[1] = &m_JoueurB;
     m_isChouine = false;
 }
 
@@ -19,28 +24,20 @@ Chouine::~Chouine()
 {
 }
 
-CarteId Chouine::getJoueurCarte(int _player, int _card)
-{
-    if (_player > 1)
-        return NONE;
-    Carte *c = m_Joueurs[_player]->getCarte(_card);
-    if (c == nullptr)
-        return NONE;
-}
 
 void Chouine::newGame()
 {
-    auto seed = chrono::high_resolution_clock::now().time_since_epoch().count();
-    std::mt19937 mt(seed);
-    std::uniform_int_distribution<int> dist(0, 3);
-
-    m_GagnantPli = JOUEUR_1;
-    int otherJoueur = 1;
-    if (dist(mt) >= Carte::NB_COLORS / 2)
+    m_GagnantPli = &m_JoueurA;
+    m_PerdantPli = &m_JoueurB;
+    if (dist(mt) == 2)
     {
-        m_GagnantPli = JOUEUR_2;
-        otherJoueur = 0;
+        m_GagnantPli = &m_JoueurB;
+        m_PerdantPli = &m_JoueurA;
     }
+    // TODO: remove
+    // m_GagnantPli = JOUEUR_2;
+    // m_PerdantPli = JOUEUR_1;
+    // otherJoueur = 0;
     
     // ajoute les cartes à la pioche
     unsigned int id = 0;
@@ -61,6 +58,7 @@ void Chouine::newGame()
     //cout << m_Pioche.nomCartes() << endl;
     //cout << m_Pioche.getLastCarte()->nom() << endl;
     
+    // ajoute l'attribut Atout pour les cartes d'atout
     auto pioche = m_Pioche.cartes();
     for (auto it=pioche.begin(); it!=pioche.end(); ++it)
     {
@@ -70,16 +68,40 @@ void Chouine::newGame()
         }
     }
 
+    // Distribution, les 2 joueurs piochent pour avoir 5 cartes chacun
     for (int i = 0; i < Joueur::MAX_CARDS; i++)
     {
         Carte *card = m_Pioche.piocheCarte();
         if (card != nullptr)
-            m_Joueurs[m_GagnantPli]->ajouterCarte(*card);
+            m_GagnantPli->ajouterCarteMain(*card);
 
         card = m_Pioche.piocheCarte();
         if (card != nullptr)
-            m_Joueurs[otherJoueur]->ajouterCarte(*card);
+            m_PerdantPli->ajouterCarteMain(*card);
     }
+
+    // creation de toutes les annnonces possibles
+    Annonce *annonce;
+    for (unsigned int i=0; i<Carte::NB_COLORS; i++)
+    {
+        bool atout = false;
+        if (Carte::ALL_COLORS[i] == m_Atout)
+            atout = true;
+        annonce = new Annonce(Carte::ALL_COLORS[i],
+                      Annonce::MARIAGE, atout);
+        m_Annonces.insert(annonce);
+        annonce = new Annonce(Carte::ALL_COLORS[i],
+                      Annonce::TIERCE, atout);
+        m_Annonces.insert(annonce);
+        annonce = new Annonce(Carte::ALL_COLORS[i],
+                      Annonce::QUARANTE, atout);
+        m_Annonces.insert(annonce);
+        annonce = new Annonce(Carte::ALL_COLORS[i],
+                      Annonce::CHOUINE, atout);
+        m_Annonces.insert(annonce);
+    }
+    annonce = new Annonce(Carte::UNDEF_COLOR, Annonce::QUINTE, false);
+    m_Annonces.insert(annonce);
 }
 
 bool Chouine::piocheVide()
@@ -89,42 +111,27 @@ bool Chouine::piocheVide()
     return ret;
 }
 
-string Chouine::choixJoueur(Chouine::JOUEUR _player)
+string Chouine::choixJoueur(string& _annonce)
 {
     string ret("erreur");
-    if (_player > 1)
+    Carte *carte = nullptr;
+    string annonce = "";
+
+    if (m_GagnantPli->carteJouee() == nullptr)
+    {
+        // C'est le premier joueur à jouer
+        carte = m_GagnantPli->choisirCarte(nullptr, _annonce);
+    } else
+    {
+        // c'est au second joueur de jouer
+        carte = m_PerdantPli->choisirCarte(m_GagnantPli->carteJouee(), _annonce);
+    }
+    if (carte == nullptr)
     {
         return ret;
     }
-    Carte *carte = nullptr;
 
-    if (m_GagnantPli == _player)
-    {
-        // ce joueur joue le premier
-        carte = m_Joueurs[_player]->choisirCarte(nullptr);
-        if (carte == nullptr)
-        {
-            return ret;
-        }
-    }
-    else
-    {
-        JOUEUR adversaire = _player == JOUEUR_1 ? JOUEUR_2 : JOUEUR_1;
-        Carte* carteAdversaire = m_Joueurs[adversaire]->carteJouee();
-        // l'autre joueur a déjà joué
-        if (carteAdversaire == nullptr)
-        {
-            return ret; // hum...
-        }
-        carte = m_Joueurs[_player]->choisirCarte(carteAdversaire);
-    }
-
-    if (carte)
-    {
-        ret = carte->nom();
-    }
-
-    return ret;
+    return carte->carteToStr();
 }
 
 bool Chouine::setJoueurChoice(int _player, int _choice)
@@ -155,229 +162,55 @@ bool Chouine::setJoueurChoice(int _player, int _choice)
 
 Chouine::JOUEUR Chouine::finPli()
 {
+    // les carte ne seront ensuite plus accessibles
+    Carte* carteJoueurA = m_JoueurA.carteJouee();
+    Carte* carteJoueurB = m_JoueurB.carteJouee();
 
-    if (m_GagnantPli == JOUEUR_1)
+    if (m_GagnantPli->id() == m_JoueurA.id())
     {
-        if (m_Joueur1.carteJouee()->gagnante(*m_Joueur2.carteJouee()))
+        if (!carteJoueurA->gagnante(*carteJoueurB))
         {
-            m_GagnantPli = JOUEUR_2;
+            // le joueur A a gagné
+            m_JoueurA.finPli(true, *carteJoueurB);
+            m_JoueurB.finPli(false, *carteJoueurA);
         }
         else
         {
-            m_GagnantPli = JOUEUR_1;
-        }        
-    }
-    else if (m_GagnantPli == JOUEUR_2)
-    {
-        if (m_Joueur2.carteJouee()->gagnante(*m_Joueur1.carteJouee()))
-        {
-            m_GagnantPli = JOUEUR_1;
+            // le joueur B a gagné
+            m_GagnantPli = &m_JoueurB;
+            m_PerdantPli = &m_JoueurA;
+            m_JoueurB.finPli(true, *carteJoueurA);
+            m_JoueurA.finPli(false, *carteJoueurB);
         }
-        else
-        {
-            m_GagnantPli = JOUEUR_2;
-        }        
-    }
-
-    if (m_GagnantPli == JOUEUR_1)
-    {
-        Carte* carteJoueur1 = m_Joueur1.carteJouee();
-        m_Joueur1.pliGagnant(*m_Joueur2.carteJouee());
-        m_Joueur2.pliPerdant(*carteJoueur1);
     }
     else
     {
-        Carte* carteJoueur2 = m_Joueur2.carteJouee();
-        m_Joueur2.pliGagnant(*m_Joueur1.carteJouee());
-        m_Joueur1.pliPerdant(*carteJoueur2);
-    }  
-        
-    return m_GagnantPli;
+        if (!carteJoueurB->gagnante(*carteJoueurA))
+        {
+            // le joueur B a gagné
+            m_JoueurB.finPli(true, *carteJoueurA);
+            m_JoueurA.finPli(false, *carteJoueurB);
+        }
+        else
+        {
+            // le joueur A a gagné
+            m_GagnantPli = &m_JoueurA;
+            m_PerdantPli = &m_JoueurB;
+            m_JoueurA.finPli(true, *carteJoueurB);
+            m_JoueurB.finPli(false, *carteJoueurA);
+        }
+    }
+
+    return (JOUEUR)m_GagnantPli->id();
 }
 
 bool Chouine::finPartie() 
 { 
-    return (m_Pioche.size() + m_Joueur1.cartes().size() ) == 0 ? true : false;
+    return (m_Pioche.size() + m_JoueurA.cartes().size() ) == 0 ? true : false;
 }
 
 
 int Chouine::pointsJoueur(JOUEUR _joueur)
 {
-    return m_Joueurs[_joueur]->getPoints();
+    return m_Joueurs[_joueur]->points();
 }
-
-
-
-/*
-string Chouine::hasChange7Trump(int _player)
-{
-   if (_player > 1)
-   {
-      return nullptr;
-   }
-   if (m_Joueurs[_player].hasChange7Trump())
-   {
-      Carte cardSeven = new Carte(m_Pioche.getTrumpCouleur(), CarteValue.SEPT, true);
-      return cardSeven.displayName();
-   }
-   else
-   {
-      return nullptr;
-   }
-}
-
-
-string Chouine::change7Trump(int _player)
-{
-   if (_player > 1)
-   {
-      return nullptr;
-   }
-   Carte cardSeven = new Carte(m_Pioche.getTrumpCouleur(), CarteValue.SEPT, true);
-
-   if (!m_Joueurs[_player].replaceTrumpCarte(cardSeven.displayName(), m_Pioche.getTrumpCarte()))
-   {
-      return nullptr;
-   }
-   m_Pioche.replaceTrumpCarte(cardSeven);
-   return cardSeven.displayName();
-}
-
-// TODO : A supprimer
-int Chouine::Play()
-{
-   int winner;
-   bool ret = false;
-
-   if (m_Joueurs[0].CarteLeft() == 0)
-   {
-      return -1;
-   }
-
-   // get strongest card
-   winner = m_Donor;
-   if (m_JoueurChoices[m_Donor].isBetter(m_JoueurChoices[(m_Donor + 1) % 2]))
-   {
-      winner = (m_Donor + 1) % 2;
-   }
-
-   // indicate to the player that card as played
-   m_Joueurs[0].PlayMove(m_JoueurChoices[0]);
-   m_Joueurs[1].PlayMove(m_JoueurChoices[1]);
-
-   m_Joueurs[winner].WinCartes(m_JoueurChoices[m_Donor], m_JoueurChoices[(m_Donor + 1) % 2]);
-   m_Joueurs[(winner + 1) % 2].enemyWinCartes(m_JoueurChoices[m_Donor], m_JoueurChoices[(m_Donor + 1) % 2]);
-
-   //Tracer.print(Tracer.Verbosity.INFO, ">>> " + m_Joueurs[m_Donor].name() + ": ");
-   //Tracer.print(Tracer.Verbosity.INFO, m_JoueurChoices[m_Donor].displayName() + " - ");
-   //Tracer.print(Tracer.Verbosity.INFO, m_Joueurs[(m_Donor + 1) % 2].name() + ": ");
-   //Tracer.print(Tracer.Verbosity.INFO, m_JoueurChoices[(m_Donor + 1) % 2].displayName() + " - ");
-   //Tracer.print(Tracer.Verbosity.INFO, "      GAGANT : " + m_Joueurs[winner].name());
-   //Tracer.println(Tracer.Verbosity.INFO, "");
-   //Tracer.println(Tracer.Verbosity.INFO, "");
-
-   if (m_Pioche.CarteLeft() > 0)
-   {
-      m_Joueurs[winner].addCarte(m_Pioche.pickCarte());
-      m_Joueurs[(winner + 1) % 2].addCarte(m_Pioche.pickCarte());
-   }
-
-   if (m_Joueurs[0].CarteLeft() > 0)
-   {
-      m_Joueurs[0].displayCartes();
-      m_Joueurs[1].displayCartes();
-   }
-
-   m_JoueurChoices[0] = nullptr;
-   m_JoueurChoices[1] = nullptr;
-
-   m_Donor = winner;
-
-   return winner;
-}
-
-bool Chouine::isGameOver()
-{
-   if (m_Joueurs[0].getIsChouine() || m_Joueurs[1].getIsChouine())
-   {
-      return true;
-   }
-
-   if (m_Joueurs[0].CarteLeft() == 0)
-   {
-      // gameover
-      return true;
-   }
-   else
-   {
-      return false;
-   }
-}
-
-
-int Chouine::getJoueurAnnouncesPoints(int _player)
-{
-   if (_player > 1)
-   {
-      return 0;
-   }
-   int points = 0;
-   set<Announce*> announces;
-
-   announces = getJoueurAnnouces(_player);
-   if (!announces.empty())
-   {
-      for (Announce an : announces)
-      {
-         points += an.getPoints();
-      }
-   }
-   return points;
-}
-
-int Chouine::getJoueurTotalPoints(int _player)
-{
-   if (_player > 1)
-   {
-      return 0;
-   }
-
-   int points;
-   set<Announce*> announces;
-
-   points = getJoueurPoints(_player);
-   if (getJoueur10Der(_player) > 0)
-   {
-      points += getJoueur10Der(_player);
-   }
-   announces = getJoueurAnnouces(_player);
-   if (!announces.empty())
-   {
-      for (Announce an : announces)
-      {
-         points += an.getPoints();
-      }
-   }
-   return points;
-}
-
-void Chouine::testBruteForce()
-{
-   LinkedList<Carte> donorCartes = new LinkedList<>();
-   LinkedList<Carte> otherCartes = new LinkedList<>();
-
-   donorCartes.add(m_Joueurs[0].m_Cartes.get(0));
-   donorCartes.add(m_Joueurs[0].m_Cartes.get(1));
-   donorCartes.add(m_Joueurs[0].m_Cartes.get(2));
-   donorCartes.add(m_Joueurs[0].m_Cartes.get(3));
-   //donorCartes.add(m_Joueurs[0].m_Cartes.get(4));
-
-   otherCartes.add(m_Joueurs[1].m_Cartes.get(0));
-   otherCartes.add(m_Joueurs[1].m_Cartes.get(1));
-   otherCartes.add(m_Joueurs[1].m_Cartes.get(2));
-   otherCartes.add(m_Joueurs[1].m_Cartes.get(3));
-   //otherCartes.add(m_Joueurs[1].m_Cartes.get(4));
-
-   m_Joueurs[0].bruteForceAttack(donorCartes, otherCartes);
-}
-*/

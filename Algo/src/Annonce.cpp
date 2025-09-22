@@ -1,44 +1,134 @@
+#include <algorithm>
+#include <cmath>
 #include "Annonce.h"
 
-const Carte::Valeur Annonce::CARTES_MARIAGE[] =
-    {
-        Carte::DAME,
-        Carte::ROI};
-const Carte::Valeur Annonce::CARTES_TIERCE[] =
-    {
-        Carte::VALET, 
-        Carte::DAME, 
-        Carte::ROI};
-const Carte::Valeur Annonce::CARTES_QUARANTE[] =
-    {
-        Carte::ROI, 
-        Carte::DAME, 
-        Carte::VALET, 
-        Carte::AS};
-const Carte::Valeur Annonce::CARTES_CHOUINE[] =
-    {
-        Carte::ROI, 
-        Carte::DAME, 
-        Carte::VALET, 
-        Carte::DIX,
-        Carte::AS};
+const std::array<Carte::Valeur, 2> Annonce::CARTES_MARIAGE =
+{
+    Carte::DAME,
+    Carte::ROI
+};
+const std::array<Carte::Valeur, 3> Annonce::CARTES_TIERCE =
+{
+    Carte::VALET,
+    Carte::DAME,
+    Carte::ROI
+};
+const std::array<Carte::Valeur, 4> Annonce::CARTES_QUARANTE =
+{
+    Carte::ROI,
+    Carte::DAME,
+    Carte::VALET,
+    Carte::AS
+};
+const std::array<Carte::Valeur, 5> Annonce::CARTES_CHOUINE =
+{
+    Carte::ROI,
+    Carte::DAME,
+    Carte::VALET,
+    Carte::DIX,
+    Carte::AS
+};
 
 const Annonce::TypeAnnonce Annonce::ANNONCES[] =
-    {Annonce::MARIAGE, Annonce::TIERCE, 
-     Annonce::QUARANTE, Annonce::QUINTE,
-     Annonce::CHOUINE};
+{
+    Annonce::MARIAGE,
+    Annonce::TIERCE,
+    Annonce::QUARANTE,
+    Annonce::QUINTE,
+    Annonce::CHOUINE
+};
 
 const set<int> Annonce::POINTS_ANNONCES =
     {20, 30, 40, 50, 1000};
+
+
+
+Annonce::Annonce(Carte::Couleur _couleur, TypeAnnonce _type, bool _atout) :
+    m_Couleur(_couleur), m_Annonce(_type), m_Atout(_atout), m_Points(0)
+{
+
+    switch (m_Annonce)
+    {
+        case MARIAGE:
+            m_Points = 20;
+            break;
+        case TIERCE:
+            m_Points = 30;
+            break;
+        case QUARANTE:
+            m_Points = 40;
+            break;
+        case CHOUINE:
+            m_Points = 300;
+            break;
+        case QUINTE:
+            m_Points = 50;
+            break;
+        default:
+            break;
+    }
+    if (m_Atout)
+    {
+        m_Points *= 2;
+    }
+}
 
 
 Annonce::~Annonce()
 {
 }
 
+int Annonce::calculeScore(ListeCartes &_cartesMain, ListeCartes &_cartesJouees)
+{
+    int nbCarte = 0;
+    for (unsigned int i = 0; i < _cartesMain.size(); i++)
+    {
+        if (carteDansAnnonce(*_cartesMain[i]) == true)
+        {
+            nbCarte++;
+        }
+    }
+    int nbCartes = 10000;
+    switch (m_Annonce)
+    {
+        case MARIAGE:
+            nbCartes = sizeof(CARTES_MARIAGE) / sizeof(Carte::Valeur);
+            break;
+        case TIERCE:
+            nbCartes = sizeof(CARTES_TIERCE) / sizeof(Carte::Valeur);
+            break;
+        case QUARANTE:
+            nbCartes = sizeof(CARTES_QUARANTE) / sizeof(Carte::Valeur);
+            break;
+        case CHOUINE:
+            nbCartes = sizeof(CARTES_CHOUINE) / sizeof(Carte::Valeur);
+            break;
+        case QUINTE:
+            nbCartes = 5;
+            break;
+        
+        default:
+            break;
+    }
+    // pourcentage de cartes dans l'annonce
+    //int score = int((nbCarte * 100) / nbCartes);
+    // probabilité d'avoir cette annonce en main
+    int proba = 100*std::pow(0.5, nbCartes - nbCarte);
+
+    // prendre en compte les cartes déjà jouées
+    for (unsigned int i = 0; i < _cartesJouees.size(); i++)
+    {
+        if (carteDansAnnonce(*_cartesJouees[i]) == true)
+        {
+            proba = -1; // annonce plus possible
+        }
+    }
+    return proba;
+}
+
 void Annonce::ajouterCarte(Carte &_carte)
 {
-    // verificationd e la couleur
+    // verification de la couleur
     if (m_Annonce != QUINTE)
     {
         if (_carte.couleur() != m_Couleur)
@@ -48,7 +138,7 @@ void Annonce::ajouterCarte(Carte &_carte)
         }
     }
     // vérifier si la carte appartient bien à l'annnonce en question
-    if (_carte.getValeur() == Carte::VALET)
+    if (_carte.valeur() == Carte::VALET)
     {
         if ((m_Annonce == TIERCE) || (m_Annonce == QUARANTE) ||
             (m_Annonce == CHOUINE) )
@@ -56,15 +146,15 @@ void Annonce::ajouterCarte(Carte &_carte)
             m_Cartes.ajouter(&_carte);
         }
     }
-    if ((_carte.getValeur() == Carte::ROI) || 
-        (_carte.getValeur() == Carte::DAME))
+    if ((_carte.valeur() == Carte::ROI) || 
+        (_carte.valeur() == Carte::DAME))
     {
         if (m_Annonce != QUINTE)
         {
             m_Cartes.ajouter(&_carte);
         }
     }
-    if (_carte.getValeur() == Carte::DIX)
+    if (_carte.valeur() == Carte::DIX)
     {
         if ((m_Annonce == QUARANTE) || (m_Annonce == QUINTE) || 
             (m_Annonce == CHOUINE) )
@@ -72,7 +162,7 @@ void Annonce::ajouterCarte(Carte &_carte)
             m_Cartes.ajouter(&_carte);
         }
     }
-    if (_carte.getValeur() == Carte::AS)
+    if (_carte.valeur() == Carte::AS)
     {
         if ((m_Annonce == QUINTE) || (m_Annonce == CHOUINE) )
         {
@@ -86,9 +176,37 @@ void Annonce::supprimerCarte(Carte *_carte)
     m_Cartes.supprimer(_carte);
 }
 
-bool Annonce::cartePresente(Carte &_carte)
+bool Annonce::carteDansAnnonce(Carte &_carte)
 {
-    return m_Cartes.rechercheCarte(_carte);    
+    // cas particulier de la quinte
+    if (m_Annonce == QUINTE) 
+    {
+        // Si la carte est un As ou 10, alors OK
+        if (_carte.valeur() == Carte::AS || _carte.valeur() == Carte::DIX)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    // autres annonces, vérifier la couleur
+    if (_carte.couleur() != m_Couleur)
+    {
+        return false;
+    }
+    // vérifier si la valeur fait partie de l'annonce
+    switch (m_Annonce)
+    {
+        case MARIAGE:
+            return std::find(CARTES_MARIAGE.begin(), CARTES_MARIAGE.end(), _carte.valeur()) != CARTES_MARIAGE.end();
+        case TIERCE:
+            return std::find(CARTES_TIERCE.begin(), CARTES_TIERCE.end(), _carte.valeur()) != CARTES_TIERCE.end();
+        case QUARANTE:
+            return std::find(CARTES_QUARANTE.begin(), CARTES_QUARANTE.end(), _carte.valeur()) != CARTES_QUARANTE.end();
+        case CHOUINE:
+            return std::find(CARTES_CHOUINE.begin(), CARTES_CHOUINE.end(), _carte.valeur()) != CARTES_CHOUINE.end();
+    }
+    return false;
 }
 
 /*void Annonce::computeScore()
@@ -154,7 +272,7 @@ bool Annonce::quinte(ListeCartes &_list)
 
     for (unsigned int i = 0; i < _list.size(); i++)
     {
-        if (_list[i]->getValeur() == Carte::AS || _list[i]->getValeur() == Carte::DIX)
+        if (_list[i]->valeur() == Carte::AS || _list[i]->valeur() == Carte::DIX)
         {
             nBrisques++;
         }
@@ -214,4 +332,50 @@ unsigned int Annonce::cartesManquantes()
         break;
     }
     return ret - m_Cartes.nombreCartes();
+}
+
+
+string Annonce::to_string()
+{
+    string text;
+    switch (m_Annonce)
+    {
+        case Annonce::MARIAGE :
+            text = 'M';
+            break;
+        case Annonce::TIERCE :
+            text = 'T';
+            break;
+        case Annonce::QUARANTE :
+            text = 'Q';
+            break;
+        case Annonce::CHOUINE :
+            text = 'C';
+            break;
+        case Annonce::QUINTE :
+            text = '5';
+            break;
+        default:
+            break;
+        }
+        text += "-";
+
+        switch (m_Couleur)
+        {
+        case Carte::PIC:
+            text += "Pi";
+            break;
+        case Carte::TREFLE:
+            text += "Tr";
+            break;
+        case Carte::CARREAU:
+            text += "Ca";
+            break;
+        case Carte::COEUR:
+            text += "Co";
+            break;
+        default:
+            break;
+    }
+    return text;
 }

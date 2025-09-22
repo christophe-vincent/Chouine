@@ -2,205 +2,107 @@
 #include <string.h>
 #include "Joueur.h"
 #include "Chouine.h"
+#include "Carte.h"
 #include "Algorithme.h"
+#include "Annonce.h"
 
 const int Joueur::MAX_CARDS = 5;
 
 using namespace std;
 
-Joueur::Joueur(Chouine& _chouine, int _niveau):
+Joueur::Joueur(Chouine& _chouine, int _niveau, int _id):
 m_Chouine(_chouine), m_Algo(_niveau, *this), m_Niveau(_niveau)
 {
+    m_Id = _id;
     m_10Der = 0;
+    m_PointsAnnonces = 0;
     m_LatestAnnonce = nullptr;
     m_Change7Trump = false;
     m_IsChouine = false;
     m_CarteJouee = nullptr;
-    // creation de toutes les annnonces possibles
-    Annonce *annonce;
-    for (unsigned int i=0; i<Carte::NB_COLORS; i++)
-    {
-        bool atout = false;
-        if (Carte::ALL_COLORS[i] == m_Chouine.couleurAtout())
-            atout = true;
-        annonce = new Annonce(Carte::ALL_COLORS[i], 
-                      Annonce::MARIAGE, atout);
-        m_Annonces.insert(annonce);
-        annonce = new Annonce(Carte::ALL_COLORS[i], 
-                      Annonce::TIERCE, atout);
-        m_Annonces.insert(annonce);
-        annonce = new Annonce(Carte::ALL_COLORS[i], 
-                      Annonce::QUARANTE, atout);
-        m_Annonces.insert(annonce);
-        annonce = new Annonce(Carte::ALL_COLORS[i], 
-                      Annonce::CHOUINE, atout);
-        m_Annonces.insert(annonce);
-    }
-    annonce = new Annonce(Annonce::QUINTE);
-    m_Annonces.insert(annonce);
 }
 
 Joueur::~Joueur()
 {
 }
 
-// retourne la main du joueur en chaine
-string Joueur::nomCartesMain()
+int Joueur::points()
 {
-    return m_Cartes.nomCartes();
-}
-
-// carte gagnees
-string Joueur::nomCartesGagnees()
-{
-    return m_CartesGagnees.nomCartes();
+    return m_CartesGagnees.getPoints() + m_10Der + m_PointsAnnonces;
 }
 
 
-Carte *Joueur::getCarte(unsigned int _index)
+Carte *Joueur::carteMain(unsigned int _index)
 {
-    if (_index >= m_Cartes.size())
+    if (_index >= m_CartesMain.size())
     {
         return nullptr;
     }
-    return m_Cartes[_index];
+    return m_CartesMain[_index];
 }
 
-void Joueur::ajouterCartesGagneesAdversaire(Carte *_c1, Carte *_c2)
-{
-    m_CartesGagneesAdversaire.ajouter(_c1);
-    m_CartesGagneesAdversaire.ajouter(_c2);
-}
 
-bool Joueur::hasChange7Trump()
+Status Joueur::ajouterCarteMain(Carte &_carte)
 {
-    if (m_Change7Trump)
-    {
-        m_Change7Trump = true;
-        return true;
-    }
-    return false;
-}
-
-Status Joueur::ajouterCarte(Carte &_carte)
-{
-    if (m_Cartes.size() >= MAX_CARDS)
+    if (m_CartesMain.size() >= MAX_CARDS)
     {
         return Status::TOO_MANY_CARDS;
     }
 
-    m_Cartes.ajouter(&_carte);
-    for (Annonce *annonce: m_Annonces)
-    {
-        annonce->ajouterCarte(_carte);
-        if (annonce->cartesManquantes() == 0)
-        {
-            //printAnnonces();
-            //exit(1);
-        }
-    }
-    printAnnonces();
+    m_CartesMain.ajouter(&_carte);
 
     return Status::OK;
 }
 
 
-Status Joueur::supprimerCarte(Carte *_carte)
+void Joueur::supprimerCarte(Carte *_carte)
 {
-    m_Cartes.supprimer(_carte);
-    for (Annonce *annonce: m_Annonces)
-    {
-        annonce->supprimerCarte(_carte);
-    }
-    printAnnonces();
+    m_CartesMain.supprimer(_carte);
 }
 
 
-// cherche si la carte fait partie d'une annonce
+// cherche si la carte fait partie d'une annonce en main
 Annonce* Joueur::rechercheAnnonce(Carte &_carte)
 {
-    Annonce* annoncePlusForte = nullptr;
-    for (Annonce *annonce: m_Annonces)
+    if (_carte.valeur() == Carte::SEPT ||
+        _carte.valeur() == Carte::HUIT ||
+        _carte.valeur() == Carte::NEUF)
     {
-        if (annonce->cartePresente(_carte))
+        // les 7,8,9 ne font jamais partie d'une annonce
+        return nullptr;
+    }
+
+    Annonce* plusForteAnnonce = nullptr;
+    for (const auto& pair : _carte.annonces())
+    {
+        Annonce* annonce = pair.first;
+        int score = pair.second;
+        if (score == 100)
         {
-            if (annonce == nullptr)
+            // l'annonce est complète
+            if (annonce > plusForteAnnonce)
             {
-                annoncePlusForte = annonce;
-            }
-            else if (annonce > annoncePlusForte)
-            {
-                annoncePlusForte = annonce;                
+                plusForteAnnonce = annonce;
             }
         }
     }
-    return annoncePlusForte;
+    return plusForteAnnonce;
 }
 
-void Joueur::printAnnonces()
-{
-    for (Annonce *annonce: m_Annonces)
-    {
-        char ann;
-        switch (annonce->type())
-        {
-        case Annonce::MARIAGE :
-            ann='M';
-            break;
-        case Annonce::TIERCE :
-            ann='T';
-            break;
-        case Annonce::QUARANTE :
-            ann='Q';
-            break;
-        case Annonce::CHOUINE :
-            ann='C';
-            break;
-        case Annonce::QUINTE :
-            ann='5';
-            break;        
-        default:
-            break;
-        }
-        char couleur[3];
-        switch (annonce->couleur())
-        {
-        case Carte::PIC:
-            strcpy(couleur,  "Pi");
-            break;
-        case Carte::TREFLE:
-            strcpy(couleur,  "Tr");
-            break;
-        case Carte::CARREAU:
-            strcpy(couleur,  "Ca");
-            break;
-        case Carte::COEUR:
-            strcpy(couleur,  "Co");
-            break;        
-        default:
-            break;
-        }
-        printf("%c%s:%u ",
-               ann, 
-               couleur,
-               annonce->cartesManquantes());
-    }
-    printf("\n");
-}
 
-bool Joueur::replaceTrumpCarte(Carte *_newCarte)
+bool Joueur::prendreCarteAtout(Carte *_newCarte)
 {
     int index = -1;
     Carte *card = nullptr;
 
-    card = m_Cartes.getCarteFromList(m_Chouine.couleurAtout(), Carte::SEPT);
+    card = m_CartesMain.getCarteFromList(m_Chouine.couleurAtout(), Carte::SEPT);
 
     if (card != nullptr)
     {
         // ok, on a le 7 d'atout
-        m_Cartes.supprimer(card);
+        m_CartesMain.supprimer(card);
         
-        ajouterCarte(*_newCarte);
+        ajouterCarteMain(*_newCarte);
         return true;
     }
 
@@ -208,67 +110,100 @@ bool Joueur::replaceTrumpCarte(Carte *_newCarte)
 }
 
 
-Carte* Joueur::choisirCarte(Carte *_carteAdversaire)
+Carte* Joueur::choisirCarte(Carte *_carteAdversaire, string& _annonce)
 {
+    // recalculer les annonces
+    if (m_Niveau >= Algorithme::VERIFIE_ANNONCE)
+    {
+        m_Annonces.clear();
+        for (Carte* carteMain: m_CartesMain.cartes())
+        {
+            carteMain->annonces().clear();
+        }
+        for (auto* annonce: m_Chouine.getAnnonces()) 
+        {
+            // le score indique si une annonce est présente, partiellement presente ou absente de la main
+            int score = annonce->calculeScore(m_CartesMain, m_CartesJouees);
+            if (score > 0)
+            {
+                // associons cette annonce au joueur
+                m_Annonces[annonce] = score;
+                //cout << "Annonce dans la main: " << annonce->to_string() << " Score=" << score << endl;
+
+                // ajoutons l'annonce et son score à chaque carte concernée
+                for (Carte* carteMain: m_CartesMain.cartes())
+                {
+                    //cout << "annonce: " << annonce->to_string() << " carte: " << carteMain->carteToStr();
+                    //cout << " Present ? " << annonce->carteDansAnnonce(*carteMain) << endl;
+                    if (annonce->carteDansAnnonce(*carteMain))
+                    {
+                        // ajoutons cette annonce dans la carte
+                        carteMain->annonces()[annonce] = score;
+                    }
+                }
+            }
+        }
+    }
+
+    // for (Carte* carteMain: m_CartesMain.cartes())
+    // {
+    //     if (carteMain->annonces().size() > 0)
+    //     {
+    //         cout << carteMain->carteToStr() + " -> " << carteMain->annonceToStr() << endl;
+    //     }
+    // }
+
     m_CarteJouee = nullptr;
     if (m_Chouine.piocheVide())
     {
+        // on doit donner la bonne couleur
         m_CarteJouee = m_Algo.choisirCartePiocheVide(_carteAdversaire);
     }
     else
     {
         m_CarteJouee = m_Algo.choisirCarte(_carteAdversaire);
     }
-    Annonce *annonce = rechercheAnnonce(*_carteAdversaire);
-    if (annonce != nullptr)
-    {
 
+    _annonce = "";
+    if (m_Niveau >= Algorithme::VERIFIE_ANNONCE)
+    {
+        // vérifier si la carte jouée fait partie d'une annonce
+        Annonce* annonce = rechercheAnnonce(*m_CarteJouee);
+        if (annonce != nullptr)
+        {
+            _annonce = annonce->to_string();
+            m_PointsAnnonces += annonce->points();
+        }
     }
     return m_CarteJouee;
 }
 
 
-void Joueur::pliGagnant(Carte& _carteAdversaire)
+void Joueur::finPli(bool _gagnant, Carte& _carteAdversaire)
 {
-    m_CartesGagnees.ajouter(&_carteAdversaire);
-    m_CartesGagnees.ajouter(m_CarteJouee);
+    if (_gagnant)
+    {
+        m_CartesGagnees.ajouter(&_carteAdversaire);
+        m_CartesGagnees.ajouter(m_CarteJouee);
+    }
+    if (_carteAdversaire.getPoints() > 0 && !m_CartesJouees.rechercheCarte(_carteAdversaire))
+    {
+        m_CartesJouees.ajouter(&_carteAdversaire);
+    }
+    if (m_CarteJouee->getPoints() > 0)
+    {
+        m_CartesJouees.ajouter(m_CarteJouee);
+    }
     supprimerCarte(m_CarteJouee);
     m_CarteJouee = nullptr;
     Carte* pioche = m_Chouine.pioche().piocheCarte();
     if (pioche != nullptr)
     {
-        ajouterCarte(*pioche);
+        ajouterCarteMain(*pioche);
     }
 }
 
-void Joueur::pliPerdant(Carte& _carteAdversaire)
-{
-    m_CartesGagneesAdversaire.ajouter(m_CarteJouee);
-    m_CartesGagneesAdversaire.ajouter(&_carteAdversaire);
-    supprimerCarte(m_CarteJouee);
-    m_CarteJouee = nullptr;
-    Carte* pioche = m_Chouine.pioche().piocheCarte();
-    if (pioche != nullptr)
-    {
-        ajouterCarte(*pioche);
-    }
-}
 
-Carte *Joueur::getSmallestTrump()
-{
-    int i = 0;
-    ListeCartes list;
-
-    m_Cartes.getTrumps(list);
-    return m_Cartes.plusFaible();
-}
-
-int Joueur::trumpNumber()
-{
-    ListeCartes list;
-    m_Cartes.getTrumps(list);
-    return list.size();
-}
 
 Carte *Joueur::EmptyPickSimulation(Carte &_userChoice)
 {
@@ -276,7 +211,7 @@ Carte *Joueur::EmptyPickSimulation(Carte &_userChoice)
     ListeCartes couleurList;
 
     // we must play a higher card
-    m_Cartes.getCouleurSubset(_userChoice.couleur(), couleurList);
+    m_CartesMain.getCouleurSubset(_userChoice.couleur(), couleurList);
 
     playCarte = couleurList.getHigherCarte(_userChoice);
     if (playCarte == nullptr)
@@ -285,7 +220,7 @@ Carte *Joueur::EmptyPickSimulation(Carte &_userChoice)
         if (!_userChoice.atout())
         {
             ListeCartes trumpList;
-            m_Cartes.getCouleurSubset(m_Chouine.couleurAtout(), trumpList);
+            m_CartesMain.getCouleurSubset(m_Chouine.couleurAtout(), trumpList);
             playCarte = couleurList.plusFaible();
         }
     }
@@ -295,9 +230,9 @@ Carte *Joueur::EmptyPickSimulation(Carte &_userChoice)
 
 // check if the Joueur is allowed to play this card or not
 // it is only done when pick is empty : user must play higher card
-bool Joueur::isCarteAllowed(Carte &_card, Carte &_otherCarte)
+bool Joueur::carteAurotisee(Carte &_card, Carte &_otherCarte)
 {
-    if (m_Cartes.size() == 1)
+    if (m_CartesMain.size() == 1)
     {
         // last card...
         return true;
@@ -309,7 +244,7 @@ bool Joueur::isCarteAllowed(Carte &_card, Carte &_otherCarte)
         return true;
     }
 
-    Carte *card = m_Cartes.getHigherCarte(_otherCarte);
+    Carte *card = m_CartesMain.getHigherCarte(_otherCarte);
     if (card == nullptr)
     {
         // the Joueur does not have higher card, so he can play nay card
@@ -321,197 +256,15 @@ bool Joueur::isCarteAllowed(Carte &_card, Carte &_otherCarte)
     }
 }
 
-Status Joueur::PlayCarte(Carte &_card)
+
+// retourne la main du joueur en string
+string Joueur::cartesMainToStr()
 {
-    m_Cartes.supprimer(&_card);
-    return Status::OK;
+    return m_CartesMain.nomCartes();
 }
 
-Status Joueur::ajouterCartesGagnees(Carte &_card1, Carte &_card2)
+// carte gagnees
+string Joueur::cartesGagneesToStr()
 {
-    if (m_Cartes.size() == 0)
-    {
-        m_10Der = 10;
-    }
-    m_CartesGagnees.ajouter(&_card1);
-    m_CartesGagnees.ajouter(&_card2);
-    return Status::OK;
+    return m_CartesGagnees.nomCartes();
 }
-
-Carte *Joueur::bruteForceAttack(ListeCartes &_hisCartes)
-{
-    /*int level = 0;
-   bool end = false;
-   ListeCartes donorCartes;
-   ListeCartes otherCartes;
-   Node nodes;
-   int* cardScore;
-   int donorId; */
-    vector<int> myCartesIdx(m_Cartes.size());
-    vector<int> hisCartesIdx(_hisCartes.size());
-
-    int i = 0;
-    std::fill(myCartesIdx.begin(), myCartesIdx.end(), i++);
-    i = 0;
-    std::fill(hisCartesIdx.begin(), hisCartesIdx.end(), i++);
-
-    return nullptr;
-    // TO BE DONE
-    //for ()
-    /*
-   // root level
-   nodes = ProcessLevel(null, donorCartes, otherCartes, 0);
-   nodesLevels.add((LinkedList<MoveNode>) nodes);
-
-   level++;
-
-   do
-   {
-      // go to the next level
-      // loop on each node of the current level
-      nodes = new LinkedList<>();
-      for (MoveNode cn : nodesLevels.get(level - 1))
-      {
-         donorCartes.clear();
-         otherCartes.clear();
-         if ((cn.getIsWinner() && (cn.getDonorId() == 0))
-            || (!cn.getIsWinner() && (cn.getDonorId() != 0)))
-         {
-            donorCartes.addAll(_myCartes);
-            otherCartes.addAll(_hisCartes);
-            donorId = 0;
-         }
-         else
-         {
-            donorCartes.addAll(_hisCartes);
-            otherCartes.addAll(_myCartes);
-            donorId = 1;
-         }
-
-         // remove all cards played
-         node = cn;
-         do
-         {
-            donorCartes.remove(node.getDonorCarte());
-            donorCartes.remove(node.getOtherCarte());
-
-            otherCartes.remove(node.getOtherCarte());
-            otherCartes.remove(node.getDonorCarte());
-
-            node = node.getParent();
-         } while (node != null);
-
-         levelNode = ProcessLevel(cn, donorCartes, otherCartes, donorId);
-         nodes.addAll(levelNode);
-      }
-
-      nodesLevels.add((LinkedList<MoveNode>) nodes);
-      level++;
-
-      if (donorCartes.size() < 2)
-      {
-         end = true;
-      }
-   } while (!end);
-
-
-   // compute scores
-   // for each nodes of the last level
-   for (MoveNode cn : nodesLevels.get(level - 1))
-   {
-      node = cn;
-
-      // goes up to the root
-      do
-      {
-         node.getParent().addScore(node.getScore());
-         node = node.getParent();
-      } while (node.getParent() != null);
-      node.addScore(node.getScore());
-   }
-
-   cardScore = new int[_myCartes.size()];
-   for (int i = 0; i < _myCartes.size(); i++)
-   {
-      cardScore[i] = 0;
-   }
-   for (MoveNode cn : nodesLevels.get(0))
-   {
-      cardScore[_myCartes.indexOf(cn.getDonorCarte())] += cn.getTotalScore();
-      //Tracer.print(Tracer.Verbosity.DEBUG, cn.getDonorCarte().displayName());
-      //Tracer.println(Tracer.Verbosity.DEBUG, " : " + String.valueOf(cn.getTotalScore()));
-   }
-
-   //Tracer.println(Tracer.Verbosity.DEBUG, "");
-   int maxScore = Integer.MIN_VALUE;
-   Carte chooseCarte = null;
-   for (int i = 0; i < _myCartes.size(); i++)
-   {
-      //Tracer.println(Tracer.Verbosity.DEBUG, _myCartes.get(i).displayName()+" : "+cardScore[i]);
-      if (cardScore[i] > maxScore)
-      {
-         chooseCarte = _myCartes.get(i);
-         maxScore = cardScore[i];
-      }
-   }
-
-
-   //Tracer.println(Tracer.Verbosity.DEBUG, "Carte to be played = " + chooseCarte.displayName());
-   return chooseCarte;
-   */
-}
-
-/*private LinkedList<MoveNode> ProcessLevel(MoveNode _parentNode,
-   LinkedList<Carte> _donorCartes,
-   LinkedList<Carte> _otherCartes,
-   int _donorId)
-{
-   LinkedList<MoveNode> nodeLevel = new LinkedList<>();
-   MoveNode node;
-   boolean isStrongest;
-   LinkedList<Carte> allowedCartes;
-   boolean lastMove;
-   int i;
-
-   lastMove = false;
-   if (_donorCartes.size() < 2)
-   {
-      lastMove = true;
-   }
-
-   //Tracer.println(Tracer.Verbosity.DEBUG, "-");
-   for (i = 0; i < _donorCartes.size(); i++)
-      //for (Carte donorCarte : _donorCartes)
-   {
-      // remove the cards the other cannot play
-      // add all stronger cards in the list
-      isStrongest = false;
-      for (Carte c : _otherCartes)
-      {
-         if (_donorCartes.get(i).isBetter(c))
-         {
-            isStrongest = true; // at least one card is better
-         }
-      }
-
-      // he must play better card or nay if none of the cards is better
-      allowedCartes = new LinkedList<>();
-      for (Carte c : _otherCartes)
-      {
-         if ((_donorCartes.get(i).isBetter(c)) || (!isStrongest))
-         {
-            allowedCartes.add(c);
-         }
-      }
-
-      // add childs to the donor node
-      for (Carte c : allowedCartes)
-      {
-         // create a new node
-         node = new MoveNode(_parentNode, _donorCartes.get(i), c, _donorId, lastMove);
-         nodeLevel.add(node);
-      }
-   }
-   return nodeLevel;
-}
-*/

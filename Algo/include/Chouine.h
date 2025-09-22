@@ -55,30 +55,37 @@ class Chouine
 public:
     enum JOUEUR
     {
-        JOUEUR_1 = 0,
-        JOUEUR_2 = 1
+        JOUEUR_A = 0,
+        JOUEUR_B = 1
     };
 
 public:
-    Chouine(int _niveauJoueur1, int _niveauJoueur2);
+    Chouine(int _niveauJoueurA, int _niveauJoueurB);
     ~Chouine();
     
     void newGame();
 
-    Joueur& joueur(JOUEUR _id) { return *m_Joueurs[_id];};
-    JOUEUR gagnantPli() { return m_GagnantPli;};
+    Joueur joueur(JOUEUR _id) { return *m_Joueurs[_id];};
+
+    // retourne le gagnant du pli
+    JOUEUR gagnantPli() { return m_GagnantPli->id() == JOUEUR_A ? JOUEUR_A : JOUEUR_B;};
+
+    // retourne le perdant du pli
+    JOUEUR perdantPli() { return m_PerdantPli->id() == JOUEUR_A ? JOUEUR_A : JOUEUR_B;};
+
     ListeCartes& pioche() { return m_Pioche; }
     
-    CarteId getJoueurCarte(int _player, int _card);
     bool piocheVide();
 
-    string choixJoueur(JOUEUR _player);
+    string choixJoueur(string& _annonce);
     bool setJoueurChoice(int _player, int _choice);
     JOUEUR finPli();
     bool finPartie();
 
     int pointsJoueur(JOUEUR _joueur);
 
+    // retourne toutes les annonces existantes
+    set<Annonce*> getAnnonces() { return m_Annonces; }
 
     /*string hasChange7Trump(int _player);
    string change7Trump(int _player);
@@ -108,7 +115,7 @@ public:
    }
    */
     Carte::Couleur couleurAtout() { return m_Atout; };
-    std::string atout() { return Carte::nomCouleur(m_Atout);}
+    std::string atout() { return Carte::couleurToStr(m_Atout);}
     /*  Carte* GetTrumpCarte() { return m_Pick.getTrumpCarte(); }
    Announce* getJoueurLatestAnnounce(int _player)
    {
@@ -144,12 +151,15 @@ public:
 private:
     Carte::Couleur m_Atout;
     static Chouine *m_Instance;
-    Joueur m_Joueur1;
-    Joueur m_Joueur2;
+    Joueur m_JoueurA;
+    Joueur m_JoueurB;
     array<Joueur *, 2> m_Joueurs;
     array<int, 2> m_JoueurLevel;
     ListeCartes m_Pioche;
-    JOUEUR m_GagnantPli;
+    Joueur* m_GagnantPli;
+    Joueur* m_PerdantPli;
     bool m_isChouine;
+    // toutes les annonces existantes (17)
+    set<Annonce *> m_Annonces;
 };
 #endif

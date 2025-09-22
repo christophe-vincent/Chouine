@@ -3,9 +3,11 @@
 
 #include <set>
 #include <vector>
-#include "Carte.h"
+#include <string>
 #include "ListeCartes.h"
+#include "Carte.h"
 using namespace std;
+
 
 class Annonce
 {
@@ -19,50 +21,35 @@ public:
         CHOUINE  = 4 
     };
     
-    static const Carte::Valeur CARTES_MARIAGE[];
-    static const Carte::Valeur CARTES_TIERCE[];
-    static const Carte::Valeur CARTES_QUARANTE[];
-    static const Carte::Valeur CARTES_CHOUINE[];
+    static const std::array<Carte::Valeur, 2> CARTES_MARIAGE;
+    static const std::array<Carte::Valeur, 3> CARTES_TIERCE;
+    static const std::array<Carte::Valeur, 4> CARTES_QUARANTE;
+    static const std::array<Carte::Valeur, 5> CARTES_CHOUINE;
     static const TypeAnnonce ANNONCES[];
     static const set<int> POINTS_ANNONCES;
 
-    Annonce(Carte::Couleur _couleur, 
-            TypeAnnonce _type, 
-            bool _atout, 
-            ListeCartes &_cartes) : 
-            m_Couleur(_couleur), 
-            m_Annonce(_type), 
-            m_Atout(_atout), 
-            m_Cartes(_cartes)
-    {
-    }
-
     Annonce(Carte::Couleur _couleur,
             TypeAnnonce _type,
-            bool _atout) : 
-            m_Couleur(_couleur),
-            m_Annonce(_type),
-            m_Atout(_atout) {}
-    Annonce(TypeAnnonce _type):
-            m_Couleur(Carte::UNDEF_COLOR),
-            m_Annonce(_type),
-            m_Atout(false) {}
+            bool _atout);
+
     ~Annonce();
 
-    bool operator> (Carte & _carte)
+    // retourne ne nombre de points de l'annonce
+    int points() { return m_Points;}
+
+    bool operator > (Annonce & _annonce)
     {
-        return this->m_Points > _carte.getPoints();
+         return this->m_Points < _annonce.points();
     }
 
-    bool operator < (Carte & _carte)
-    {
-        return this->m_Points < _carte.getPoints();
-    }    
+    // calcule le pourcetage de cartes données présentes dans l'annonce
+    // 50 pour un mariage signifie qu'il n'y a par exemple qu'un roi ou une dame
+    int calculeScore(ListeCartes &_cartesMain, ListeCartes &_cartesJouees);
 
     void ajouterCarte(Carte &_carte);
     void supprimerCarte(Carte *_carte);
-    bool cartePresente(Carte &_carte);
-
+    bool carteDansAnnonce(Carte &_carte);
+    vector<Carte*>& cartes() { return m_Cartes.cartes(); }
 
     static bool mariage(ListeCartes &_list);
     static bool tierce(ListeCartes &_list);
@@ -74,9 +61,10 @@ public:
     TypeAnnonce type() { return m_Annonce; }
     unsigned int cartesManquantes();
 
+    string to_string();
+
 private:
     //void computeScore();
-
     ListeCartes m_Cartes;
     Carte::Couleur m_Couleur;
     TypeAnnonce m_Annonce;

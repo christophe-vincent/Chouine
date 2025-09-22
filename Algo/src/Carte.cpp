@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Carte.h"
+#include "Annonce.h"
 using namespace std;
 
 const std::array<string, 4> Carte::NOM_COULEURS =
@@ -29,75 +30,32 @@ const int Carte::NB_VALUES = 8;
 
 Carte::Carte(Couleur _couleur, Valeur _value, bool _trump) : m_Couleur(_couleur), m_Valeur(_value), m_Atout(_trump)
 {
-    //m_Announce = nullptr;
     m_Score = 0;
-
-    // set the announces the card may be involved
-    /*	switch (m_Valeur)
-    {
-    case AS:
-        m_Announcetypes.insert(Announce::CHOUINE);
-        m_Announcetypes.insert(Announce::QUARANTE);
-        m_Announcetypes.insert(Announce::QUINTE);
-        break;
-    case DIX:
-        m_Announcetypes.insert(Announce::CHOUINE);
-        m_Announcetypes.insert(Announce::QUINTE);
-        break;
-    case ROI:
-        m_Announcetypes.insert(Announce::CHOUINE);
-        m_Announcetypes.insert(Announce::QUARANTE);
-        m_Announcetypes.insert(Announce::TIERCE);
-        m_Announcetypes.insert(Announce::MARIAGE);
-        break;
-    case DAME:
-        m_Announcetypes.insert(Announce::CHOUINE);
-        m_Announcetypes.insert(Announce::QUARANTE);
-        m_Announcetypes.insert(Announce::TIERCE);
-        m_Announcetypes.insert(Announce::MARIAGE);
-        break;
-    case VALET:
-        m_Announcetypes.insert(Announce::CHOUINE);
-        m_Announcetypes.insert(Announce::QUARANTE);
-        m_Announcetypes.insert(Announce::TIERCE);
-        break;
-    }*/
 }
 
 Carte::~Carte()
 {
 }
 
-bool Carte::operator==(Carte &_card)
+bool Carte::operator == (const Carte &_card) const
 {
-    if ((m_Valeur == _card.getValeur()) && (m_Couleur == _card.couleur()))
+    if ((m_Valeur == _card.valeur()) && (m_Couleur == _card.couleur()))
     {
         return true;
     }
     return false;
 }
 
-bool Carte::operator>(Carte  &_card)
-{
-    //cout << m_Valeur << " > " << _card.getValeur() << " -> " << (m_Valeur > _card.getValeur()) << endl; 
-    return m_Valeur > _card.getValeur();
-}
+// bool Carte::operator > (const Carte  &_card) const
+// {
+//     return !gagnante(_card);
+// }
 
-bool Carte::operator<(Carte  &_card)
-{
-    //cout << m_Valeur << " < " << _card.getValeur() << " -> " << (m_Valeur < _card.getValeur()) << endl; 
-    return m_Valeur < _card.getValeur();
-}
+// bool Carte::operator < (const Carte  &_card) const
+// {
+//     return gagnante(_card);
+// }
 
-
-std::string Carte::nomCouleur(Couleur _couleur)
-{
-    if (_couleur < NOM_COULEURS.size())
-    {
-        return NOM_COULEURS[_couleur];
-    }
-    return "erreur";
-}
 
 bool Carte::brisque()
 {
@@ -140,32 +98,15 @@ int Carte::getPoints()
     return points;
 }
 
-/*void Carte::addProbableAnnounce(Announce *_announce)
-{
-    if (m_ProbableAnnounce.find(_announce) == m_ProbableAnnounce.end)
-    {
-        m_ProbableAnnounce.insert(_announce);
-    }
-}
-
-void Carte::removeProbableAnnounce(Announce *_announce)
-{
-   auto it = m_ProbableAnnounce.find(_announce);
-    if (it != m_ProbableAnnounce.end)
-    {
-        m_ProbableAnnounce.erase(it);
-    }
-}*/
-
 // Vrai si _carte est supérieure
-bool Carte::gagnante(Carte &_card)
+bool Carte::gagnante(const Carte &_card) const
 {
     bool ret;
 
     if (m_Couleur == _card.couleur())
     {
         // meme couleur
-        if (m_Valeur > _card.getValeur())
+        if (m_Valeur > _card.valeur())
         {
             ret = false;
         }
@@ -188,7 +129,17 @@ bool Carte::gagnante(Carte &_card)
     return ret;
 }
 
-string Carte::nomCouleur()
+std::string Carte::couleurToStr(Couleur _couleur)
+{
+    if (_couleur < NOM_COULEURS.size())
+    {
+        return NOM_COULEURS[_couleur];
+    }
+    return "erreur";
+}
+
+
+string Carte::couleurCarteToStr() const
 {
     string couleur = "";
     switch (m_Couleur)
@@ -211,7 +162,7 @@ string Carte::nomCouleur()
     return couleur;
 }
 
-string Carte::nom()
+string Carte::carteToStr()
 {
     string valeur;
 
@@ -246,7 +197,21 @@ string Carte::nom()
         break;
     }
 
-    valeur += nomCouleur();
+    valeur += couleurCarteToStr();
+    if (m_Atout)
+    {
+        valeur += "*";
+    }
 
     return valeur;
+}
+
+std::string Carte::annonceToStr()
+{
+    std::string str = "";
+    for (const auto& pair : m_Annonces)
+    {
+        str += pair.first->to_string() + ":" + to_string(pair.second) + " ";
+    }
+    return str;
 }

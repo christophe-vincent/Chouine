@@ -4,7 +4,9 @@
 #include <set>
 #include <string>
 #include <array>
-using namespace std;
+#include <map>
+
+class Annonce;
 
 enum class Status
 {
@@ -25,7 +27,7 @@ public:
         UNDEF_COLOR
     };
 
-    static const std::array<string, 4> NOM_COULEURS;
+    static const std::array<std::string, 4> NOM_COULEURS;
 
     static const Couleur ALL_COLORS[];
     static const int NB_COLORS;
@@ -48,39 +50,51 @@ public:
     Carte(Couleur _couleur, Valeur _value, bool _trump);
     ~Carte();
 
-    bool operator ==(Carte &_card);
-    bool operator > (Carte &_card);
-    bool operator < (Carte &_card);
+    bool operator==(const Carte &_card) const;
+    //bool operator>(const Carte &_card) const;
+    //bool operator<(const Carte &_card) const;
 
-    static std::string nomCouleur(Couleur _couleur);
-    Couleur couleur() { return m_Couleur; }
-    Valeur getValeur() { return m_Valeur; }
-    bool atout() { return m_Atout; }
+    // retourne la couleur
+    Couleur couleur() const { return m_Couleur; }
+
+    // retourne la valeur
+    Valeur valeur() const { return m_Valeur; }
+
+    // vrai si la carte est un atout
+    bool atout() const { return m_Atout; }
+
+    // ecriture de l'atout
     void atout(bool _trump) { m_Atout = _trump; }
+
+    // score getter/setter
+    const int score() const & { return m_Score; }
+    void score(int _score) { m_Score = _score; }
+
+    bool gagnante(const Carte &_card) const;
+
+    // retourne les annonces associées à cette carte
+    std::map<Annonce*, int>& annonces() { return m_Annonces; }
+
+    // retourne vrai si la carte est une brisque (10 ou As)
     bool brisque();
-    //Announce* getAnnounce()                            { return m_Announce; }
-    //void setAnnounce(Announce *_ann)                   { m_Announce = _ann; }
-    //set<Announce*> getProbableAnnounces()              { return m_ProbableAnnounce; }
-    //set<Announce::AnnounceType> getAllAnnounceTypes()  { return m_Announcetypes; }
-    int getScore() { return m_Score; }
-    void setScore(int _score) { m_Score = _score; }
 
+    // retourne le nombre de points de la carte
     int getPoints();
-    //void addProbableAnnounce(Announce* _announce);
-    //void removeProbableAnnounce(Announce* _announce);
 
-    // vrai si la carte en argument est plus forte
-    bool gagnante(Carte &_card);
-    std::string nomCouleur();
-    std::string nom();
+    // convertit vers une chaine de chaine de caracteres
+    static std::string couleurToStr(Couleur _couleur);
+    std::string couleurCarteToStr() const;
+    std::string carteToStr();
+    std::string annonceToStr();
 
 private:
     Couleur m_Couleur;
     Valeur m_Valeur;
     bool m_Atout;
-    //Announce *m_Announce;
-    //set<Announce*> m_ProbableAnnounce;
+    std::map<Annonce*, int> m_Annonces;
     int m_Score;
+
+   
 };
 
 #endif

@@ -7,6 +7,8 @@
 #include "Annonce.h"
 
 using namespace std;
+static std::random_device rd;
+static std::mt19937 mt(rd());
 
 ListeCartes::ListeCartes() : m_isTrumpSeven(false)
 {
@@ -30,7 +32,7 @@ void ListeCartes::ajouter(Carte *_carte)
         }
     }
     //cout << _carte->nom() << endl;
-    if ((_carte->atout()) && (_carte->getValeur() == Carte::SEPT))
+    if ((_carte->atout()) && (_carte->valeur() == Carte::SEPT))
     {
         m_isTrumpSeven = true;
     }
@@ -45,7 +47,7 @@ void ListeCartes::supprimer(Carte *_card)
     if (it != m_Cartes.end())
     {
         m_Cartes.erase(it);
-        if ((_card->atout()) && (_card->getValeur() == Carte::SEPT))
+        if ((_card->atout()) && (_card->valeur() == Carte::SEPT))
         {
             m_isTrumpSeven = false;
         }
@@ -55,9 +57,6 @@ void ListeCartes::supprimer(Carte *_card)
 ///////////////////////////////
 void ListeCartes::shuffle()
 {
-    auto seed = chrono::high_resolution_clock::now().time_since_epoch().count();
-    std::mt19937 mt(seed);
-    
     std::shuffle(m_Cartes.begin(), m_Cartes.end(), mt);
 }
 
@@ -82,7 +81,7 @@ Carte *ListeCartes::searchCarte(Carte::Valeur _value)
     auto it = m_Cartes.begin();
     while ((it != m_Cartes.end()) && (ret == nullptr))
     {
-        if ((*it)->getValeur() == _value)
+        if ((*it)->valeur() == _value)
         {
             ret = *it;
         }
@@ -117,18 +116,20 @@ Carte *ListeCartes::plusFaible(bool _sansAtout)
     {
         if ( (plusFaibleHorsAtout == nullptr) && (!(*it)->atout()) )
         {
-            // init de la carte la plus faible sane jouer d'atout
+            // init de la carte la plus faible sans jouer d'atout
             plusFaibleHorsAtout = *it;
         }
-        if (!(*it)->atout())
+        else
         {
-            if ((**it) < *plusFaibleHorsAtout)
-            {
-                //cout << (*it)->nom() << " < " << plusFaibleHorsAtout->nom() << endl;
-                plusFaibleHorsAtout = *it;
-            }
+            it++;
+            continue;
         }
-        if ((**it) < *plusFaible)
+        if (!(*it)->atout() && ((*it)->getPoints() < plusFaibleHorsAtout->getPoints()))
+        {
+            //cout << (*it)->nom() << " < " << plusFaibleHorsAtout->nom() << endl;
+            plusFaibleHorsAtout = *it;
+        }
+        if ((*it)->getPoints() < plusFaibleHorsAtout->getPoints())
         {
             plusFaible = *it;
         }
@@ -149,7 +150,7 @@ Carte* ListeCartes::choisirPlusForte(Carte* _carte)
 
     for (auto it=m_Cartes.begin(); it!=m_Cartes.end(); ++it)
     {
-        if (_carte->gagnante(**it))
+        if ((*it)->getPoints() > _carte->getPoints())
         {
             if (carte == nullptr)
             {
@@ -157,12 +158,12 @@ Carte* ListeCartes::choisirPlusForte(Carte* _carte)
             }
             else
             {
-                if ((*it)->gagnante(*carte))
+                if ((*it)->getPoints() < _carte->getPoints())
                 {
                     // la carte choisie precedement est plus forte
                     carte = *it;
                 }
-            }            
+            }
         }
     }
     if (carte == nullptr)
@@ -172,7 +173,8 @@ Carte* ListeCartes::choisirPlusForte(Carte* _carte)
     return carte;
 }
 
-
+////////////////////////////////
+// remplit la liste _list avec les cartes de la couleur _couleur
 void ListeCartes::getCouleurSubset(Carte::Couleur _couleur, ListeCartes &_list)
 {
     auto it = m_Cartes.begin();
@@ -186,13 +188,15 @@ void ListeCartes::getCouleurSubset(Carte::Couleur _couleur, ListeCartes &_list)
     }
 }
 
+////////////////////////////////
+// 
 bool ListeCartes::isContainsValeur(Carte::Valeur _value)
 {
     bool ret = false;
 
     for (auto it = m_Cartes.begin(); it != m_Cartes.end(); it++)
     {
-        if ((*it)->getValeur() == _value)
+        if ((*it)->valeur() == _value)
         {
             ret = true;
             break;
@@ -224,7 +228,7 @@ ListeCartes ListeCartes::getCartesFromList(Carte::Valeur _value)
 
     for (auto it = m_Cartes.begin(); it != m_Cartes.end(); it++)
     {
-        if ((*it)->getValeur() == _value)
+        if ((*it)->valeur() == _value)
         {
             ret.ajouter(*it);
         }
@@ -252,7 +256,7 @@ Carte *ListeCartes::getCarteFromList(Carte::Couleur _couleur, Carte::Valeur _val
 
     for (auto it = m_Cartes.begin(); it != m_Cartes.end(); it++)
     {
-        if (((*it)->getValeur() == _value) && ((*it)->couleur() == _couleur))
+        if (((*it)->valeur() == _value) && ((*it)->couleur() == _couleur))
         {
             ret = *it;
         }
@@ -267,7 +271,7 @@ int ListeCartes::NumberOfValeur(Carte::Valeur _value)
 
     for (auto it = m_Cartes.begin(); it != m_Cartes.end(); it++)
     {
-        if ((*it)->getValeur() == _value)
+        if ((*it)->valeur() == _value)
         {
             ret++;
         }
@@ -280,10 +284,10 @@ Carte *ListeCartes::getHigherValeur(Carte::Valeur _value)
 {
     Carte *card = nullptr;
     auto it = m_Cartes.begin();
-    while ((it != m_Cartes.end()) && (_value > (*it)->getValeur()))
+    while ((it != m_Cartes.end()) && (_value > (*it)->valeur()))
         it++;
 
-    if ((it != m_Cartes.end()) && (_value > (*it)->getValeur()))
+    if ((it != m_Cartes.end()) && (_value > (*it)->valeur()))
     {
         // we found the card !
         card = *it;
@@ -291,14 +295,14 @@ Carte *ListeCartes::getHigherValeur(Carte::Valeur _value)
     return card;
 }
 
-Carte *ListeCartes::getHigherCarte(Carte &_card)
+Carte *ListeCartes::getHigherCarte(Carte &_carte)
 {
     Carte *card = nullptr;
     auto it = m_Cartes.begin();
-    while ((it != m_Cartes.end()) && (!(*it)->gagnante(_card)))
+    while ((it != m_Cartes.end()) && (!(_carte.getPoints() > (*it)->getPoints())))
         it++;
 
-    if ((it != m_Cartes.end()) && (!(*it)->gagnante(_card)))
+    if ((it != m_Cartes.end()) && (! (_carte.getPoints() > (*it)->getPoints())))
     {
         // we found the card !
         card = *it;
@@ -325,7 +329,7 @@ std::string ListeCartes::nomCartes()
     string cartes;
     for (auto it = m_Cartes.begin(); it != m_Cartes.end(); it++)
     {
-       cartes += (*it)->nom() + " ";
+       cartes += (*it)->carteToStr() + " ";
     }
     return cartes;
 }
