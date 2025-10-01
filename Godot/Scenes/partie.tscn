@@ -1,0 +1,57 @@
+[gd_scene load_steps=6 format=3 uid="uid://bftfnuj4mri6h"]
+
+[ext_resource type="Script" uid="uid://dftrx4q78fbw7" path="res://Scripts/partie.gd" id="1_m1snf"]
+[ext_resource type="Texture2D" uid="uid://cbp2l4pnc5wl5" path="res://Assets/jouer.png" id="3_1x1o5"]
+[ext_resource type="Texture2D" uid="uid://cxt4m38yrulu8" path="res://Assets/jouer.svg" id="3_up2em"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bjfpd"]
+size = Vector2(437, 27)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_up2em"]
+size = Vector2(592, 69.75)
+
+[node name="Partie" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_m1snf")
+
+[node name="CardContainer" type="Control" parent="."]
+z_index = 1
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 276.0
+offset_top = 140.0
+offset_right = 967.0
+offset_bottom = 423.0
+mouse_filter = 2
+color = Color(0.428547, 0.6671001, 0.0071176123, 1)
+
+[node name="ZoneJeu" type="Area2D" parent="."]
+position = Vector2(193, 114)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneJeu"]
+position = Vector2(422.5, 162.5)
+shape = SubResource("RectangleShape2D_bjfpd")
+
+[node name="MainJoueur" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MainJoueur"]
+position = Vector2(601, 612.875)
+shape = SubResource("RectangleShape2D_up2em")
+
+[node name="TextureButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 68.0
+offset_top = 589.0
+offset_right = 148.0
+offset_bottom = 629.0
+texture_normal = ExtResource("3_1x1o5")
+texture_pressed = ExtResource("3_up2em")
+
+[connection signal="area_shape_entered" from="ZoneJeu" to="ZoneJeu" method="_on_area_shape_entered"]
+[connection signal="area_shape_exited" from="ZoneJeu" to="ZoneJeu" method="_on_area_shape_exited"]
+[connection signal="pressed" from="TextureButton" to="." method="_on_texture_button_pressed"]

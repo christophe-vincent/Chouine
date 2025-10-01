@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="44.717796mm"
+   height="64.703606mm"
+   viewBox="0 0 44.717796 64.703606"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   sodipodi:docname="coeur-as.svg"
+   inkscape:export-filename="jouer.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="2.2085282"
+     inkscape:cx="27.393809"
+     inkscape:cy="310.6141"
+     inkscape:window-width="1712"
+     inkscape:window-height="1735"
+     inkscape:window-x="1866"
+     inkscape:window-y="223"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="1_heart-3" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-43.319813,-2.3512609)">
+    <g
+       id="1_heart"
+       transform="matrix(0.26448497,0,0,0.26448497,23.012921,-13.963513)">
+      <g
+         id="jack_heart"
+         transform="translate(-1654.7422)">
+        <g
+           id="1_heart-3"
+           transform="translate(1732.7712,-188.06992)">
+          <g
+             id="use820"
+             transform="translate(0,486.27499)">
+            <path
+               style="fill:#ffffff;stroke:#000000;stroke-width:2.5"
+               d="m 0,0 c 0,3.78 3.09,6.87 6.87,6.87 h 152.845 c 3.77,0 6.86,-3.09 6.86,-6.87 v -228.4 c 0,-3.78 -3.09,-6.87 -6.86,-6.87 H 6.87 c -3.78,0 -6.87,3.09 -6.87,6.87 z"
+               id="path912" />
+          </g>
+          <g
+             id="use821"
+             style="fill:#e6180a"
+             transform="translate(4,287.15701)">
+            <path
+               d="M 17.888672,-8.1044922 H 7.831543 l -1.1967774,2.7714844 q -0.5878906,1.3857422 -0.5878906,2.2885742 0,1.1967774 0.9658203,1.7636719 0.5668945,0.33593748 2.7924805,0.50390623 V 0 H 0.3359375 V -0.77685547 Q 1.8686523,-1.0078125 2.8554688,-2.0366211 3.8422852,-3.0864258 5.2910156,-6.3408203 L 15.474121,-29.058594 h 0.398926 l 10.26709,23.3476565 q 1.469726,3.3173828 2.41455,4.1782227 0.713868,0.65087886 2.015625,0.75585933 V 0 H 16.796875 v -0.77685547 h 0.566895 q 1.658691,0 2.330566,-0.46191403 0.461914,-0.3359375 0.461914,-0.9658203 0,-0.3779297 -0.125977,-0.7768555 -0.04199,-0.1889649 -0.629882,-1.574707 z m -0.713867,-1.5537109 -4.241211,-9.8051759 -4.3671877,9.8051759 z"
+               id="text912"
+               style="font-weight:bold;font-size:43px;font-family:'Bitstream Vera Serif'"
+               transform="scale(0.56453,1.05741)"
+               aria-label="A" />
+          </g>
+          <g
+             id="use822"
+             style="fill:#e6180a"
+             transform="rotate(180,81.787502,227.9975)">
+            <path
+               d="M 17.888672,-8.1044922 H 7.831543 l -1.1967774,2.7714844 q -0.5878906,1.3857422 -0.5878906,2.2885742 0,1.1967774 0.9658203,1.7636719 0.5668945,0.33593748 2.7924805,0.50390623 V 0 H 0.3359375 V -0.77685547 Q 1.8686523,-1.0078125 2.8554688,-2.0366211 3.8422852,-3.0864258 5.2910156,-6.3408203 L 15.474121,-29.058594 h 0.398926 l 10.26709,23.3476565 q 1.469726,3.3173828 2.41455,4.1782227 0.713868,0.65087886 2.015625,0.75585933 V 0 H 16.796875 v -0.77685547 h 0.566895 q 1.658691,0 2.330566,-0.46191403 0.461914,-0.3359375 0.461914,-0.9658203 0,-0.3779297 -0.125977,-0.7768555 -0.04199,-0.1889649 -0.629882,-1.574707 z m -0.713867,-1.5537109 -4.241211,-9.8051759 -4.3671877,9.8051759 z"
+               id="text913"
+               style="font-weight:bold;font-size:43px;font-family:'Bitstream Vera Serif'"
+               transform="scale(0.56453,1.05741)"
+               aria-label="A" />
+          </g>
+          <g
+             id="use823"
+             transform="rotate(180,6.8250002,150.57849)">
+            <path
+               style="fill:#e6180a"
+               d="m -7.67,3.93 c 0.01,-4.71 5.91,-8.14 7.64,-11.87 1.75,3.72 7.66,7.12 7.7,11.83 C 7.68,6.11 5.96,7.92 3.85,7.92 1.73,7.92 0,6.13 0,3.91 0,6.14 -1.71,7.94 -3.82,7.94 -5.94,7.95 -7.66,6.15 -7.67,3.93 Z"
+               id="path913" />
+          </g>
+          <g
+             id="use824"
+             transform="translate(153.925,441.995)">
+            <path
+               style="fill:#e6180a"
+               d="m -7.67,3.93 c 0.01,-4.71 5.91,-8.14 7.64,-11.87 1.75,3.72 7.66,7.12 7.7,11.83 C 7.68,6.11 5.96,7.92 3.85,7.92 1.73,7.92 0,6.13 0,3.91 0,6.14 -1.71,7.94 -3.82,7.94 -5.94,7.95 -7.66,6.15 -7.67,3.93 Z"
+               id="path914" />
+          </g>
+          <g
+             id="use825"
+             transform="matrix(-2.4,0,0,-2.4,83.787602,364.7064)">
+            <path
+               style="fill:#e6180a"
+               d="m -7.67,3.93 c 0.01,-4.71 5.91,-8.14 7.64,-11.87 1.75,3.72 7.66,7.12 7.7,11.83 C 7.68,6.11 5.96,7.92 3.85,7.92 1.73,7.92 0,6.13 0,3.91 0,6.14 -1.71,7.94 -3.82,7.94 -5.94,7.95 -7.66,6.15 -7.67,3.93 Z"
+               id="path915" />
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,142 @@
+{
+    "carreau":
+	{
+		"as":
+		{
+			"image": "carreau-as.svg"
+		},
+ 		"10":
+		{
+			"image": "carreau-10.svg"
+		},
+		"roi":
+		{
+			"image": "carreau-roi.svg"
+		},
+		"dame":
+		{
+			"image": "carreau-dame.svg"
+		},
+		"valet":
+		{
+			"image": "carreau-valet.svg"
+		},
+		"9":
+		{
+			"image": "carreau-9.svg"
+		},
+		"8":
+		{
+			"image": "carreau-8.svg"
+		},
+		"7":
+		{
+			"image": "carreau-7.svg"
+		}
+	},
+	"pic":
+	{
+		"as":
+		{
+			"image": "pic-as.svg"
+		},
+ 		"10":
+		{
+			"image": "pic-10.svg"
+		},
+		"roi":
+		{
+			"image": "pic-roi.svg"
+		},
+		"dame":
+		{
+			"image": "pic-dame.svg"
+		},
+		"valet":
+		{
+			"image": "pic-valet.svg"
+		},
+		"9":
+		{
+			"image": "pic-9.svg"
+		},
+		"8":
+		{
+			"image": "pic-8.svg"
+		},
+		"7":
+		{
+			"image": "pic-7.svg"
+		}
+	},
+	"coeur":
+	{
+		"as":
+		{
+			"image": "coeur-as.svg"
+		},
+		"10":
+		{
+			"image": "coeur-10.svg"
+		},
+		"roi":
+		{
+			"image": "coeur-roi.svg"
+		},
+		"dame":
+		{
+			"image": "coeur-dame.svg"
+		},
+		"valet":
+		{
+			"image": "coeur-valet.svg"
+		},
+		"9":
+		{
+			"image": "coeur-9.svg"
+		},
+		"8":
+		{
+			"image": "coeur-8.svg"
+		},
+		"7":
+		{
+			"image": "coeur-7.svg"
+		}
+	},
+	"trefle":
+	{
+		"as":
+		{
+			"image": "trefle-as.svg"
+		},
+ 		"10":
+		{
+			"image": "trefle-10.svg"
+		},
+		"roi":
+		{
+			"image": "trefle-roi.svg"
+		},
+		"dame":
+		{
+			"image": "trefle-dame.svg"
+		},
+		"valet":
+		{
+			"image": "trefle-valet.svg"
+		},
+		"9":
+		{
+			"image": "trefle-9.svg"
+		},
+		"8":
+		{
+			"image": "trefle-8.svg"
+		},
+		"7":
+		{
+			"image": "trefle-7.svg"
+		}
+	}
+}
