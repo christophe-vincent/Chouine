@@ -18,6 +18,13 @@ public:
     void shuffle();
     Carte *piocheCarte();
     Carte *searchCarte(Carte::Valeur _value);
+
+    // retourne la position d'une carte dans la liste
+    unsigned int position(Carte* _carte);
+
+    // échange une carte avec celle de la liste
+    Carte *echangerCarte(Carte* _carte, unsigned int position);
+
     void getTrumps(ListeCartes &_list);
     Carte *plusFaible(bool _sansAtout=true);
     Carte* choisirPlusForte(Carte* _carte);
@@ -33,7 +40,7 @@ public:
     int getPoints();
 
     vector<Carte*>& cartes() { return m_Cartes; }
-    bool isTrumpSeven() { return m_isTrumpSeven; }
+    Carte* septAtout() { return m_SeptAtout; }
     unsigned int size() { return (unsigned int)m_Cartes.size(); }
     Carte *getLastCarte() { return m_Cartes.front(); }
     Carte *operator[](size_t _idx) { return m_Cartes[_idx]; }
@@ -46,7 +53,7 @@ private:
 
 private:
     vector<Carte *> m_Cartes;
-    bool m_isTrumpSeven;
+    Carte* m_SeptAtout;
 };
 
 #endif

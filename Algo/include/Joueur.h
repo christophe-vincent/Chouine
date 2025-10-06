@@ -65,7 +65,7 @@ public:
     void finPli(bool _gagnant, Carte& _carteAdversaire);
 
     // prend la carte d'atout avec le 7 d'atout
-    bool prendreCarteAtout(Carte *_newCarte);
+    bool prendreCarteAtout();
 
     // a t'on le droit de jouer cette carte quand la pioche est vide ?
     bool carteAurotisee(Carte &_card, Carte &_otherCarte);
@@ -81,6 +81,7 @@ protected:
 
 private:
     int m_Id;
+    bool m_SecondChoix;
     Chouine &m_Chouine;
     ListeCartes m_CartesMain;    // 5 cartes de la main
     ListeCartes m_CartesGagnees; // cards win

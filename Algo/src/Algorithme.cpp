@@ -13,15 +13,16 @@ static std::uniform_int_distribution<int> dist(0, 4);
 
 Carte* Algorithme::choisirCarte()
 {
-    if (m_Niveau == NIVEAUX::RANDOM)
-    {
-        return m_Joueur.carteMain(dist(mt) % m_Joueur.quantiteCartesMain());
-    }
     if (m_Niveau >= NIVEAUX::PROBA_ANNONCE)
     {
         return calculScores();
     }
-    return m_Joueur.cartes().plusFaible();
+    if (m_Niveau >= NIVEAUX::CARTE_PLUS_FAIBLE)
+    {
+        return m_Joueur.cartes().plusFaible();
+    }
+    // m_Niveau == NIVEAUX::RANDOM
+    return m_Joueur.carteMain(dist(mt) % m_Joueur.quantiteCartesMain());
 }
 
 Carte* Algorithme::calculScores()
@@ -32,21 +33,29 @@ Carte* Algorithme::calculScores()
     for (Carte* carteMain: cartesMain.cartes())
     {
         int score = 0;
-        // pour les cartes yan des points
-        score = 10 * carteMain->getPoints();
+        // pour les cartes ayant des points
+        score = carteMain->getPoints();
+        float scoreAnnonces = 0;
         for (auto& annonce: carteMain->annonces())
         {
-            score += int(2 * 10 * annonce.first->points() * (annonce.second/100.0));
+            int sa = int(2.3 * annonce.first->points() * (annonce.second/100.0));
+            if (sa > scoreAnnonces)
+            {
+                scoreAnnonces = sa;
+            }
         }
-        if (carteMain->atout())
+        score += scoreAnnonces; // / carteMain->annonces().size();
+        if (carteMain->atout()) // && carteMain->getPoints() == 0)
         {
-            // si +10 alors +52.8% de gain par rapport à niveau 3
-            // +5 => +52.6%
-            // +50 => 52.5%
-            // +100 => 52.9%
-            // +110 => 53.3%
-            // +150 => 53.0%
-            score += 110;
+            if (carteMain->getPoints() == 0)
+            {
+                score += 40;
+            }
+            else
+            {
+                score += 60;
+            }
+            
         }
         if (score < plusPetitScore)
         {
@@ -55,6 +64,7 @@ Carte* Algorithme::calculScores()
         }
         carteMain->score(score);
     }
+
     return ret;
 }
 
@@ -91,7 +101,7 @@ Carte* Algorithme::choisirCartePiocheVide(Carte *_choixAdversaire)
 {
     if (_choixAdversaire == nullptr)
     {
-        return choisirCarte();
+         return choisirCarte();
     }
 
     Carte* carte = m_Joueur.cartes().choisirPlusForte(_choixAdversaire);

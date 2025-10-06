@@ -39,7 +39,7 @@ const Annonce::TypeAnnonce Annonce::ANNONCES[] =
 };
 
 const set<int> Annonce::POINTS_ANNONCES =
-    {20, 30, 40, 50, 1000};
+    {20, 30, 40, 50, 60};
 
 
 
@@ -59,7 +59,7 @@ Annonce::Annonce(Carte::Couleur _couleur, TypeAnnonce _type, bool _atout) :
             m_Points = 40;
             break;
         case CHOUINE:
-            m_Points = 300;
+            m_Points = 150;
             break;
         case QUINTE:
             m_Points = 50;

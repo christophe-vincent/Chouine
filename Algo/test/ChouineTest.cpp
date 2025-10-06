@@ -7,12 +7,32 @@
 #include <vector>
 #include <atomic>
 #include <mutex>
+#include <iomanip>
 #include "Chouine.h"
 #include "Joueur.h"
-using namespace std;
 
-bool verbose = false;
-void log(){}
+
+/*
+0 -> 1: 69.0%
+0 -> 2: 72.4%
+0 -> 3: 80.4%
+0 -> 4: 81.3%
+0 -> 5: 82.5%
+
+1 -> 2: 68.9%
+2 -> 3: 63.8%
+3 -> 4: 52.8%
+4 -> 5: 53.0%
+*/
+
+
+unsigned int niveau1 = 5;
+unsigned int niveau2 = 5;
+int nbParties = 1;
+
+bool verbose = nbParties == 1 ? true : false;
+
+void log() {}
 
 template<typename First, typename ...Rest>
 void log(First && first, Rest && ...rest)
@@ -24,10 +44,9 @@ void log(First && first, Rest && ...rest)
     }
 }
 
-
-string getCardcolor(int _id)
+std::string getCardcolor(int _id)
 {
-    string ret = "";
+    std::string ret = "";
     switch (_id >> 3)
     {
     case 0:
@@ -48,9 +67,9 @@ string getCardcolor(int _id)
     return ret;
 }
 
-bool testChoix(string _choix, bool& _erreur)
+bool testChoix(const std::string& _choix, bool& _erreur)
 {
-    if ( (_choix == "erreur") || (_choix == "E_E"))
+    if ((_choix == "erreur") || (_choix == "E_E"))
     {
         _erreur = true;
     }
@@ -61,11 +80,10 @@ bool testChoix(string _choix, bool& _erreur)
     return false;
 }
 
-
 int partie(unsigned int _niveauJoueur1,
-            unsigned int _niveauJoueur2, 
-            int& _pointsJoueur1, 
-            int& _pointsJoueur2)
+           unsigned int _niveauJoueur2, 
+           int& _pointsJoueur1, 
+           int& _pointsJoueur2)
 {
     Chouine chouine(_niveauJoueur1, _niveauJoueur2);
 
@@ -76,64 +94,56 @@ int partie(unsigned int _niveauJoueur1,
     
     log("Atout : ", chouine.atout(), "\n");
     
-    string choix;
+    std::string choix;
     bool stop = false;
     int tour = 0;
     bool erreur = false;
     Chouine::JOUEUR gagnant = chouine.gagnantPli();
     Chouine::JOUEUR perdant = chouine.perdantPli();
-    string annonce;
+    std::string annonce;
     
-    while (! stop)
+    while (!stop)
     {
-        tour ++;
+        tour++;
         log("\nTOUR ", tour, "\n");
         log("Pioche  : ", chouine.pioche().nomCartes(), "\n");
-        log("Joueur ", gagnant + 1, ": ", chouine.joueur(gagnant).cartesMainToStr(), "\n");
-        log("Joueur ", perdant + 1, ": ", chouine.joueur(perdant).cartesMainToStr(), "\n");
-        
+
         choix = chouine.choixJoueur(annonce);
+        log("Joueur ", gagnant + 1, ": ", chouine.joueur(gagnant).cartesMainToStr(), "\n");
         stop = testChoix(choix, erreur);
-        string message = "Choix Joueur " +  to_string(gagnant + 1) + " : " + choix;
+        std::string message = "Choix Joueur " + std::to_string(gagnant + 1) + " : " + choix;
         message += (annonce != "") ? " (" + annonce + ")" : "";
         log(message, "\n");
 
         annonce = "";
         choix = chouine.choixJoueur(annonce);
+        log("Joueur ", perdant + 1, ": ", chouine.joueur(perdant).cartesMainToStr(), "\n");
         stop |= testChoix(choix, erreur);
-        message = "Choix Joueur " +  to_string(perdant + 1) + " : " + choix;
+        message = "Choix Joueur " + std::to_string(perdant + 1) + " : " + choix;
         message += (annonce != "") ? " (" + annonce + ")" : "";
         log(message, "\n");
 
         if (erreur)
         {
-            cout << "Erreur" << endl;
+            std::cout << "Erreur" << std::endl;
             return 1;
         }
-        if (! stop)
+        if (!stop)
         {
             gagnant = chouine.finPli();
             perdant = chouine.perdantPli();
             stop = chouine.finPartie();
             log("Gagnant pli: ", chouine.gagnantPli() + 1, "\n");
-            //log("Points joueur 1 : ", _pointsJoueur1, "\n");
-            //log("Points joueur 2 : ", _pointsJoueur2, "\n");
         }
-        //stop = true;
-        //if (tour > 0) stop = true;
     }
+    
     _pointsJoueur1 = chouine.pointsJoueur(Chouine::JOUEUR_A);
     _pointsJoueur2 = chouine.pointsJoueur(Chouine::JOUEUR_B);
     log("Cartes joueur 1 : ", joueur1.cartesGagneesToStr(), "\n");
     log("Cartes joueur 2 : ", joueur2.cartesGagneesToStr(), "\n");
     log("Points joueur 1 : ", _pointsJoueur1, "\n");
     log("Points joueur 2 : ", _pointsJoueur2, "\n");
-    if (_pointsJoueur1 > _pointsJoueur2) {
-        //cout << "Joueur 1 gagne " << _pointsJoueur1 << " - " << _pointsJoueur2 << endl;
-    }
-    else {
-        //cout << "Joueur 2 gagne " << _pointsJoueur2 << " - " << _pointsJoueur1 << endl;
-    }
+    
     return 0;
 }
 
@@ -144,7 +154,6 @@ private:
     std::atomic<int> pointsJoueur1{0};
     std::atomic<int> pointsJoueur2{0};
     std::atomic<bool> shouldStop{false};
-    std::mutex resultsMutex;
 
 public:
     int runGamesParallel(int nbParties, int niveau1, int niveau2) {
@@ -214,53 +223,38 @@ private:
             pointsJoueur2 += points2;
         }
     }
-    
-    int partie(int niveau1, int niveau2, int& points1, int& points2);
 };
-
 
 int main()
 {
-    unsigned int niveau1 = 3;
-    unsigned int niveau2 = 5;
-    int points1;
-    int points2;
-    int partiesJoueur1 = 0;
-    int partiesJoueur2 = 0;
-    int pointsJoueur1 = 0;
-    int pointsJoueur2 = 0;
-    int nbParties = 100000;
-    int ret;
-
+    std::cout << "Running " << nbParties << " games with multithreading..." << std::endl;
+    
     SimpleMultiThreadGame engine;
     
-    int result = engine.runGamesParallel(100000, 3, 5);
+    // Measure execution time
+    auto start = std::chrono::high_resolution_clock::now();
+    int result = engine.runGamesParallel(nbParties, niveau1, niveau2);
+    auto end = std::chrono::high_resolution_clock::now();
+    
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
     
     if (result == 0) {
-        std::cout << "Player 1 wins: " << engine.getPartiesJoueur1() << std::endl;
-        std::cout << "Player 2 wins: " << engine.getPartiesJoueur2() << std::endl;
-        std::cout << "Player 1 total points: " << engine.getPointsJoueur1() << std::endl;
-        std::cout << "Player 2 total points: " << engine.getPointsJoueur2() << std::endl;
+        std::cout << "=== RESULTS ===" << std::endl;
+        std::cout << "Joueur 1 (level " << niveau1 << "): Parties " << engine.getPartiesJoueur1();
+        std::cout << ", points " << engine.getPointsJoueur1() << std::endl;
+        std::cout << "Joueur 2 (level " << niveau2 << "): Parties " << engine.getPartiesJoueur2();
+        std::cout << ", points " << engine.getPointsJoueur2() << std::endl;
+        
+        // Calculate percentages
+        double winRate1 = (static_cast<double>(engine.getPartiesJoueur1()) / nbParties) * 100.0;
+        double winRate2 = (static_cast<double>(engine.getPartiesJoueur2()) / nbParties) * 100.0;
+        
+        std::cout << "Win rates: Joueur 1: " << std::fixed << std::setprecision(2) << winRate1 << "%, ";
+        std::cout << "Joueur 2: " << winRate2 << "%" << std::endl;
+        std::cout << "Execution time: " << duration.count() << " ms" << std::endl;
     } else {
         std::cout << "Error occurred: " << result << std::endl;
     }
-    return 0;
-
-    for(int i=0; i<nbParties; i++)
-    {
-        ret = partie(niveau1, niveau2, points1, points2);
-        if (ret != 0)
-        {
-            break;
-        }
-        points1 > points2 ? partiesJoueur1++ : partiesJoueur2++;
-        pointsJoueur1 += points1;
-        pointsJoueur2 += points2;
-    }
-    cout << "Joueur 1 (level " << niveau1 << "): Parties " << partiesJoueur1;
-    cout << " points " << pointsJoueur1 << endl;
-    cout << "Joueur 2 (level " << niveau2 << "): Parties " << partiesJoueur2;
-    cout << " points " << pointsJoueur2 << endl;
-
-    return ret;
+    
+    return result;
 }
