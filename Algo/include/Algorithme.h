@@ -13,7 +13,7 @@ enum NIVEAUX
         PRISE_BRISQUE     = 1,  // Prend les brisques de l'adversaire
         CARTE_PLUS_FAIBLE = 2,  // Carte la plus faible
         VERIFIE_ANNONCE   = 3,  // vérifie si une annonce doit être faite avant de jouer une carte
-        // prendre la carte d'atout avec le 7 d'atout
+        ECHANGE_7_ATOUT   = 4,  // prendre la carte d'atout avec le 7 d'atout
         PROBA_ANNONCE     = 5   // mémoriser les cartes jouées pour faire des annonces
     };
 

@@ -202,6 +202,10 @@ string Carte::carteToStr()
     {
         valeur += "*";
     }
+    if (m_Score > 0)
+    {
+        valeur += " (" + to_string(m_Score) + ")";
+    }
 
     return valeur;
 }

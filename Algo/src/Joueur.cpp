@@ -14,6 +14,7 @@ Joueur::Joueur(Chouine& _chouine, int _niveau, int _id):
 m_Chouine(_chouine), m_Algo(_niveau, *this), m_Niveau(_niveau)
 {
     m_Id = _id;
+    m_SecondChoix = false;
     m_10Der = 0;
     m_PointsAnnonces = 0;
     m_LatestAnnonce = nullptr;
@@ -104,7 +105,7 @@ Annonce* Joueur::rechercheAnnonce(Carte &_carte)
 }
 
 
-bool Joueur::prendreCarteAtout(Carte *_newCarte)
+bool Joueur::prendreCarteAtout()
 {
     int index = -1;
     Carte *card = nullptr;
@@ -113,10 +114,9 @@ bool Joueur::prendreCarteAtout(Carte *_newCarte)
 
     if (card != nullptr)
     {
-        // ok, on a le 7 d'atout
-        m_CartesMain.supprimer(card);
-        
-        ajouterCarteMain(*_newCarte);
+        unsigned int position = m_CartesMain.position(card);
+        Carte* nouvelleCarte = m_Chouine.pioche().echangerCarte(card, 0);
+        m_CartesMain.echangerCarte(nouvelleCarte, position);
         return true;
     }
 
@@ -146,6 +146,14 @@ int Joueur::choixCarte(std::string& _carte)
 
 Carte* Joueur::choisirCarte(Carte *_carteAdversaire, string& _annonce)
 {
+    // Si il ne reste que 2 carte en pioche, échanger le 7 d'atout
+    if (m_Niveau >= Algorithme::ECHANGE_7_ATOUT)
+    {
+        if (m_Chouine.pioche().cartes().size() <= 2 && m_Chouine.pioche().cartes().size() > 0)
+        {
+            prendreCarteAtout();
+        }
+    }
     // recalculer les annonces
     if (m_Niveau >= Algorithme::VERIFIE_ANNONCE)
     {
@@ -209,12 +217,22 @@ Carte* Joueur::choisirCarte(Carte *_carteAdversaire, string& _annonce)
             m_PointsAnnonces += annonce->points();
         }
     }
+
+    // si la carte jouée est le 7 d'atout, échange avec l'atout de la pioche et on revoit le choix
+    if (m_CarteJouee->valeur() == Carte::SEPT && m_CarteJouee->atout() && m_Chouine.pioche().size() > 2 && m_SecondChoix == false)
+    {
+        // désavantage à faire ceci...
+        //prendreCarteAtout();
+        //m_SecondChoix = true;
+        //m_CarteJouee = choisirCarte(_carteAdversaire, _annonce);
+    }
     return m_CarteJouee;
 }
 
 
 void Joueur::finPli(bool _gagnant, Carte& _carteAdversaire)
 {
+    m_SecondChoix = false;
     if (_gagnant)
     {
         m_CartesGagnees.ajouter(&_carteAdversaire);

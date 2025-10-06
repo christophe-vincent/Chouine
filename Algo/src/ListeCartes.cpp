@@ -10,11 +10,11 @@ using namespace std;
 static std::random_device rd;
 static std::mt19937 mt(rd());
 
-ListeCartes::ListeCartes() : m_isTrumpSeven(false)
+ListeCartes::ListeCartes() : m_SeptAtout(nullptr)
 {
 }
 
-ListeCartes::ListeCartes(Carte *_card) : m_isTrumpSeven(false)
+ListeCartes::ListeCartes(Carte *_card) : m_SeptAtout(nullptr)
 {
     m_Cartes.push_back(_card);
 }
@@ -34,7 +34,7 @@ void ListeCartes::ajouter(Carte *_carte)
     //cout << _carte->nom() << endl;
     if ((_carte->atout()) && (_carte->valeur() == Carte::SEPT))
     {
-        m_isTrumpSeven = true;
+        m_SeptAtout = _carte;
     }
     m_Cartes.push_back(_carte);
 }
@@ -49,7 +49,7 @@ void ListeCartes::supprimer(Carte *_card)
         m_Cartes.erase(it);
         if ((_card->atout()) && (_card->valeur() == Carte::SEPT))
         {
-            m_isTrumpSeven = false;
+            m_SeptAtout = nullptr;
         }
     }
 }
@@ -91,6 +91,35 @@ Carte *ListeCartes::searchCarte(Carte::Valeur _value)
 }
 
 
+unsigned int ListeCartes::position(Carte* _carte)
+{
+    unsigned int ret = 0;
+
+    auto it = m_Cartes.begin();
+    while ((it != m_Cartes.end()) && (_carte != *it))
+    {
+        it++;
+        ret++;
+    }
+    return ret;
+}
+
+
+///////////////////////////////
+Carte *ListeCartes::echangerCarte(Carte* _carte, unsigned int _position)
+{
+    Carte* ret = nullptr;
+    if (_position >= m_Cartes.size())
+    {
+        return ret;
+    }
+    // swap des 2 cartes
+    ret = m_Cartes[_position];
+    m_Cartes[_position] = _carte;
+    return ret;
+}
+
+
 ///////////////////////////////
 void ListeCartes::getTrumps(ListeCartes &_list)
 {
@@ -119,17 +148,16 @@ Carte *ListeCartes::plusFaible(bool _sansAtout)
             // init de la carte la plus faible sans jouer d'atout
             plusFaibleHorsAtout = *it;
         }
-        else
+        if (plusFaible == nullptr)
         {
-            it++;
-            continue;
+            plusFaible = *it;
         }
         if (!(*it)->atout() && ((*it)->getPoints() < plusFaibleHorsAtout->getPoints()))
         {
             //cout << (*it)->nom() << " < " << plusFaibleHorsAtout->nom() << endl;
             plusFaibleHorsAtout = *it;
         }
-        if ((*it)->getPoints() < plusFaibleHorsAtout->getPoints())
+        if ((*it)->getPoints() < plusFaible->getPoints())
         {
             plusFaible = *it;
         }
@@ -150,7 +178,7 @@ Carte* ListeCartes::choisirPlusForte(Carte* _carte)
 
     for (auto it=m_Cartes.begin(); it!=m_Cartes.end(); ++it)
     {
-        if ((*it)->getPoints() > _carte->getPoints())
+        if (_carte->gagnante(**it))
         {
             if (carte == nullptr)
             {
@@ -158,7 +186,8 @@ Carte* ListeCartes::choisirPlusForte(Carte* _carte)
             }
             else
             {
-                if ((*it)->getPoints() < _carte->getPoints())
+                // TODO: utiliser le score pourrait être pertinent ?
+                if ((*it)->getPoints() < carte->getPoints())
                 {
                     // la carte choisie precedement est plus forte
                     carte = *it;
