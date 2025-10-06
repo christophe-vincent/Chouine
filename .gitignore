@@ -23,6 +23,8 @@ Desktop.ini
 *.o
 *.a
 Algo/Build
+Algo/build
+build
 Godot/godot_cpp
 
 # Godot files

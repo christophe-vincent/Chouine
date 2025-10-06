@@ -88,6 +88,7 @@ int partie(unsigned int _niveauJoueur1,
     Chouine chouine(_niveauJoueur1, _niveauJoueur2);
 
     chouine.newGame();
+    chouine.distribution_cartes();
 
     Joueur joueur1 = chouine.joueur(Chouine::JOUEUR_A);
     Joueur joueur2 = chouine.joueur(Chouine::JOUEUR_B);

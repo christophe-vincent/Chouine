@@ -59,7 +59,11 @@ void Chouine::newGame()
 
     m_Pioche.shuffle();
     int carte_atout = m_Pioche.cartes().size() - 2 - (2 * Joueur::MAX_CARDS);
-    m_Atout = m_Pioche.cartes()[carte_atout]->couleur();
+    // echange des cartes d'tout
+    Carte* atout = m_Pioche.cartes()[carte_atout];
+    m_Pioche.cartes()[carte_atout] = m_Pioche.cartes()[0];
+    m_Pioche.cartes()[0] = atout;
+    m_Atout = atout->couleur();
 
     // ajoute l'attribut Atout pour les cartes d'atout
     auto pioche = m_Pioche.cartes();
