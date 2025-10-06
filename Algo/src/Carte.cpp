@@ -5,7 +5,7 @@ using namespace std;
 
 const std::array<string, 4> Carte::NOM_COULEURS =
 {
-    "coeur", "pic", "trèfle", "carreau"
+    "coeur", "pic", "trefle", "carreau"
 };
 
 const Carte::Couleur Carte::ALL_COLORS[] =
@@ -145,19 +145,19 @@ string Carte::couleurCarteToStr() const
     switch (m_Couleur)
     {
     case COEUR:
-        couleur += "COE";
+        couleur += "coeur";
         break;
     case CARREAU:
-        couleur += "CAR";
+        couleur += "carreau";
         break;
     case TREFLE:
-        couleur += "TRE";
+        couleur += "trefle";
         break;
     case PIC:
-        couleur += "PIC";
+        couleur += "pic";
         break;
     default:
-        couleur += "E";
+        couleur += "erreur";
     }
     return couleur;
 }
@@ -169,35 +169,35 @@ string Carte::carteToStr()
     switch (m_Valeur)
     {
     case SEPT:
-        valeur = " 7_";
+        valeur += "7";
         break;
     case HUIT:
-        valeur = " 8_";
+        valeur += "8";
         break;
     case NEUF:
-        valeur = " 9_";
+        valeur += "9";
         break;
     case DIX:
-        valeur = "10_";
+        valeur += "10";
         break;
     case VALET:
-        valeur = "Va_";
+        valeur += "valet";
         break;
     case DAME:
-        valeur = "Da_";
+        valeur += "dame";
         break;
     case ROI:
-        valeur = "Ro_";
+        valeur += "roi";
         break;
     case AS:
-        valeur = "As_";
+        valeur += "as";
         break;
     default:
-        valeur = "E_";
+        valeur += "";
         break;
     }
+    valeur += "-" + couleurCarteToStr();
 
-    valeur += couleurCarteToStr();
     if (m_Atout)
     {
         valeur += "*";

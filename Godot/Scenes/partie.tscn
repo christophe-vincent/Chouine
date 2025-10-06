@@ -3,12 +3,10 @@
 [ext_resource type="Script" uid="uid://dftrx4q78fbw7" path="res://Scripts/partie.gd" id="1_m1snf"]
 [ext_resource type="Texture2D" uid="uid://cbp2l4pnc5wl5" path="res://Assets/jouer.png" id="3_1x1o5"]
 [ext_resource type="Texture2D" uid="uid://cxt4m38yrulu8" path="res://Assets/jouer.svg" id="3_up2em"]
+[ext_resource type="Script" uid="uid://dxjbmkokb6h8y" path="res://Scripts/Pile.gd" id="4_1x1o5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bjfpd"]
 size = Vector2(437, 27)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_up2em"]
-size = Vector2(592, 69.75)
 
 [node name="Partie" type="Control"]
 layout_mode = 3
@@ -21,37 +19,85 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="JOUER" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 276.0
-offset_top = 140.0
-offset_right = 967.0
-offset_bottom = 423.0
-mouse_filter = 2
-color = Color(0.428547, 0.6671001, 0.0071176123, 1)
-
-[node name="ZoneJeu" type="Area2D" parent="."]
-position = Vector2(193, 114)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneJeu"]
-position = Vector2(422.5, 162.5)
-shape = SubResource("RectangleShape2D_bjfpd")
-
-[node name="MainJoueur" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="MainJoueur"]
-position = Vector2(601, 612.875)
-shape = SubResource("RectangleShape2D_up2em")
-
-[node name="TextureButton" type="TextureButton" parent="."]
-layout_mode = 0
-offset_left = 68.0
-offset_top = 589.0
-offset_right = 148.0
-offset_bottom = 629.0
+offset_left = 1041.0
+offset_top = 590.0
+offset_right = 1121.0
+offset_bottom = 630.0
 texture_normal = ExtResource("3_1x1o5")
 texture_pressed = ExtResource("3_up2em")
 
+[node name="Tapis" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 201.0
+offset_top = 207.0
+offset_right = 865.0
+offset_bottom = 420.0
+mouse_filter = 2
+color = Color(0.428547, 0.6671001, 0.0071176123, 1)
+script = ExtResource("4_1x1o5")
+Type = 1
+
+[node name="Pioche" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 1018.0
+offset_top = 209.0
+offset_right = 1138.0
+offset_bottom = 399.0
+script = ExtResource("4_1x1o5")
+
+[node name="Retourne" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 883.0
+offset_top = 210.0
+offset_right = 1002.0
+offset_bottom = 399.0
+mouse_filter = 2
+script = ExtResource("4_1x1o5")
+
+[node name="MainJoueur" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 196.0
+offset_top = 452.0
+offset_right = 871.0
+offset_bottom = 636.0
+mouse_filter = 2
+script = ExtResource("4_1x1o5")
+Type = 1
+
+[node name="MainOrdi" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 195.0
+offset_right = 867.0
+offset_bottom = 183.0
+mouse_filter = 2
+script = ExtResource("4_1x1o5")
+Type = 1
+
+[node name="OrdiGagnees" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 2.0
+offset_right = 148.0
+offset_bottom = 172.0
+script = ExtResource("4_1x1o5")
+
+[node name="JoueurGagnees" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 22.0
+offset_top = 451.0
+offset_right = 151.0
+offset_bottom = 640.0
+script = ExtResource("4_1x1o5")
+
+[node name="ZoneJeu" type="Area2D" parent="."]
+position = Vector2(195, 135)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneJeu"]
+position = Vector2(332, 177)
+shape = SubResource("RectangleShape2D_bjfpd")
+
+[connection signal="pressed" from="JOUER" to="." method="_on_texture_button_pressed"]
 [connection signal="area_shape_entered" from="ZoneJeu" to="ZoneJeu" method="_on_area_shape_entered"]
 [connection signal="area_shape_exited" from="ZoneJeu" to="ZoneJeu" method="_on_area_shape_exited"]
-[connection signal="pressed" from="TextureButton" to="." method="_on_texture_button_pressed"]

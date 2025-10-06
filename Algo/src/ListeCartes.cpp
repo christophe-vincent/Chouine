@@ -329,7 +329,10 @@ std::string ListeCartes::nomCartes()
     string cartes;
     for (auto it = m_Cartes.begin(); it != m_Cartes.end(); it++)
     {
-       cartes += (*it)->carteToStr() + " ";
+        if (cartes.length() > 0) {
+            cartes += " ";
+        }
+       cartes += (*it)->carteToStr();
     }
     return cartes;
 }

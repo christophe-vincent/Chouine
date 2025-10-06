@@ -26,6 +26,20 @@ Joueur::~Joueur()
 {
 }
 
+void Joueur::nouvellePartie()
+{
+    m_10Der = 0;
+    m_Annonces.clear();
+    m_CarteJouee = nullptr;
+    m_CartesGagnees.cartes().clear();
+    m_CartesJouees.cartes().clear();
+    m_CartesMain.cartes().clear();
+    m_Change7Trump = false;
+    m_IsChouine = false;
+    m_LatestAnnonce = nullptr;
+    m_PointsAnnonces = 0;
+}
+
 int Joueur::points()
 {
     return m_CartesGagnees.getPoints() + m_10Der + m_PointsAnnonces;
@@ -107,6 +121,26 @@ bool Joueur::prendreCarteAtout(Carte *_newCarte)
     }
 
     return false;
+}
+
+int Joueur::choixCarte(std::string& _carte)
+{
+    // recherche la carte
+    m_CarteJouee = nullptr;
+    for (Carte* c: m_CartesMain.cartes())
+    {
+        if (c->carteToStr().compare(_carte) == 0)
+        {
+            m_CarteJouee = c;
+            break;
+        }
+    }
+    if (m_CarteJouee == nullptr)
+    {
+        cout << "Erreur, la carte " << _carte << "ne fait pas partie de la main" << endl;
+        return 1;
+    }
+    return 0;
 }
 
 

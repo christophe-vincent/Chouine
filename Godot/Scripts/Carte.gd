@@ -1,8 +1,8 @@
 extends Node2D
 
-@onready var area: Area2D = $Area2D
+@onready var carte: Area2D = $Area2D
 @onready var front_face_texture: Sprite2D = $Area2D/FrontFace
-#@onready var back_face_texture: Sprinte2D = $Area2D/BackFace
+@onready var back_face_texture: Sprite2D = $Area2D/BackFace
 @onready var collision: CollisionShape2D= $Area2D/CollisionShape2D
 
 ## The name of the card.
@@ -15,52 +15,70 @@ extends Node2D
 @export var back_image: Texture2D
 ## Whether the front face of the card is shown.
 ## If true, the front face is visible; otherwise, the back face is visible.
-@export var show_front: bool = true:
-	set(value):
-		if value:
-			front_face_texture.visible = true
-			#back_face_texture.visible = false
-		else:
-			front_face_texture.visible = false
-			#back_face_texture.visible = true
+@export var show_front: bool = true
 
-
+var draggable = true
 var dragging = false
 var drag_offset = Vector2.ZERO
 var zone_jeu = false
+var position_initiale = Vector2(0, 0)
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	collision.shape.size = Settings.DEFAULT_CARD_SIZE
 	front_face_texture.texture = front_image
+	back_face_texture.texture = back_image
 	var texture_scale = Settings.DEFAULT_CARD_SIZE / front_image.get_size() 
 	front_face_texture.scale = texture_scale
-	area.mouse_entered.connect(_on_mouse_entered)
-	area.mouse_exited.connect(_on_mouse_exited)
-	area.input_event.connect(_on_input_event)
-	area.position = position
+	back_face_texture.scale = texture_scale
+	if show_front:
+		front_face_texture.visible = true
+		back_face_texture.visible = false
+	else:
+		front_face_texture.visible = false
+		back_face_texture.visible = true
+	carte.mouse_entered.connect(_on_mouse_entered)
+	carte.mouse_exited.connect(_on_mouse_exited)
+	carte.input_event.connect(_on_input_event)
+	carte.position = position
 
+func move(pos):
+	carte.position = pos
+	
+func size():
+	return card_size
+	
+func face_visible(v):
+	if v:
+		front_face_texture.visible = true
+		back_face_texture.visible = false
+	else:
+		front_face_texture.visible = false
+		back_face_texture.visible = true
 
 func _on_input_event(_viewport, event, _shape_idx):
-	if event is InputEventMouseButton:
+	if draggable and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed:
 				# Start dragging
 				dragging = true
-				drag_offset = area.global_position - get_global_mouse_position()
+				position_initiale = carte.position
+				drag_offset = carte.global_position - get_global_mouse_position()
 			else:
 				# Stop dragging
 				dragging = false
 				if zone_jeu == true:
 					get_parent().carte_jouee(card_name)
-					print("Courte jouée")
+				else:
+					# on retourne à la position initiale
+					carte.position = position_initiale
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	if dragging:
-		area.global_position = get_global_mouse_position() + drag_offset
+		carte.global_position = get_global_mouse_position() + drag_offset
 
 func _on_mouse_entered():
 	pass
@@ -69,11 +87,11 @@ func _on_mouse_exited():
 	pass
 
 
-func _on_area_2d_area_shape_entered(area_rid: RID, area: Area2D, area_shape_index: int, local_shape_index: int) -> void:
+func _on_area_2d_area_shape_entered(_area_rid: RID, area: Area2D, _area_shape_index: int, _local_shape_index: int) -> void:
 	if area.name == "ZoneJeu":
 		zone_jeu = true
 
 
-func _on_area_2d_area_shape_exited(area_rid: RID, area: Area2D, area_shape_index: int, local_shape_index: int) -> void:
+func _on_area_2d_area_shape_exited(_area_rid: RID, area: Area2D, _area_shape_index: int, _local_shape_index: int) -> void:
 	if area.name == "ZoneJeu":
 		zone_jeu = false

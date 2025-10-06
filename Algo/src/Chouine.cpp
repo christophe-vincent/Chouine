@@ -27,6 +27,11 @@ Chouine::~Chouine()
 
 void Chouine::newGame()
 {
+    m_Annonces.clear();
+    m_Pioche.cartes().clear();
+    m_JoueurA.nouvellePartie();
+    m_JoueurB.nouvellePartie();
+
     m_GagnantPli = &m_JoueurA;
     m_PerdantPli = &m_JoueurB;
     if (dist(mt) == 2)
@@ -53,11 +58,9 @@ void Chouine::newGame()
     }
 
     m_Pioche.shuffle();
-    m_Atout = m_Pioche.getLastCarte()->couleur();
+    int carte_atout = m_Pioche.cartes().size() - 2 - (2 * Joueur::MAX_CARDS);
+    m_Atout = m_Pioche.cartes()[carte_atout]->couleur();
 
-    //cout << m_Pioche.nomCartes() << endl;
-    //cout << m_Pioche.getLastCarte()->nom() << endl;
-    
     // ajoute l'attribut Atout pour les cartes d'atout
     auto pioche = m_Pioche.cartes();
     for (auto it=pioche.begin(); it!=pioche.end(); ++it)
@@ -66,18 +69,6 @@ void Chouine::newGame()
         {
             (*it)->atout(true);
         }
-    }
-
-    // Distribution, les 2 joueurs piochent pour avoir 5 cartes chacun
-    for (int i = 0; i < Joueur::MAX_CARDS; i++)
-    {
-        Carte *card = m_Pioche.piocheCarte();
-        if (card != nullptr)
-            m_GagnantPli->ajouterCarteMain(*card);
-
-        card = m_Pioche.piocheCarte();
-        if (card != nullptr)
-            m_PerdantPli->ajouterCarteMain(*card);
     }
 
     // creation de toutes les annnonces possibles
@@ -102,6 +93,21 @@ void Chouine::newGame()
     }
     annonce = new Annonce(Carte::UNDEF_COLOR, Annonce::QUINTE, false);
     m_Annonces.insert(annonce);
+}
+
+void Chouine::distribution_cartes()
+{
+    // Distribution, les 2 joueurs piochent pour avoir 5 cartes chacun
+    for (int i = 0; i < Joueur::MAX_CARDS; i++)
+    {
+        Carte *card = m_Pioche.piocheCarte();
+        if (card != nullptr)
+            m_GagnantPli->ajouterCarteMain(*card);
+
+        card = m_Pioche.piocheCarte();
+        if (card != nullptr)
+            m_PerdantPli->ajouterCarteMain(*card);
+    }
 }
 
 bool Chouine::piocheVide()
@@ -134,30 +140,17 @@ string Chouine::choixJoueur(string& _annonce)
     return carte->carteToStr();
 }
 
-bool Chouine::setJoueurChoice(int _player, int _choice)
+int Chouine::setChoixJoueur(std::string _choice)
 {
-    if (_player > 1)
+    if (m_GagnantPli->carteJouee() == nullptr)
     {
-        return false;
-    }
-   /* Carte *card;
-    card = m_Joueurs[_player]->getCarte(_choice);
-    if (card == nullptr)
+        // C'est le premier joueur à jouer
+        return m_GagnantPli->choixCarte(_choice);
+    } else
     {
-        return false;
+        // c'est au second joueur de jouer
+        return m_PerdantPli->choixCarte(_choice);
     }
-    // check if user can play this card
-    if ((m_Pioche.size() == 0) && (m_GagnantPli != _player))
-    {
-        if (!m_Joueurs[_player]->isCarteAllowed(*card, *m_CarteJouee))
-        {
-            return false;
-        }
-    }
-
-    // TODO : lancer la résolution de la done ici
-*/
-    return true;
 }
 
 Chouine::JOUEUR Chouine::finPli()
@@ -165,6 +158,9 @@ Chouine::JOUEUR Chouine::finPli()
     // les carte ne seront ensuite plus accessibles
     Carte* carteJoueurA = m_JoueurA.carteJouee();
     Carte* carteJoueurB = m_JoueurB.carteJouee();
+    if (carteJoueurA == nullptr || carteJoueurB == nullptr) {
+        return JOUEUR::ERREUR;
+    }
 
     if (m_GagnantPli->id() == m_JoueurA.id())
     {

@@ -55,6 +55,7 @@ class Chouine
 public:
     enum JOUEUR
     {
+        ERREUR = -1,
         JOUEUR_A = 0,
         JOUEUR_B = 1
     };
@@ -64,6 +65,8 @@ public:
     ~Chouine();
     
     void newGame();
+
+    void distribution_cartes();
 
     Joueur joueur(JOUEUR _id) { return *m_Joueurs[_id];};
 
@@ -78,7 +81,8 @@ public:
     bool piocheVide();
 
     string choixJoueur(string& _annonce);
-    bool setJoueurChoice(int _player, int _choice);
+    int setChoixJoueur(std::string _choice);
+
     JOUEUR finPli();
     bool finPartie();
 

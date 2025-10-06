@@ -1,0 +1,58 @@
+extends ColorRect
+
+enum TypePile {
+	PILE,
+	MAIN
+}
+
+@export var Type: TypePile
+@export var card_size: Vector2
+
+var face_visible = true
+var draggable = true
+# si non adaptatif, alors les cartes ont une position fixe, quelque soit leurs nombre
+var adaptatif = true
+var nb_cartes_max = 2
+
+var _cartes = {}
+
+func init_cartes():
+	_cartes = {}
+	
+func cartes():
+	# retourne les cartes de la pile
+	var ret = {}
+	for c in _cartes:
+		ret[c] = _cartes[c]['carte']
+	return ret
+
+func supprimer_carte(nom):
+	_cartes.erase(nom)
+
+func ajouter_carte(nom, carte):
+	_cartes[nom] = {"carte": carte, "index": _cartes.size()+1}
+	if Type == TypePile.PILE:
+		carte.move(position + size/2)
+	else:
+		calcul_positions()
+
+	carte.draggable = draggable
+	carte.face_visible(face_visible)
+	carte.face_visible(face_visible)
+	pass 
+
+func calcul_positions():
+	var nb_cartes = _cartes.size()
+	if not adaptatif:
+		nb_cartes = nb_cartes_max
+	var slot_1 = card_size.x/2 + (size.x - (card_size.x * nb_cartes))/(nb_cartes + 1)
+	var diff_slot = card_size.x + (size.x - (card_size.x * nb_cartes))/(nb_cartes + 1)
+	var index: int = 1
+	for c in _cartes:
+		#var index = _cartes[c]['index']
+		var carte = _cartes[c]['carte']
+		var x = position.x + slot_1 + (diff_slot * (index - 1))
+		#var x = position.x + carte.size().x/2 + (size.x - (carte.size().x * index))/(index + 1)
+		var y = position.y + size.y/2
+		carte.move(Vector2(x, y))
+		index += 1

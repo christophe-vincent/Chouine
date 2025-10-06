@@ -33,6 +33,8 @@ public:
     void niveau(int _niveau) { m_Niveau = _niveau; }
     int niveau() { return m_Niveau; }
 
+    void nouvellePartie();
+
     // retourne la list des cartes en main
     ListeCartes &cartes() { return m_CartesMain; }
 
@@ -57,6 +59,9 @@ public:
 
     // Vérifie si une annonce doit être déclarée avant de jouer cette carte
     Annonce* rechercheAnnonce(Carte &_carte);
+
+    // une carte a été choisie
+    int choixCarte(std::string& _carte);
 
     // choisir une carte à jouer
     Carte* choisirCarte(Carte *_enemyChoice, std::string& _annonce);

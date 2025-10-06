@@ -1,7 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://djghivsshxngt"]
+[gd_scene load_steps=3 format=3 uid="uid://djghivsshxngt"]
 
 [ext_resource type="Script" uid="uid://342gnsyor230" path="res://Scripts/Carte.gd" id="1_j3r2x"]
-[ext_resource type="Texture2D" uid="uid://h47opggo2whr" path="res://Assets/Cartes/carreau-7.png" id="2_j3r2x"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jw58i"]
 
@@ -12,7 +11,8 @@ script = ExtResource("1_j3r2x")
 top_level = true
 
 [node name="FrontFace" type="Sprite2D" parent="Area2D"]
-texture = ExtResource("2_j3r2x")
+
+[node name="BackFace" type="Sprite2D" parent="Area2D"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("RectangleShape2D_jw58i")
