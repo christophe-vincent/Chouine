@@ -19,6 +19,11 @@ Desktop.ini
 # My files
 # =======
 
+# compilation
+*.o
+*.a
+Algo/Build
+Godot/godot_cpp
 
 # Godot files
 *.import
