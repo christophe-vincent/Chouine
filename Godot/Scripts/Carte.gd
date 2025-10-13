@@ -19,6 +19,7 @@ extends Node2D
 
 var draggable = true
 var dragging = false
+var moving = false
 var drag_offset = Vector2.ZERO
 var zone_jeu = false
 var position_initiale = Vector2(0, 0)
@@ -43,9 +44,15 @@ func _ready() -> void:
 	carte.input_event.connect(_on_input_event)
 	carte.position = position
 
-func move(pos):
-	carte.position = pos
+func move(pos, duree_effet):
+	moving = true
+	var tween = get_tree().create_tween()
+	tween.tween_property(carte, "position", pos, duree_effet)
+	tween.connect("finished", stop_moving)
 	
+func stop_moving():
+	moving = false
+
 func size():
 	return card_size
 	
@@ -58,7 +65,7 @@ func face_visible(v):
 		back_face_texture.visible = true
 
 func _on_input_event(_viewport, event, _shape_idx):
-	if draggable and event is InputEventMouseButton:
+	if draggable and (not moving) and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed:
 				# Start dragging

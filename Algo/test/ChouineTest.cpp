@@ -28,7 +28,7 @@
 
 unsigned int niveau1 = 5;
 unsigned int niveau2 = 5;
-int nbParties = 1;
+int nbParties = 10000;
 
 bool verbose = nbParties == 1 ? true : false;
 
@@ -102,6 +102,7 @@ int partie(unsigned int _niveauJoueur1,
     Chouine::JOUEUR gagnant = chouine.gagnantPli();
     Chouine::JOUEUR perdant = chouine.perdantPli();
     std::string annonce;
+    std::string priseAtout;
     
     while (!stop)
     {
@@ -109,18 +110,18 @@ int partie(unsigned int _niveauJoueur1,
         log("\nTOUR ", tour, "\n");
         log("Pioche  : ", chouine.pioche().nomCartes(), "\n");
 
-        choix = chouine.choixJoueur(annonce);
-        log("Joueur ", gagnant + 1, ": ", chouine.joueur(gagnant).cartesMainToStr(), "\n");
+        choix = chouine.choixJoueur(annonce, priseAtout);
+        log("Cartes joueur ", gagnant + 1, ": ", chouine.joueur(gagnant).cartesMainToStr(), "\n");
         stop = testChoix(choix, erreur);
-        std::string message = "Choix Joueur " + std::to_string(gagnant + 1) + " : " + choix;
+        std::string message = "Choix Joueur " + std::to_string(gagnant + 1) + "  : " + choix;
         message += (annonce != "") ? " (" + annonce + ")" : "";
         log(message, "\n");
 
         annonce = "";
-        choix = chouine.choixJoueur(annonce);
-        log("Joueur ", perdant + 1, ": ", chouine.joueur(perdant).cartesMainToStr(), "\n");
+        choix = chouine.choixJoueur(annonce, priseAtout);
+        log("Cartes joueur ", perdant + 1, ": ", chouine.joueur(perdant).cartesMainToStr(), "\n");
         stop |= testChoix(choix, erreur);
-        message = "Choix Joueur " + std::to_string(perdant + 1) + " : " + choix;
+        message = "Choix Joueur " + std::to_string(perdant + 1) + "  : " + choix;
         message += (annonce != "") ? " (" + annonce + ")" : "";
         log(message, "\n");
 
@@ -131,6 +132,11 @@ int partie(unsigned int _niveauJoueur1,
         }
         if (!stop)
         {
+            // affichage des annonces possibles
+            std::string annonces = chouine.annoncesEnMainJoueur(0);
+            if (annonces.size() > 0) log("Annonces joueur 1: " + annonces + "\n");
+            annonces = chouine.annoncesEnMainJoueur(1);
+            if (annonces.size() > 0) log("Annonces joueur 2: " + annonces + "\n");
             gagnant = chouine.finPli();
             perdant = chouine.perdantPli();
             stop = chouine.finPartie();

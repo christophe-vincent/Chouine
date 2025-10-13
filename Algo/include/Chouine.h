@@ -80,8 +80,10 @@ public:
     
     bool piocheVide();
 
-    string choixJoueur(string& _annonce);
+    string choixJoueur(string& _annonce, string& _carteAtout);
     int setChoixJoueur(std::string _choice);
+    int setChoixAnnonce(int _joueur, std::string _annonce);
+    std::string annoncesEnMainJoueur(int _joueur);
 
     JOUEUR finPli();
     bool finPartie();
@@ -91,66 +93,11 @@ public:
     // retourne toutes les annonces existantes
     set<Annonce*> getAnnonces() { return m_Annonces; }
 
-    /*string hasChange7Trump(int _player);
-   string change7Trump(int _player);
-   int Play();
-   bool isGameOver();
-   int getJoueurAnnouncesPoints(int _player);
-   int getJoueurTotalPoints(int _player);
+    /*
    void testBruteForce();
-   
-   
-   int getJoueurLevel(int _player)
-   {
-      if (_player > 1) return 0;
-      return m_Joueurs[_player].getLevel();
-   }   
-   set<Carte*> GetPickList() { return m_Pick.GetCartes(); }
-   set<Carte*> GetJoueurListeCartes(int _player)
-   {
-      if (_player > 1) return ;
-      return m_Joueurs[_player].GetCartes();
-   }
-
-   set<Carte*> GetJoueurWinListeCartes(int _player)
-   {
-      if (_player > 1) return nullptr;
-      return m_Joueurs[_player].GetWinCartes();
-   }
    */
     Carte::Couleur couleurAtout() { return m_Atout; };
     std::string atout() { return Carte::couleurToStr(m_Atout);}
-    /*  Carte* GetTrumpCarte() { return m_Pick.getTrumpCarte(); }
-   Announce* getJoueurLatestAnnounce(int _player)
-   {
-      if (_player > 1) return nullptr;
-      return m_Joueurs[_player].getLatestAnnounce();
-   }
-   
-   int donnor() { return m_Donor; }
-   Announce setJoueurAnnounce(int _player, set<string> _cardNames)
-   {
-      if (_player > 1) return nullptr;
-      return m_Joueurs[_player].newAnnouce(_cardNames);
-   }
-   
-   int getJoueurPoints(int _player)
-   {
-      if (_player > 1) return -1;
-      return m_Joueurs[_player].Points();
-   }
-
-   int getJoueur10Der(int _player)
-   {
-      if (_player > 1) return -1;
-      return m_Joueurs[_player].get10Der();
-   }
-
-   set<Announce*> getJoueurAnnouces(int _player)
-   {
-      if (_player > 1) return nullptr;
-      return m_Joueurs[_player].getAnnouces();
-   }*/
 
 private:
     Carte::Couleur m_Atout;

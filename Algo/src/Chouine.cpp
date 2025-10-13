@@ -121,7 +121,7 @@ bool Chouine::piocheVide()
     return ret;
 }
 
-string Chouine::choixJoueur(string& _annonce)
+string Chouine::choixJoueur(string& _annonce, string& _carteAtout)
 {
     string ret("erreur");
     Carte *carte = nullptr;
@@ -131,10 +131,12 @@ string Chouine::choixJoueur(string& _annonce)
     {
         // C'est le premier joueur à jouer
         carte = m_GagnantPli->choisirCarte(nullptr, _annonce);
+        _carteAtout = m_GagnantPli->priseCarteAtout();
     } else
     {
         // c'est au second joueur de jouer
         carte = m_PerdantPli->choisirCarte(m_GagnantPli->carteJouee(), _annonce);
+        _carteAtout = m_PerdantPli->priseCarteAtout();
     }
     if (carte == nullptr)
     {
@@ -155,6 +157,18 @@ int Chouine::setChoixJoueur(std::string _choice)
         // c'est au second joueur de jouer
         return m_PerdantPli->choixCarte(_choice);
     }
+}
+
+int Chouine::setChoixAnnonce(int _joueur, std::string _annonce)
+{
+    if (_joueur < 0 || _joueur > 1)
+        return -1;
+    return 0; // m_Joueurs[_joueur]->choixAnnonce(_annonce);
+}
+
+std::string Chouine::annoncesEnMainJoueur(int _joueur)
+{
+    return m_Joueurs[_joueur]->annoncesEnMain();
 }
 
 Chouine::JOUEUR Chouine::finPli()

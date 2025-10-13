@@ -63,6 +63,12 @@ public:
     // une carte a été choisie
     int choixCarte(std::string& _carte);
 
+    // une annonce a été choisie
+    int choixAnnonce(std::string& _annonce);
+
+    // retourne la liste des annonces en main du joueur
+    std::string annoncesEnMain();
+
     // choisir une carte à jouer
     Carte* choisirCarte(Carte *_enemyChoice, std::string& _annonce);
 
@@ -71,6 +77,8 @@ public:
 
     // prend la carte d'atout avec le 7 d'atout
     bool prendreCarteAtout();
+
+    std::string priseCarteAtout() { return m_Change7Atout; }
 
     // a t'on le droit de jouer cette carte quand la pioche est vide ?
     bool carteAurotisee(Carte &_card, Carte &_otherCarte);
@@ -82,11 +90,11 @@ protected:
     Carte *EmptyPickSimulation(Carte &_userChoice);
 
     bool m_IsChouine;
-    bool m_Change7Trump;
 
 private:
     int m_Id;
     bool m_SecondChoix;
+    std::string m_Change7Atout;
     Chouine &m_Chouine;
     ListeCartes m_CartesMain;    // 5 cartes de la main
     ListeCartes m_CartesGagnees; // cards win

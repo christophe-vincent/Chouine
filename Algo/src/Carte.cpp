@@ -198,14 +198,14 @@ string Carte::carteToStr()
     }
     valeur += "-" + couleurCarteToStr();
 
-    if (m_Atout)
-    {
-        valeur += "*";
-    }
-    if (m_Score > 0)
-    {
-        valeur += " (" + to_string(m_Score) + ")";
-    }
+    // if (m_Atout)
+    // {
+    //     valeur += "*";
+    // }
+    // if (m_Score > 0)
+    // {
+    //     valeur += " (" + to_string(m_Score) + ")";
+    // }
 
     return valeur;
 }

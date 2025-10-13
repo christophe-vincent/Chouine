@@ -18,7 +18,7 @@ m_Chouine(_chouine), m_Algo(_niveau, *this), m_Niveau(_niveau)
     m_10Der = 0;
     m_PointsAnnonces = 0;
     m_LatestAnnonce = nullptr;
-    m_Change7Trump = false;
+    m_Change7Atout = "";
     m_IsChouine = false;
     m_CarteJouee = nullptr;
 }
@@ -35,7 +35,7 @@ void Joueur::nouvellePartie()
     m_CartesGagnees.cartes().clear();
     m_CartesJouees.cartes().clear();
     m_CartesMain.cartes().clear();
-    m_Change7Trump = false;
+    m_Change7Atout = "";
     m_IsChouine = false;
     m_LatestAnnonce = nullptr;
     m_PointsAnnonces = 0;
@@ -117,6 +117,7 @@ bool Joueur::prendreCarteAtout()
         unsigned int position = m_CartesMain.position(card);
         Carte* nouvelleCarte = m_Chouine.pioche().echangerCarte(card, 0);
         m_CartesMain.echangerCarte(nouvelleCarte, position);
+        m_Change7Atout = card->carteToStr();
         return true;
     }
 
@@ -143,6 +144,48 @@ int Joueur::choixCarte(std::string& _carte)
     return 0;
 }
 
+int Joueur::choixAnnonce(std::string& _annonce)
+{
+    // recherche l'annonce
+    Annonce* annonce = nullptr;
+    for (auto* ann: m_Chouine.getAnnonces()) 
+    {
+        if (ann->to_string().compare(_annonce) == 0)
+        {
+            annonce = ann;
+            break;
+        }
+    }
+    if (annonce == nullptr)
+    {
+        cout << "Erreur, l'annonce " << _annonce << "ne fait pas partie des annonces possibles" << endl;
+        return 1;
+    }
+    m_PointsAnnonces += annonce->points();
+    m_Annonces[annonce] = annonce->points();
+    return 0;
+}
+
+
+std::string Joueur::annoncesEnMain()
+{
+    std::string annonces;
+    for (auto* annonce: m_Chouine.getAnnonces()) 
+    {
+        // le score indique si une annonce est présente, partiellement presente ou absente de la main
+        int score = annonce->calculeScore(m_CartesMain, m_CartesJouees);
+        if (score == 100 && m_Annonces.count(annonce) == 0)
+        {
+            if (annonces.size() > 0)
+            {
+                annonces += " ";
+            }
+            annonces += annonce->to_string();
+        }
+    }
+    return annonces;
+}
+
 
 Carte* Joueur::choisirCarte(Carte *_carteAdversaire, string& _annonce)
 {
@@ -157,7 +200,6 @@ Carte* Joueur::choisirCarte(Carte *_carteAdversaire, string& _annonce)
     // recalculer les annonces
     if (m_Niveau >= Algorithme::VERIFIE_ANNONCE)
     {
-        m_Annonces.clear();
         for (Carte* carteMain: m_CartesMain.cartes())
         {
             carteMain->annonces().clear();
@@ -168,9 +210,7 @@ Carte* Joueur::choisirCarte(Carte *_carteAdversaire, string& _annonce)
             int score = annonce->calculeScore(m_CartesMain, m_CartesJouees);
             if (score > 0)
             {
-                // associons cette annonce au joueur
-                m_Annonces[annonce] = score;
-                //cout << "Annonce dans la main: " << annonce->to_string() << " Score=" << score << endl;
+                // cout << "Annonce dans la main: " << annonce->to_string() << " Score=" << score << endl;
 
                 // ajoutons l'annonce et son score à chaque carte concernée
                 for (Carte* carteMain: m_CartesMain.cartes())
@@ -215,6 +255,7 @@ Carte* Joueur::choisirCarte(Carte *_carteAdversaire, string& _annonce)
         {
             _annonce = annonce->to_string();
             m_PointsAnnonces += annonce->points();
+            m_Annonces[annonce] = annonce->points();
         }
     }
 

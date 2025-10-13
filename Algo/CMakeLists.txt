@@ -9,7 +9,7 @@ project (chouinealgo)
 include_directories(include)
 
 file(GLOB SOURCES "src/*.cpp")
-#set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
 
 add_library(chouinealgo STATIC ${SOURCES})
 

@@ -341,19 +341,19 @@ string Annonce::to_string()
     switch (m_Annonce)
     {
         case Annonce::MARIAGE :
-            text = 'M';
+            text = "mariage";
             break;
         case Annonce::TIERCE :
-            text = 'T';
+            text = "tierce";
             break;
         case Annonce::QUARANTE :
-            text = 'Q';
+            text = "quarante";
             break;
         case Annonce::CHOUINE :
-            text = 'C';
+            text = "chouine";
             break;
         case Annonce::QUINTE :
-            text = '5';
+            text = "quinte";
             break;
         default:
             break;
@@ -363,16 +363,16 @@ string Annonce::to_string()
         switch (m_Couleur)
         {
         case Carte::PIC:
-            text += "Pi";
+            text += "pic";
             break;
         case Carte::TREFLE:
-            text += "Tr";
+            text += "trefle";
             break;
         case Carte::CARREAU:
-            text += "Ca";
+            text += "carreau";
             break;
         case Carte::COEUR:
-            text += "Co";
+            text += "coeur";
             break;
         default:
             break;
