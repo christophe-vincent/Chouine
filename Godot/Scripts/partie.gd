@@ -109,7 +109,9 @@ func init_jeu():
 	dix_de_der.visible = false
 	
 	annonces_ordi.reset()
+	annonces_ordi.visible = true
 	annonces_joueur.reset()
+	annonces_joueur.visible = true
 
 
 func carte_jouee(nom):
@@ -119,11 +121,11 @@ func carte_jouee(nom):
 	if carte_atout != null && carte_atout.card_name == nom:
 		print("ERREUR: Carte d'atout déposée sur la zone de jeu")
 		return -1
-	coup_joueur = false
 	var ret = chouine.set_choix_joueur(nom)
-	if ret == -1:
+	if ret != 0:
 		print("ERREUR: Erreur dans le choix du joueur")
 		return -1
+	coup_joueur = false
 	tapis.ajouter_carte(cartes[nom], 0.1)
 	main_joueur.supprimer_carte(nom)
 	# est-ce la fin du pli ?
@@ -282,14 +284,20 @@ func fin_pli():
 		var points_joueur = chouine.points_joueur(JOUEURS.HUMAIN)
 		points.text = str(points_joueur) + " - " + str(points_ordi)
 		points.visible = true
+		var screen_size = get_viewport_rect().size
 		joueur_gagnees.Type = Pile.TypePile.MAIN
-		joueur_gagnees.size = Vector2(845, 190)
-		joueur_gagnees.position += Vector2(40, 0)
+		joueur_gagnees.size = Vector2(screen_size.x - 2*Settings.DEFAULT_CARD_SIZE.x, Settings.DEFAULT_CARD_SIZE.y)
+		joueur_gagnees.position.x = Settings.DEFAULT_CARD_SIZE.x
 		joueur_gagnees.calcul_positions(0)
 		ordi_gagnees.Type = Pile.TypePile.MAIN
-		ordi_gagnees.size = Vector2(845, 190)
-		ordi_gagnees.position += Vector2(40, 0)
+		ordi_gagnees.visibilite(true)
+		ordi_gagnees.size = Vector2(screen_size.x - 2*Settings.DEFAULT_CARD_SIZE.x, Settings.DEFAULT_CARD_SIZE.y)
+		ordi_gagnees.position.x = Settings.DEFAULT_CARD_SIZE.x
 		ordi_gagnees.calcul_positions(0)
+		annonces_ordi.reset()
+		annonces_ordi.visible = false
+		annonces_joueur.reset()
+		annonces_joueur.visible = false
 		return
 	# debug: affiche les cartes
 	print("Ordi        : " + chouine.cartes_joueur(0))

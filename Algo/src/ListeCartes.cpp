@@ -391,17 +391,15 @@ Carte *ListeCartes::getHigherValeur(Carte::Valeur _value)
 
 Carte *ListeCartes::getHigherCarte(Carte &_carte)
 {
-    Carte *card = nullptr;
-    auto it = m_Cartes.begin();
-    while ((it != m_Cartes.end()) && (!(_carte.getPoints() > (*it)->getPoints())))
-        it++;
-
-    if ((it != m_Cartes.end()) && (! (_carte.getPoints() > (*it)->getPoints())))
+    for (auto c : m_Cartes)
     {
-        // we found the card !
-        card = *it;
+        if (_carte.gagnante(*c))
+        {
+            // we found the card !
+            return c;
+        }
     }
-    return card;
+    return nullptr;
 }
 
 int ListeCartes::getPoints()

@@ -31,6 +31,10 @@ func cartes():
 		ret[c] = _cartes[c]['carte']
 	return ret
 
+func visibilite(_visible: bool):
+	for c in _cartes:
+		_cartes[c].carte.face_visible(_visible)
+
 func supprimer_carte(nom):
 	_cartes.erase(nom)
 

@@ -124,7 +124,7 @@ bool Joueur::prendreCarteAtout()
     return false;
 }
 
-int Joueur::choixCarte(std::string& _carte)
+int Joueur::choixCarte(std::string& _carte, Carte* _carteAdversaire)
 {
     // recherche la carte
     m_CarteJouee = nullptr;
@@ -132,6 +132,15 @@ int Joueur::choixCarte(std::string& _carte)
     {
         if (c->carteToStr().compare(_carte) == 0)
         {
+            // on vérifie si la carte est jouable
+            if (m_Chouine.piocheVide() && _carteAdversaire != nullptr)
+            {
+                if (!carteAurotisee(*c, *_carteAdversaire))
+                {
+                    cout << "Erreur, la carte " << _carte << " n'est pas autorisée à être jouée" << endl;
+                    return 2;
+                }
+            }
             m_CarteJouee = c;
             break;
         }
@@ -152,8 +161,12 @@ int Joueur::choixAnnonce(std::string& _annonce)
     {
         if (ann->to_string().compare(_annonce) == 0)
         {
-            annonce = ann;
-            break;
+            int score = ann->calculeScore(m_CartesMain, m_CartesJouees);
+            if (score == 100 && m_Annonces.count(annonce) == 0)
+            {
+                annonce = ann;
+                break;
+            }
         }
     }
     if (annonce == nullptr)
@@ -241,6 +254,16 @@ Carte* Joueur::choisirCarte(Carte *_carteAdversaire, string& _annonce)
     {
         // on doit donner la bonne couleur
         m_CarteJouee = m_Algo.choisirCartePiocheVide(_carteAdversaire);
+        //m_CarteJouee = m_CartesMain[0];
+
+        if (_carteAdversaire != nullptr)
+        {
+            if (!carteAurotisee(*m_CarteJouee, *_carteAdversaire))
+            {
+                cout << "Erreur, la carte n'est pas autorisée à être jouée" << endl;
+                return nullptr;
+            }
+        }
     }
     else
     {
@@ -341,7 +364,7 @@ bool Joueur::carteAurotisee(Carte &_card, Carte &_otherCarte)
     Carte *card = m_CartesMain.getHigherCarte(_otherCarte);
     if (card == nullptr)
     {
-        // the Joueur does not have higher card, so he can play nay card
+        // the Joueur does not have higher card, so he can play any card
         return true;
     }
     else

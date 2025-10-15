@@ -63,6 +63,18 @@ void Chouine::newGame()
 
 void Chouine::distribution_cartes()
 {
+    // ajoute l'attribut Atout pour les cartes d'atout
+    Carte* atout = m_Pioche[m_Pioche.size()-11];
+    m_Atout = atout->couleur();
+    auto pioche = m_Pioche.cartes();
+    for (auto it=pioche.begin(); it!=pioche.end(); ++it)
+    {
+        if ((*it)->couleur() == m_Atout)
+        {
+            (*it)->atout(true);
+        }
+    }
+
     // Distribution, les 2 joueurs piochent pour avoir 5 cartes chacun
     for (int i = 0; i < Joueur::MAX_CARDS; i++)
     {
@@ -76,19 +88,8 @@ void Chouine::distribution_cartes()
     }
 
     // echange des cartes d'tout
-    Carte* atout = m_Pioche.piocheCarte();
+    atout = m_Pioche.piocheCarte();
     m_Pioche.cartes().insert(m_Pioche.cartes().begin(), atout);
-    m_Atout = atout->couleur();
-
-    // ajoute l'attribut Atout pour les cartes d'atout
-    auto pioche = m_Pioche.cartes();
-    for (auto it=pioche.begin(); it!=pioche.end(); ++it)
-    {
-        if ((*it)->couleur() == m_Atout)
-        {
-            (*it)->atout(true);
-        }
-    }
 
     // creation de toutes les annnonces possibles
     Annonce *annonce;
@@ -155,7 +156,7 @@ int Chouine::setChoixJoueur(std::string _choice)
     } else
     {
         // c'est au second joueur de jouer
-        return m_PerdantPli->choixCarte(_choice);
+        return m_PerdantPli->choixCarte(_choice, m_GagnantPli->carteJouee());
     }
 }
 

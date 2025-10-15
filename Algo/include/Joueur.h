@@ -61,7 +61,7 @@ public:
     Annonce* rechercheAnnonce(Carte &_carte);
 
     // une carte a été choisie
-    int choixCarte(std::string& _carte);
+    int choixCarte(std::string& _carte, Carte* _carteAdversaire=nullptr);
 
     // une annonce a été choisie
     int choixAnnonce(std::string& _annonce);

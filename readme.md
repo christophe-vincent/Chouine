@@ -16,7 +16,8 @@ L'algorithme est développé en C++ et la partie graphique grâce à Godot.
 # bugs connus
 - Quinte non détectée
 - Tierce et mariage annoncés pour une même couleur
-- Calcul des points 
+- Calcul des points
+- annonce non detectée apres la distribution des 5 cartes
 
 ## Algorithme
 
