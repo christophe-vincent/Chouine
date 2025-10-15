@@ -28,7 +28,12 @@
 
 unsigned int niveau1 = 5;
 unsigned int niveau2 = 5;
-int nbParties = 10000;
+int nbParties = 1;
+
+
+std::vector<std::string> vecteur_quinte = {
+    "10-coeur", "*", "as-coeur", "*", "10-pic", "*", "as-pic", "*", "10-trefle"};
+
 
 bool verbose = nbParties == 1 ? true : false;
 
@@ -86,8 +91,10 @@ int partie(unsigned int _niveauJoueur1,
            int& _pointsJoueur2)
 {
     Chouine chouine(_niveauJoueur1, _niveauJoueur2);
+    chouine.setOrdreCartes(vecteur_quinte);
 
     chouine.newGame();
+    log("Pioche  : ", chouine.pioche().nomCartes(), "\n");
     chouine.distribution_cartes();
 
     Joueur joueur1 = chouine.joueur(Chouine::JOUEUR_A);
@@ -109,6 +116,7 @@ int partie(unsigned int _niveauJoueur1,
         tour++;
         log("\nTOUR ", tour, "\n");
         log("Pioche  : ", chouine.pioche().nomCartes(), "\n");
+        chouine.septAtoutEnMain(gagnant);
 
         choix = chouine.choixJoueur(annonce, priseAtout);
         log("Cartes joueur ", gagnant + 1, ": ", chouine.joueur(gagnant).cartesMainToStr(), "\n");

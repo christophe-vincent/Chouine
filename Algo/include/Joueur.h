@@ -15,7 +15,7 @@ class Node
 private:
     Node *m_Parent;
     // pair : card idx play 1, card idx player 2
-    map<pair<int, int>, Node *> m_Nodes;
+    std::map<std::pair<int, int>, Node *> m_Nodes;
     int m_Points;
 };
 

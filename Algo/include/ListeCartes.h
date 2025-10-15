@@ -4,20 +4,19 @@
 #include "Carte.h"
 
 class Annonce;
-using namespace std;
 
 class ListeCartes
 {
-private:
 public:
     ListeCartes();
     ListeCartes(Carte *_card);
 
     void ajouter(Carte *_card);
     void supprimer(Carte *_card);
-    void shuffle();
+    void shuffle(std::vector<std::string> _order);
     Carte *piocheCarte();
     Carte *searchCarte(Carte::Valeur _value);
+    Carte *searchCarte(Carte::Valeur _value, Carte::Couleur _couleur);
 
     // retourne la position d'une carte dans la liste
     unsigned int position(Carte* _carte);
@@ -39,7 +38,7 @@ public:
     Carte *getHigherCarte(Carte &_value);
     int getPoints();
 
-    vector<Carte*>& cartes() { return m_Cartes; }
+    std::vector<Carte*>& cartes() { return m_Cartes; }
     Carte* septAtout() { return m_SeptAtout; }
     unsigned int size() { return (unsigned int)m_Cartes.size(); }
     Carte *getLastCarte() { return m_Cartes.front(); }
@@ -52,7 +51,7 @@ private:
     void miseAJourAnnonces();
 
 private:
-    vector<Carte *> m_Cartes;
+    std::vector<Carte *> m_Cartes;
     Carte* m_SeptAtout;
 };
 

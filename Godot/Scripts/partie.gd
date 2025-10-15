@@ -2,27 +2,30 @@
 extends Control
 
 # Scene principale
-@onready var pioche: Control = $Piles/Pioche
-@onready var retourne: Control = $Piles/Retourne
-@onready var main_joueur: Control = $Piles/MainJoueur
-@onready var main_ordi: Control = $Piles/MainOrdi
-@onready var tapis: Control = $Tapis
-@onready var joueur_gagnees: Control = $Piles/JoueurGagnees
-@onready var ordi_gagnees: Control = $Piles/OrdiGagnees
-@onready var dix_de_der: Control = $DixDeDer
+@onready var pioche: Pile = $Piles/Pioche
+@onready var retourne: Pile = $Piles/Retourne
+@onready var main_joueur: Pile = $Piles/MainJoueur
+@onready var main_ordi: Pile = $Piles/MainOrdi
+@onready var tapis: Pile = $Tapis
+@onready var joueur_gagnees: Pile = $Piles/JoueurGagnees
+@onready var ordi_gagnees: Pile = $Piles/OrdiGagnees
 @onready var zone_jeu: CollisionShape2D = $ZoneJeu/CollisionShape2D
-@onready var texte_gagne: Label = $Gagne
-@onready var texte_perdu: Label = $Perdu
-@onready var points: Label = $Points
+@onready var texte_gagne: Label = $Scores/Gagne
+@onready var texte_perdu: Label = $Scores/Perdu
+@onready var points: Label = $Scores/Points
+@onready var dix_de_der: Label = $Scores/DixDeDer
 @onready var annonces_ordi: Node2D = $AnnoncesOrdi
 @onready var annonces_joueur: Node2D = $AnnoncesJoueur
+@onready var jouer: TextureButton = $Jouer
 
 var card_packed_scene = preload("res://Scenes/carte.tscn")
-var cartes = {}
-var mains = {}
-var cartes_pioche = []
+var cartes: Dictionary[String, Carte] = {}
+var mains: Dictionary[int, Control] = {}
+var cartes_pioche: Array[String] = []
 var chouine = IChouine.new()
-
+var carte_atout: Carte = null
+var sept_atout: Carte = null
+var coup_joueur: bool = false
 
 enum JOUEURS {
 	ORDI = 0,
@@ -31,33 +34,11 @@ enum JOUEURS {
 
 func _ready():
 	mains = {0: main_ordi, 1: main_joueur}
-	pioche.card_size = Settings.DEFAULT_CARD_SIZE
-	
-	pioche.card_size = Settings.DEFAULT_CARD_SIZE
-	pioche.face_visible = true
-	
-	main_joueur.card_size = Settings.DEFAULT_CARD_SIZE
-	main_joueur.draggable = true
-	main_joueur.face_visible = true
-	
-	main_ordi.card_size = Settings.DEFAULT_CARD_SIZE
-	main_ordi.draggable = false
-	main_ordi.face_visible = true
-	
-	tapis.card_size = Settings.DEFAULT_CARD_SIZE
-	tapis.draggable = false
-	tapis.face_visible = true
-	tapis.adaptatif = false
-	
-	joueur_gagnees.card_size = Settings.DEFAULT_CARD_SIZE
-	joueur_gagnees.draggable = false
-	joueur_gagnees.face_visible = true
-	
-	ordi_gagnees.card_size = Settings.DEFAULT_CARD_SIZE
-	ordi_gagnees.draggable = false
-	ordi_gagnees.face_visible = true
-	zone_jeu.disabled = true
-	annonces_joueur.partie = self
+	joueur_gagnees.original_size = joueur_gagnees.size
+	ordi_gagnees.original_size = ordi_gagnees.size
+	joueur_gagnees.original_position = joueur_gagnees.position
+	ordi_gagnees.original_position = ordi_gagnees.position
+	init_jeu()
 	setup_game()
 
 func setup_game():
@@ -80,12 +61,70 @@ func creer_cartes():
 				add_child(card_instance)
 				cartes[nom_carte] = card_instance
 
+func init_jeu():
+	retourne.draggable = false
+	pioche.card_size = Settings.DEFAULT_CARD_SIZE	
+	pioche.card_size = Settings.DEFAULT_CARD_SIZE
+	pioche.face_visible = false
+	pioche.init_cartes()
+	
+	main_joueur.card_size = Settings.DEFAULT_CARD_SIZE
+	main_joueur.draggable = true
+	main_joueur.face_visible = true
+	main_joueur.init_cartes()
+	
+	main_ordi.card_size = Settings.DEFAULT_CARD_SIZE
+	main_ordi.draggable = false
+	main_ordi.face_visible = true
+	main_ordi.init_cartes()
+	
+	tapis.card_size = Settings.DEFAULT_CARD_SIZE
+	tapis.draggable = false
+	tapis.face_visible = true
+	tapis.adaptatif = false
+	tapis.init_cartes()
+	
+	joueur_gagnees.card_size = Settings.DEFAULT_CARD_SIZE
+	joueur_gagnees.Type = Pile.TypePile.PILE
+	joueur_gagnees.draggable = false
+	joueur_gagnees.face_visible = true
+	joueur_gagnees.init_cartes()
+	joueur_gagnees.size = joueur_gagnees.original_size
+	joueur_gagnees.position = joueur_gagnees.original_position
+	
+	ordi_gagnees.card_size = Settings.DEFAULT_CARD_SIZE
+	ordi_gagnees.Type = Pile.TypePile.PILE
+	ordi_gagnees.draggable = false
+	ordi_gagnees.face_visible = false
+	ordi_gagnees.init_cartes()
+	ordi_gagnees.size = ordi_gagnees.original_size
+	ordi_gagnees.position = ordi_gagnees.original_position
+	
+	zone_jeu.disabled = true
+	annonces_joueur.partie = self
+	
+	texte_perdu.visible = false
+	texte_gagne.visible = false
+	points.visible = false
+	dix_de_der.visible = false
+	
+	annonces_ordi.reset()
+	annonces_joueur.reset()
+
+
 func carte_jouee(nom):
-	print("Choix joueur: " + nom)
+	if coup_joueur == false:
+		return -1
+	print ("Choix joueur: " + nom)
+	if carte_atout != null && carte_atout.card_name == nom:
+		print("ERREUR: Carte d'atout déposée sur la zone de jeu")
+		return -1
+	coup_joueur = false
 	var ret = chouine.set_choix_joueur(nom)
 	if ret == -1:
-		print("Erreur dans le choix du joueur")
-	tapis.ajouter_carte(nom, cartes[nom], 0.1)
+		print("ERREUR: Erreur dans le choix du joueur")
+		return -1
+	tapis.ajouter_carte(cartes[nom], 0.1)
 	main_joueur.supprimer_carte(nom)
 	# est-ce la fin du pli ?
 	ret = chouine.fin_pli()
@@ -94,33 +133,36 @@ func carte_jouee(nom):
 		coup_ordi()
 	else:
 		fin_pli()
-	
+	return 0
+
+func carte_main_joueur(nom):
+	# une carte est déposée dans la main du joueur, ca ne peut être que la carte d'atout
+	if carte_atout != null && nom == carte_atout.card_name:
+		# chercher le sept d'atout
+		main_joueur.ajouter_carte(carte_atout)
+		main_joueur.supprimer_carte(sept_atout.card_name)
+		main_joueur.calcul_positions(Settings.DUREE_MOUVEMENT)
+		retourne.ajouter_carte(sept_atout)
+		retourne.supprimer_carte(carte_atout.card_name)
+		chouine.echanger_carte_atout(JOUEURS.HUMAIN)
+		print("Joueur      : Echange carte atout: ", carte_atout.card_name)
+		cartes_pioche.pop_front()
+		cartes_pioche.push_front(sept_atout.card_name)
+		carte_atout = null
+		sept_atout.draggable = false
+		return 0
+	return -1
+
 func melanger():
 	cartes_pioche = []
 	for c in Array(chouine.partie().split(" ")):
 		await get_tree().create_timer(0.05).timeout
 		c = c.replace('*', '')
 		cartes_pioche.append(c)
-		pioche.ajouter_carte(c, cartes[c])
+		pioche.ajouter_carte(cartes[c])
 
 func _on_texture_button_pressed() -> void:
-	# remove cards
-	#for k in cartes:
-	#	remove_child(cartes[k])
-	#cartes.clear()
-	pioche.init_cartes()
-	main_joueur.init_cartes()
-	main_ordi.init_cartes()
-	tapis.init_cartes()
-	dix_de_der.visible = false
-	texte_gagne.visible = false
-	texte_perdu.visible = false
-	points.visible = false
-	
-	pioche.draggable = false
-	pioche.face_visible = false
-	annonces_ordi.reset()
-	annonces_joueur.reset()
+	init_jeu()
 	
 	await melanger()
 	
@@ -132,64 +174,81 @@ func _on_texture_button_pressed() -> void:
 	await distribution_cartes(5)
 	
 	# carte de la retourne
-	var c = cartes_pioche.front()
+	var c = cartes_pioche.pop_back()
 	pioche.supprimer_carte(c)
-	retourne.ajouter_carte(c, cartes[c])
+	retourne.ajouter_carte(cartes[c])
+	cartes_pioche.push_front(c)
+	carte_atout = cartes[c]
+	sept_atout = cartes["7-" + c.split("-")[1]]
+	var sept_atout_en_main: bool = chouine.sept_atout_en_main(JOUEURS.HUMAIN)
+	if sept_atout_en_main:
+		carte_atout.draggable = true
 	
 	await get_tree().create_timer(1).timeout
 	if chouine.gagnant_pli() == JOUEURS.ORDI:
 		coup_ordi()
 	#	print(choix_ordi)
 	zone_jeu.disabled = false
-	pass # Replace with function body.
-	
+	coup_joueur = true
+
+func distribution_carte(joueur):
+	await get_tree().create_timer(Settings.DUREE_DISTRIBUTION).timeout
+	var c = cartes_pioche.pop_back()
+	pioche.supprimer_carte(c)
+	mains[joueur].ajouter_carte(cartes[c])
+	# Si la carte d'atout se retrouve dans une main alors elle devient une carte normale
+	if carte_atout != null && carte_atout.card_name == c:
+		carte_atout = null
+
 func distribution_cartes(nb_cartes):
 	var joueur = chouine.gagnant_pli()
 	if cartes_pioche.size() == 0:
 		return false
 	for i in range(nb_cartes):
-		await get_tree().create_timer(0.5).timeout
-		var c = cartes_pioche.pop_back()
-		pioche.supprimer_carte(c)
-		mains[joueur].ajouter_carte(c, cartes[c])
-		print("Joueur: " + str(joueur) + " Distribution: " + c)
-		await get_tree().create_timer(0.5).timeout
+		await distribution_carte(joueur)
 		joueur = (joueur + 1) % 2
-		c = cartes_pioche.pop_back()
-		pioche.supprimer_carte(c)
-		mains[joueur].ajouter_carte(c, cartes[c])
-		print("Joueur: " + str(joueur) + " Distribution: " + c)
+		await distribution_carte(joueur)
 		joueur = (joueur + 1) % 2
+	
+	# le sept d'atout est-il dans la main du joueur ?
+	var sept_atout_en_main: bool = chouine.sept_atout_en_main(JOUEURS.HUMAIN)
+	if sept_atout_en_main && carte_atout != null:
+		carte_atout.draggable = true
 	return true
 
 func coup_ordi():
 	var choix_ordi = chouine.choix_joueur().split("|")
 	var choix_carte = choix_ordi[0]
-	print("Choix Ordi: " + choix_carte)
+	print("Choix Ordi  : " + choix_carte)
 	var annonce = choix_ordi[1]
-	if annonce:
+	if annonce != "":
 		annonces_ordi.point(annonce)
-		print("Annonce: " + annonce)
-	var sept_atout = choix_ordi[2]
-	if sept_atout != "":
+		print("Annonce Ordi: " + annonce)
+	var echange_sept_atout = choix_ordi[2]
+	if echange_sept_atout != "" && carte_atout != null:
 		if retourne.cartes().size() == 0:
-			print("Erreur, la retourne est vide")
+			print("ERREUR: La retourne est vide")
 		else:
-			var carte_retourne = retourne.cartes().keys()[0]
 			# la carte de joueur rejoint la retourne
 			retourne.ajouter_carte(sept_atout)
-			main_ordi.ajouter_carte(carte_retourne)
-			retourne.supprimer_carte(carte_retourne)
+			main_ordi.ajouter_carte(carte_atout)
+			retourne.supprimer_carte(carte_atout)
 			main_ordi.supprimer_carte(sept_atout)
-			print(carte_retourne)
-			
+			print("Ordi        : Echange sept atout - ", carte_atout.card_name)
+			cartes_pioche.pop_front()
+			cartes_pioche.push_front(sept_atout.card_name)
+			carte_atout = null
+			sept_atout.draggable = true
+
 	main_ordi.supprimer_carte(choix_carte)
-	tapis.ajouter_carte(choix_carte, cartes[choix_carte])
+	tapis.ajouter_carte(cartes[choix_carte])
 	# est-ce la fin du pli ?
 	var ret = chouine.fin_pli()
 	if ret >= 0:
 		fin_pli()
-	
+	else:
+		coup_joueur = true
+
 func fin_pli():
 	await get_tree().create_timer(1.0).timeout
 	var gagnant = chouine.gagnant_pli()
@@ -197,18 +256,18 @@ func fin_pli():
 	for c in cartes_tapis:
 		tapis.supprimer_carte(c)
 	if gagnant == JOUEURS.ORDI:
-		print("Gagnant: Ordi")
+		print("Gagnant     : Ordi")
 		for c in cartes_tapis:
-			ordi_gagnees.ajouter_carte(c, cartes_tapis[c])
+			ordi_gagnees.ajouter_carte(cartes_tapis[c])
 	else:
-		print("Gagnant: Joueur")
+		print("Gagnant     : Joueur")
 		for c in cartes_tapis:
-			joueur_gagnees.ajouter_carte(c, cartes_tapis[c])
+			joueur_gagnees.ajouter_carte(cartes_tapis[c])
 
 	print(" ")
 	await distribution_cartes(1)
 	annonces_joueur.annonces_autorisees(chouine.annonces_en_main_joueur(1))
-	
+
 	await get_tree().create_timer(1.0).timeout
 	
 	if chouine.fin_partie() == 1:
@@ -225,16 +284,20 @@ func fin_pli():
 		points.visible = true
 		joueur_gagnees.Type = Pile.TypePile.MAIN
 		joueur_gagnees.size = Vector2(845, 190)
+		joueur_gagnees.position += Vector2(40, 0)
 		joueur_gagnees.calcul_positions(0)
 		ordi_gagnees.Type = Pile.TypePile.MAIN
 		ordi_gagnees.size = Vector2(845, 190)
+		ordi_gagnees.position += Vector2(40, 0)
 		ordi_gagnees.calcul_positions(0)
 		return
 	# debug: affiche les cartes
-	print("Ordi  : " + chouine.cartes_joueur(0))
-	print("Joueur: " + chouine.cartes_joueur(1))
+	print("Ordi        : " + chouine.cartes_joueur(0))
+	print("Joueur      : " + chouine.cartes_joueur(1))
 	if gagnant == JOUEURS.ORDI:
 		coup_ordi()
+	else:
+		coup_joueur = true
 
 
 func annonce_joueur(annonce):
@@ -242,4 +305,4 @@ func annonce_joueur(annonce):
 	if ret == 0:
 		# annonce autorisee
 		annonces_joueur.point(annonce)
-	print(annonce)
+		print("Joueur      : " + annonce)

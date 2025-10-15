@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bftfnuj4mri6h"]
+[gd_scene load_steps=8 format=3 uid="uid://bftfnuj4mri6h"]
 
 [ext_resource type="Script" uid="uid://dftrx4q78fbw7" path="res://Scripts/partie.gd" id="1_m1snf"]
 [ext_resource type="Texture2D" uid="uid://cbp2l4pnc5wl5" path="res://Assets/jouer.png" id="3_1x1o5"]
@@ -8,6 +8,9 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bjfpd"]
 size = Vector2(437, 27)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ek6vc"]
+size = Vector2(682, 28)
 
 [node name="Partie" type="Control"]
 layout_mode = 3
@@ -92,12 +95,12 @@ offset_bottom = 399.0
 script = ExtResource("4_1x1o5")
 card_size = Vector2(120, 180)
 
-[node name="JOUER" type="TextureButton" parent="."]
+[node name="Jouer" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 23.0
-offset_top = 19.0
-offset_right = 103.0
-offset_bottom = 59.0
+offset_left = 67.0
+offset_top = 285.0
+offset_right = 149.0
+offset_bottom = 315.0
 texture_normal = ExtResource("3_1x1o5")
 texture_pressed = ExtResource("3_up2em")
 
@@ -108,47 +111,11 @@ position = Vector2(195, 135)
 position = Vector2(332, 177)
 shape = SubResource("RectangleShape2D_bjfpd")
 
-[node name="DixDeDer" type="Label" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 434.0
-offset_top = 458.0
-offset_right = 657.0
-offset_bottom = 513.0
-theme_override_font_sizes/font_size = 40
-text = "10 de der !!!"
+[node name="MainJoueur" type="Area2D" parent="."]
 
-[node name="Gagne" type="Label" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 291.0
-offset_top = 43.0
-offset_right = 800.0
-offset_bottom = 126.0
-theme_override_colors/font_color = Color(0, 0.33333334, 0.8627451, 1)
-theme_override_font_sizes/font_size = 60
-text = "Vous avez gagné !"
-
-[node name="Perdu" type="Label" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 293.0
-offset_top = 44.0
-offset_right = 818.0
-offset_bottom = 127.0
-theme_override_colors/font_color = Color(0.56078434, 0, 0, 1)
-theme_override_font_sizes/font_size = 60
-text = "Vous avez perdu..."
-
-[node name="Points" type="Label" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 485.0
-offset_top = 135.0
-offset_right = 589.0
-offset_bottom = 190.0
-theme_override_font_sizes/font_size = 40
-text = "50-70"
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MainJoueur"]
+position = Vector2(499, 539)
+shape = SubResource("RectangleShape2D_ek6vc")
 
 [node name="AnnoncesOrdi" parent="." instance=ExtResource("5_ek6vc")]
 position = Vector2(861, 15)
@@ -156,6 +123,53 @@ position = Vector2(861, 15)
 [node name="AnnoncesJoueur" parent="." instance=ExtResource("5_ek6vc")]
 position = Vector2(866, 442)
 
-[connection signal="pressed" from="JOUER" to="." method="_on_texture_button_pressed"]
+[node name="Scores" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Perdu" type="Label" parent="Scores"]
+visible = false
+layout_mode = 0
+offset_left = 281.0
+offset_top = 205.0
+offset_right = 806.0
+offset_bottom = 288.0
+theme_override_colors/font_color = Color(0.56078434, 0, 0, 1)
+theme_override_font_sizes/font_size = 60
+text = "Vous avez perdu..."
+
+[node name="Points" type="Label" parent="Scores"]
+visible = false
+layout_mode = 0
+offset_left = 477.0
+offset_top = 291.0
+offset_right = 581.0
+offset_bottom = 346.0
+theme_override_font_sizes/font_size = 40
+text = "50-70"
+
+[node name="Gagne" type="Label" parent="Scores"]
+visible = false
+layout_mode = 0
+offset_left = 277.0
+offset_top = 204.0
+offset_right = 786.0
+offset_bottom = 287.0
+theme_override_colors/font_color = Color(0, 0.33333334, 0.8627451, 1)
+theme_override_font_sizes/font_size = 60
+text = "Vous avez gagné !"
+
+[node name="DixDeDer" type="Label" parent="Scores"]
+visible = false
+layout_mode = 0
+offset_left = 436.0
+offset_top = 363.0
+offset_right = 659.0
+offset_bottom = 418.0
+theme_override_font_sizes/font_size = 40
+text = "10 de der !!!"
+
+[connection signal="pressed" from="Jouer" to="." method="_on_texture_button_pressed"]
 [connection signal="area_shape_entered" from="ZoneJeu" to="ZoneJeu" method="_on_area_shape_entered"]
 [connection signal="area_shape_exited" from="ZoneJeu" to="ZoneJeu" method="_on_area_shape_exited"]

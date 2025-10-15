@@ -66,6 +66,8 @@ public:
     
     void newGame();
 
+    void setOrdreCartes(const std::vector<std::string>& _order) { m_OrdreCartes = _order; }
+
     void distribution_cartes();
 
     Joueur joueur(JOUEUR _id) { return *m_Joueurs[_id];};
@@ -80,10 +82,12 @@ public:
     
     bool piocheVide();
 
-    string choixJoueur(string& _annonce, string& _carteAtout);
+    std::string choixJoueur(std::string& _annonce, std::string& _carteAtout);
     int setChoixJoueur(std::string _choice);
     int setChoixAnnonce(int _joueur, std::string _annonce);
     std::string annoncesEnMainJoueur(int _joueur);
+    bool septAtoutEnMain(JOUEUR _joueur);
+    bool echangerCarteAtout(JOUEUR _joueur);
 
     JOUEUR finPli();
     bool finPartie();
@@ -91,7 +95,7 @@ public:
     int pointsJoueur(JOUEUR _joueur);
 
     // retourne toutes les annonces existantes
-    set<Annonce*> getAnnonces() { return m_Annonces; }
+    std::set<Annonce*> getAnnonces() { return m_Annonces; }
 
     /*
    void testBruteForce();
@@ -100,17 +104,18 @@ public:
     std::string atout() { return Carte::couleurToStr(m_Atout);}
 
 private:
+    std::vector<std::string> m_OrdreCartes;
     Carte::Couleur m_Atout;
     static Chouine *m_Instance;
     Joueur m_JoueurA;
     Joueur m_JoueurB;
-    array<Joueur *, 2> m_Joueurs;
-    array<int, 2> m_JoueurLevel;
+    std::array<Joueur *, 2> m_Joueurs;
+    std::array<int, 2> m_JoueurLevel;
     ListeCartes m_Pioche;
     Joueur* m_GagnantPli;
     Joueur* m_PerdantPli;
     bool m_isChouine;
     // toutes les annonces existantes (17)
-    set<Annonce *> m_Annonces;
+    std::set<Annonce *> m_Annonces;
 };
 #endif

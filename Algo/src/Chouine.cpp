@@ -15,6 +15,7 @@ Chouine::Chouine(int _niveauJoueurA, int _niveauJoueurB) :
 m_JoueurA(*this, _niveauJoueurA, JOUEUR_A), 
 m_JoueurB(*this, _niveauJoueurB, JOUEUR_B)
 {
+    m_OrdreCartes = vector<string>();
     m_Joueurs[0] = &m_JoueurA;
     m_Joueurs[1] = &m_JoueurB;
     m_isChouine = false;
@@ -57,12 +58,26 @@ void Chouine::newGame()
         }
     }
 
-    m_Pioche.shuffle();
-    int carte_atout = m_Pioche.cartes().size() - 2 - (2 * Joueur::MAX_CARDS);
+    m_Pioche.shuffle(m_OrdreCartes);
+}
+
+void Chouine::distribution_cartes()
+{
+    // Distribution, les 2 joueurs piochent pour avoir 5 cartes chacun
+    for (int i = 0; i < Joueur::MAX_CARDS; i++)
+    {
+        Carte *card = m_Pioche.piocheCarte();
+        if (card != nullptr)
+            m_GagnantPli->ajouterCarteMain(*card);
+
+        card = m_Pioche.piocheCarte();
+        if (card != nullptr)
+            m_PerdantPli->ajouterCarteMain(*card);
+    }
+
     // echange des cartes d'tout
-    Carte* atout = m_Pioche.cartes()[carte_atout];
-    m_Pioche.cartes()[carte_atout] = m_Pioche.cartes()[0];
-    m_Pioche.cartes()[0] = atout;
+    Carte* atout = m_Pioche.piocheCarte();
+    m_Pioche.cartes().insert(m_Pioche.cartes().begin(), atout);
     m_Atout = atout->couleur();
 
     // ajoute l'attribut Atout pour les cartes d'atout
@@ -97,21 +112,6 @@ void Chouine::newGame()
     }
     annonce = new Annonce(Carte::UNDEF_COLOR, Annonce::QUINTE, false);
     m_Annonces.insert(annonce);
-}
-
-void Chouine::distribution_cartes()
-{
-    // Distribution, les 2 joueurs piochent pour avoir 5 cartes chacun
-    for (int i = 0; i < Joueur::MAX_CARDS; i++)
-    {
-        Carte *card = m_Pioche.piocheCarte();
-        if (card != nullptr)
-            m_GagnantPli->ajouterCarteMain(*card);
-
-        card = m_Pioche.piocheCarte();
-        if (card != nullptr)
-            m_PerdantPli->ajouterCarteMain(*card);
-    }
 }
 
 bool Chouine::piocheVide()
@@ -163,12 +163,22 @@ int Chouine::setChoixAnnonce(int _joueur, std::string _annonce)
 {
     if (_joueur < 0 || _joueur > 1)
         return -1;
-    return 0; // m_Joueurs[_joueur]->choixAnnonce(_annonce);
+    return m_Joueurs[_joueur]->choixAnnonce(_annonce);
 }
 
 std::string Chouine::annoncesEnMainJoueur(int _joueur)
 {
     return m_Joueurs[_joueur]->annoncesEnMain();
+}
+
+bool Chouine::septAtoutEnMain(JOUEUR _joueur)
+{
+    return m_Joueurs[_joueur]->cartes().searchCarte(Carte::SEPT, m_Atout) != nullptr;
+}
+
+bool Chouine::echangerCarteAtout(JOUEUR _joueur)
+{
+    return m_Joueurs[_joueur]->prendreCarteAtout();
 }
 
 Chouine::JOUEUR Chouine::finPli()

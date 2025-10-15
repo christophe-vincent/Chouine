@@ -1,6 +1,7 @@
 #include <iostream>
 #include <random>
 #include <chrono>
+#include <queue>
 #include <algorithm>
 #include "Annonce.h"
 #include "ListeCartes.h"
@@ -55,9 +56,57 @@ void ListeCartes::supprimer(Carte *_card)
 }
 
 ///////////////////////////////
-void ListeCartes::shuffle()
+void ListeCartes::shuffle(std::vector<std::string> _order)
 {
-    std::shuffle(m_Cartes.begin(), m_Cartes.end(), mt);
+    if (_order.size() > 0)
+    {
+        // l'ordre des cartes est partiellemt défini
+        vector<Carte*> newOrder;
+        queue<Carte*> cartesChoisies;
+        // on place toutes les cartes choisies dans une nouvelle liste
+        for (auto it=_order.begin(); it!=_order.end(); ++it)
+        {
+            for (auto itc=m_Cartes.begin(); itc!=m_Cartes.end(); ++itc)
+            {
+                if ((*it) != "*" && (*it) == (*itc)->carteToStr())
+                {
+                    cartesChoisies.push(*itc);
+                    m_Cartes.erase(itc);
+                    break;
+                }
+            }
+        }
+        // maintenant on insere les cartes aleatoires
+        for (auto it=_order.begin(); it!=_order.end(); ++it)
+        {
+            if ((*it) != "*")
+            {
+                newOrder.insert(newOrder.begin(), cartesChoisies.front());
+                cartesChoisies.pop();
+            }
+            else
+            {
+                // on choisit une carte au hasard
+                uniform_int_distribution<int> dist(0, (int)m_Cartes.size()-1);
+                int idx = dist(mt);
+                newOrder.insert(newOrder.begin(), m_Cartes[idx]);
+                m_Cartes.erase(m_Cartes.begin()+idx);
+            }
+        }
+        // le reste des cartes est ajouter à la liste
+        while (!m_Cartes.empty())
+        {
+            uniform_int_distribution<int> dist(0, (int)m_Cartes.size()-1);
+            int idx = dist(mt);
+            newOrder.insert(newOrder.begin(), m_Cartes[idx]);
+            m_Cartes.erase(m_Cartes.begin()+idx);
+        }
+        m_Cartes = newOrder;
+    }
+    else
+    {
+        std::shuffle(m_Cartes.begin(), m_Cartes.end(), mt);
+    }
 }
 
 ///////////////////////////////
@@ -82,6 +131,22 @@ Carte *ListeCartes::searchCarte(Carte::Valeur _value)
     while ((it != m_Cartes.end()) && (ret == nullptr))
     {
         if ((*it)->valeur() == _value)
+        {
+            ret = *it;
+        }
+        it++;
+    }
+    return ret;
+}
+
+Carte *ListeCartes::searchCarte(Carte::Valeur _value, Carte::Couleur _couleur)
+{
+    Carte *ret = nullptr;
+
+    auto it = m_Cartes.begin();
+    while ((it != m_Cartes.end()) && (ret == nullptr))
+    {
+        if ((*it)->valeur() == _value && (*it)->couleur() == _couleur)
         {
             ret = *it;
         }

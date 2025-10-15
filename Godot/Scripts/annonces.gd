@@ -85,9 +85,11 @@ func reset():
 
 func annonces_autorisees(annonces_autorisee):
 	for a in annonces_autorisee.split(" "):
-		point(a, couleurs_vert)
+		if a != "":
+			point(a, couleurs_vert)
 
 func point(annonce, couleurs=couleurs_rouge):
+	# Le joueur a déclaré une annonce
 	var ann = annonce.split("-")
 	if ann[0] == "chouine":
 		# rien à faire, la partie est terminee

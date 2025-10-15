@@ -15,7 +15,9 @@ var draggable = true
 # si non adaptatif, alors les cartes ont une position fixe, quelque soit leurs nombre
 var adaptatif = true
 var nb_cartes_max = 2
-var duree_effet = 1.0
+var duree_effet = Settings.DUREE_MOUVEMENT
+var original_size: Vector2 = Vector2(0, 0)
+var original_position: Vector2 = Vector2(0, 0)
 
 var _cartes = {}
 
@@ -32,8 +34,8 @@ func cartes():
 func supprimer_carte(nom):
 	_cartes.erase(nom)
 
-func ajouter_carte(nom, carte, duration=-1.0):
-	_cartes[nom] = {"carte": carte, "index": _cartes.size()+1}
+func ajouter_carte(carte: Carte, duration=-1.0):
+	_cartes[carte.card_name] = {"carte": carte, "index": _cartes.size()+1}
 	carte.face_visible(face_visible)
 	var duree = duration
 	if duration == -1.0:

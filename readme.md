@@ -6,13 +6,17 @@ L'algorithme est développé en C++ et la partie graphique grâce à Godot.
 
 
 # TODO list
-- Prise de la carte d'atout
 - Menu principal
 - Gestion des points/partie
 - Affichage des points/cartes
 - Algo: Prise de la carte d'atout pour completer une annonce
 - Ordre des cartes dans la main
 - Bouton pour selectionner une annonce
+
+# bugs connus
+- Quinte non détectée
+- Tierce et mariage annoncés pour une même couleur
+- Calcul des points 
 
 ## Algorithme
 

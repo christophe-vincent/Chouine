@@ -1,4 +1,5 @@
 extends Node2D
+class_name Carte
 
 @onready var carte: Area2D = $Area2D
 @onready var front_face_texture: Sprite2D = $Area2D/FrontFace
@@ -22,6 +23,7 @@ var dragging = false
 var moving = false
 var drag_offset = Vector2.ZERO
 var zone_jeu = false
+var main_joueur = false
 var position_initiale = Vector2(0, 0)
 
 
@@ -75,9 +77,12 @@ func _on_input_event(_viewport, event, _shape_idx):
 			else:
 				# Stop dragging
 				dragging = false
+				var ret: int = 1
 				if zone_jeu == true:
-					get_parent().carte_jouee(card_name)
-				else:
+					ret = get_parent().carte_jouee(card_name)
+				elif main_joueur == true:
+					ret = get_parent().carte_main_joueur(card_name)
+				if ret != 0:
 					# on retourne à la position initiale
 					carte.position = position_initiale
 
@@ -97,8 +102,12 @@ func _on_mouse_exited():
 func _on_area_2d_area_shape_entered(_area_rid: RID, area: Area2D, _area_shape_index: int, _local_shape_index: int) -> void:
 	if area.name == "ZoneJeu":
 		zone_jeu = true
+	elif area.name == "MainJoueur":
+		main_joueur = true
 
 
 func _on_area_2d_area_shape_exited(_area_rid: RID, area: Area2D, _area_shape_index: int, _local_shape_index: int) -> void:
 	if area.name == "ZoneJeu":
 		zone_jeu = false
+	elif area.name == "MainJoueur":
+		main_joueur = false

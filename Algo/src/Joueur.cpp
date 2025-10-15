@@ -192,7 +192,8 @@ Carte* Joueur::choisirCarte(Carte *_carteAdversaire, string& _annonce)
     // Si il ne reste que 2 carte en pioche, échanger le 7 d'atout
     if (m_Niveau >= Algorithme::ECHANGE_7_ATOUT)
     {
-        if (m_Chouine.pioche().cartes().size() <= 2 && m_Chouine.pioche().cartes().size() > 0)
+        if (m_Chouine.pioche().cartes().size() <= 2 && m_Chouine.pioche().cartes().size() > 0 &&
+            m_CartesMain.searchCarte(Carte::SEPT, m_Chouine.couleurAtout()) != nullptr)
         {
             prendreCarteAtout();
         }
