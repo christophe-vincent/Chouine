@@ -10,6 +10,7 @@
 #include <iomanip>
 #include "Chouine.h"
 #include "Joueur.h"
+#include "Annonce.h"
 
 
 /*
@@ -17,7 +18,7 @@
 0 -> 2: 72.4%
 0 -> 3: 80.4%
 0 -> 4: 81.3%
-0 -> 5: 82.5%
+0 -> 5: 83.7%
 
 1 -> 2: 68.9%
 2 -> 3: 63.8%
@@ -25,8 +26,10 @@
 4 -> 5: 53.0%
 */
 
+int NB_THREADS = static_cast<int>(std::thread::hardware_concurrency());
+//int NB_THREADS = 1;
 
-unsigned int niveau1 = 5;
+unsigned int niveau1 = 0;
 unsigned int niveau2 = 5;
 int nbParties = 100000;
 
@@ -97,8 +100,8 @@ int partie(unsigned int _niveauJoueur1,
     log("Pioche  : ", chouine.pioche().nomCartes(), "\n");
     chouine.distribution_cartes();
 
-    Joueur joueur1 = chouine.joueur(Chouine::JOUEUR_A);
-    Joueur joueur2 = chouine.joueur(Chouine::JOUEUR_B);
+    Joueur& joueur1 = chouine.joueur(Chouine::JOUEUR_A);
+    Joueur& joueur2 = chouine.joueur(Chouine::JOUEUR_B);
     
     log("Atout : ", chouine.atout(), "\n");
     
@@ -117,6 +120,26 @@ int partie(unsigned int _niveauJoueur1,
         log("\nTOUR ", tour, "\n");
         log("Pioche  : ", chouine.pioche().nomCartes(), "\n");
         chouine.septAtoutEnMain(gagnant);
+
+        // simule un humain qui déclare une annonce
+        string annonces = chouine.annoncesEnMainJoueur(gagnant);
+        if (annonces.length() > 0)
+        {
+            log("----------------->" + chouine.annoncesEnMainJoueur(gagnant) + "\n");
+            //cout << "----------------->" << chouine.annoncesEnMainJoueur(gagnant) << endl;
+            // std::size_t pos = annonces.find(" ");
+            // string annonce;
+            // if (pos != string::npos)
+            // {
+            //     annonce = annonces.substr(pos + 1);
+            // }
+            // else
+            // {
+            //     annonce = annonces;
+            // }
+            // log("----------------->" + annonce + "\n");
+            // chouine.setChoixAnnonce(gagnant, annonce);
+        }
 
         choix = chouine.choixJoueur(annonce, priseAtout);
         log("Cartes joueur ", gagnant + 1, ": ", chouine.joueur(gagnant).cartesMainToStr(), "\n");
@@ -143,23 +166,24 @@ int partie(unsigned int _niveauJoueur1,
         if (!stop)
         {
             // affichage des annonces possibles
-            std::string annonces = chouine.annoncesEnMainJoueur(0);
-            if (annonces.size() > 0) log("Annonces joueur 1: " + annonces + "\n");
-            annonces = chouine.annoncesEnMainJoueur(1);
-            if (annonces.size() > 0) log("Annonces joueur 2: " + annonces + "\n");
+            if (joueur1.getLatestAnnonce() != nullptr) log("Annonce joueur 1: " + joueur1.getLatestAnnonce()->to_string() + "\n");
+            if (joueur2.getLatestAnnonce() != nullptr) log("Annonce joueur 2: " + joueur2.getLatestAnnonce()->to_string() + "\n");
             gagnant = chouine.finPli();
             perdant = chouine.perdantPli();
             stop = chouine.finPartie();
             log("Gagnant pli: ", chouine.gagnantPli() + 1, "\n");
         }
     }
-    
+
+    log ("");
     _pointsJoueur1 = chouine.pointsJoueur(Chouine::JOUEUR_A);
     _pointsJoueur2 = chouine.pointsJoueur(Chouine::JOUEUR_B);
     log("Cartes joueur 1 : ", joueur1.cartesGagneesToStr(), "\n");
     log("Cartes joueur 2 : ", joueur2.cartesGagneesToStr(), "\n");
     log("Points joueur 1 : ", _pointsJoueur1, "\n");
     log("Points joueur 2 : ", _pointsJoueur2, "\n");
+    log("Points joueur 1 : ", joueur1.pointsToStr(), "\n");
+    log("Points joueur 2 : ", joueur2.pointsToStr(), "\n");
     
     return 0;
 }
@@ -174,7 +198,7 @@ private:
 
 public:
     int runGamesParallel(int nbParties, int niveau1, int niveau2) {
-        const int numThreads = std::min(static_cast<int>(std::thread::hardware_concurrency()), nbParties);
+        const int numThreads = std::min(NB_THREADS, nbParties);
         const int gamesPerThread = nbParties / numThreads;
         const int extraGames = nbParties % numThreads;
         

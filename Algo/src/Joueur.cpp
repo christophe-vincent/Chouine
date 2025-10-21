@@ -21,6 +21,13 @@ m_Chouine(_chouine), m_Algo(_niveau, *this), m_Niveau(_niveau)
     m_Change7Atout = "";
     m_IsChouine = false;
     m_CarteJouee = nullptr;
+    m_Annonces.clear();
+    m_CouleurAnnonces.clear();
+    for (int i=0; i<Carte::NB_COLORS; i++)
+    {
+        m_CouleurAnnonces[Carte::ALL_COLORS[i]] = false;
+    }
+    m_Quinte = false;
 }
 
 Joueur::~Joueur()
@@ -39,6 +46,11 @@ void Joueur::nouvellePartie()
     m_IsChouine = false;
     m_LatestAnnonce = nullptr;
     m_PointsAnnonces = 0;
+    for (int i=0; i<Carte::NB_COLORS; i++)
+    {
+        m_CouleurAnnonces[Carte::ALL_COLORS[i]] = false;
+    }
+    m_Quinte = false;
 }
 
 int Joueur::points()
@@ -126,6 +138,7 @@ bool Joueur::prendreCarteAtout()
 
 int Joueur::choixCarte(std::string& _carte, Carte* _carteAdversaire)
 {
+    m_LatestAnnonce = nullptr;
     // recherche la carte
     m_CarteJouee = nullptr;
     for (Carte* c: m_CartesMain.cartes())
@@ -155,6 +168,7 @@ int Joueur::choixCarte(std::string& _carte, Carte* _carteAdversaire)
 
 int Joueur::choixAnnonce(std::string& _annonce)
 {
+    m_LatestAnnonce = nullptr;
     // recherche l'annonce
     Annonce* annonce = nullptr;
     for (auto* ann: m_Chouine.getAnnonces()) 
@@ -162,20 +176,30 @@ int Joueur::choixAnnonce(std::string& _annonce)
         if (ann->to_string().compare(_annonce) == 0)
         {
             int score = ann->calculeScore(m_CartesMain, m_CartesJouees);
-            if (score == 100 && m_Annonces.count(annonce) == 0)
+            if (score == 100 && m_Annonces.count(ann) == 0)
             {
-                annonce = ann;
-                break;
+                if (((ann->type() == Annonce::QUINTE && m_Quinte == false)) ||
+                    (ann->type() != Annonce::QUINTE && m_CouleurAnnonces[ann->couleur()] == false))
+                {
+                    if (ann->type() == Annonce::QUINTE)
+                    {
+                        m_Quinte = true;
+                    }
+                    annonce = ann;
+                    break;
+                }
             }
         }
     }
     if (annonce == nullptr)
     {
-        cout << "Erreur, l'annonce " << _annonce << "ne fait pas partie des annonces possibles" << endl;
+        cout << "Erreur, l'annonce " << _annonce << " ne fait pas partie des annonces possibles" << endl;
         return 1;
     }
     m_PointsAnnonces += annonce->points();
     m_Annonces[annonce] = annonce->points();
+    if (annonce->type() == Annonce::CHOUINE) m_IsChouine = true;
+    m_LatestAnnonce = annonce;
     return 0;
 }
 
@@ -202,6 +226,7 @@ std::string Joueur::annoncesEnMain()
 
 Carte* Joueur::choisirCarte(Carte *_carteAdversaire, string& _annonce)
 {
+    m_LatestAnnonce = nullptr;
     // Si il ne reste que 2 carte en pioche, échanger le 7 d'atout
     if (m_Niveau >= Algorithme::ECHANGE_7_ATOUT)
     {
@@ -277,9 +302,17 @@ Carte* Joueur::choisirCarte(Carte *_carteAdversaire, string& _annonce)
         Annonce* annonce = rechercheAnnonce(*m_CarteJouee);
         if (annonce != nullptr)
         {
-            _annonce = annonce->to_string();
-            m_PointsAnnonces += annonce->points();
-            m_Annonces[annonce] = annonce->points();
+            if (m_Annonces.find(annonce) == m_Annonces.end() &&
+                m_CouleurAnnonces[annonce->couleur()] == false)
+            {
+                // l'annonce n'a pas déjà été faite
+                if (annonce->type() == Annonce::CHOUINE) m_IsChouine = true;
+                _annonce = annonce->to_string();
+                m_CouleurAnnonces[annonce->couleur()] = true;
+                m_PointsAnnonces += annonce->points();
+                m_Annonces[annonce] = annonce->points();
+                m_LatestAnnonce = annonce;
+            }
         }
     }
 
@@ -384,4 +417,18 @@ string Joueur::cartesMainToStr()
 string Joueur::cartesGagneesToStr()
 {
     return m_CartesGagnees.nomCartes();
+}
+
+// points en string
+std::string Joueur::pointsToStr()
+{
+    std::string ret = std::to_string(points()) + " points   ";
+    ret += "Cartes: " + std::to_string(m_CartesGagnees.getPoints());
+    ret += "pts, Annonces: " + std::to_string(m_PointsAnnonces);
+    ret += "pts";
+    if (m_10Der > 0)
+    {
+        ret += ", 10 de der";
+    }
+    return ret;
 }

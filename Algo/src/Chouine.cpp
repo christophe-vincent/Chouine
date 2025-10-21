@@ -226,16 +226,32 @@ Chouine::JOUEUR Chouine::finPli()
         }
     }
 
+    if (finPartie())
+    {
+        m_GagnantPli->set10Der();
+    }
+
     return (JOUEUR)m_GagnantPli->id();
 }
 
 bool Chouine::finPartie() 
-{ 
-    return (m_Pioche.size() + m_JoueurA.cartes().size() ) == 0 ? true : false;
+{
+    // vérification des chouines
+    if (m_JoueurA.chouine() || m_JoueurB.chouine())
+    {
+        return true;
+    }
+    return (m_Pioche.size() + m_JoueurA.cartes().size() +
+            m_JoueurB.cartes().size() ) == 0 ? true : false;
 }
 
 
 int Chouine::pointsJoueur(JOUEUR _joueur)
 {
     return m_Joueurs[_joueur]->points();
+}
+
+std::string Chouine::pointsJoueurStr(JOUEUR _joueur)
+{
+    return m_Joueurs[_joueur]->pointsToStr();
 }

@@ -47,7 +47,10 @@ public:
 
     // retourne le nombre de points du joueur
     int points();
-    
+
+    // accorde le 10 de der
+    void set10Der() {m_10Der = 10;};
+
     // retourne la carte
     Carte *carteMain(unsigned int _index);
 
@@ -63,7 +66,7 @@ public:
     // une carte a été choisie
     int choixCarte(std::string& _carte, Carte* _carteAdversaire=nullptr);
 
-    // une annonce a été choisie
+    // une annonce a été choisie par le joueur
     int choixAnnonce(std::string& _annonce);
 
     // retourne la liste des annonces en main du joueur
@@ -82,9 +85,16 @@ public:
 
     // a t'on le droit de jouer cette carte quand la pioche est vide ?
     bool carteAurotisee(Carte &_card, Carte &_otherCarte);
+
+    // retourne l'annonce faite dans le pli
+    Annonce* getLatestAnnonce() { return m_LatestAnnonce;};
+
+    // Le joueur a t-il une chouine en main ?
+    bool chouine() { return m_IsChouine;};
     
     std::string cartesMainToStr();
     std::string cartesGagneesToStr();
+    std::string pointsToStr();
 
 protected:
     Carte *EmptyPickSimulation(Carte &_userChoice);
@@ -106,6 +116,8 @@ private:
     Algorithme m_Algo;
     Carte *m_CarteJouee;
     std::map<Annonce*, int> m_Annonces;
+    std::map<Carte::Couleur, bool> m_CouleurAnnonces;
+    bool m_Quinte;
 };
 
 #endif

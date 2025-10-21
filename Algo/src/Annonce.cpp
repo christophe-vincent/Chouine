@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <cmath>
 #include "Annonce.h"
+#include <iostream>
 
 const std::array<Carte::Valeur, 2> Annonce::CARTES_MARIAGE =
 {
@@ -39,7 +40,7 @@ const Annonce::TypeAnnonce Annonce::ANNONCES[] =
 };
 
 const set<int> Annonce::POINTS_ANNONCES =
-    {20, 30, 40, 50, 60};
+    {20, 30, 40, 50, 600};
 
 
 
@@ -88,39 +89,58 @@ int Annonce::calculeScore(ListeCartes &_cartesMain, ListeCartes &_cartesJouees)
             nbCarte++;
         }
     }
-    int nbCartes = 10000;
+    int nbCartesAnnonce = 10000;
     switch (m_Annonce)
     {
         case MARIAGE:
-            nbCartes = sizeof(CARTES_MARIAGE) / sizeof(Carte::Valeur);
+            nbCartesAnnonce = sizeof(CARTES_MARIAGE) / sizeof(Carte::Valeur);
             break;
         case TIERCE:
-            nbCartes = sizeof(CARTES_TIERCE) / sizeof(Carte::Valeur);
+            nbCartesAnnonce = sizeof(CARTES_TIERCE) / sizeof(Carte::Valeur);
             break;
         case QUARANTE:
-            nbCartes = sizeof(CARTES_QUARANTE) / sizeof(Carte::Valeur);
+            nbCartesAnnonce = sizeof(CARTES_QUARANTE) / sizeof(Carte::Valeur);
             break;
         case CHOUINE:
-            nbCartes = sizeof(CARTES_CHOUINE) / sizeof(Carte::Valeur);
+            nbCartesAnnonce = sizeof(CARTES_CHOUINE) / sizeof(Carte::Valeur);
             break;
         case QUINTE:
-            nbCartes = 5;
+            nbCartesAnnonce = 5;
             break;
-        
         default:
             break;
     }
+
     // pourcentage de cartes dans l'annonce
     //int score = int((nbCarte * 100) / nbCartes);
     // probabilité d'avoir cette annonce en main
-    int proba = 100*std::pow(0.5, nbCartes - nbCarte);
+    int proba = 100*std::pow(0.5, nbCartesAnnonce - nbCarte);
+    if (proba == 100)
+    {
+        // toutes les cartes de l'annonce sont en main
+        return proba;
+    }
 
     // prendre en compte les cartes déjà jouées
-    for (unsigned int i = 0; i < _cartesJouees.size(); i++)
+    if (m_Annonce == QUINTE)
     {
-        if (carteDansAnnonce(*_cartesJouees[i]) == true)
+        int nbBrisquesJouees = 0;
+        for (auto c: _cartesJouees.cartes())
         {
-            proba = -1; // annonce plus possible
+            if (c->brisque()) nbBrisquesJouees++;
+        }
+        if (nbBrisquesJouees + nbCarte >= 8)
+        {
+            proba = -1; // plus de brisques dans la pioche
+        }
+    } else
+    {
+        for (unsigned int i = 0; i < _cartesJouees.size(); i++)
+        {
+            if (carteDansAnnonce(*_cartesJouees[i]) == true)
+            {
+                proba = -1; // annonce plus possible
+            }
         }
     }
     return proba;
@@ -205,6 +225,8 @@ bool Annonce::carteDansAnnonce(Carte &_carte)
             return std::find(CARTES_QUARANTE.begin(), CARTES_QUARANTE.end(), _carte.valeur()) != CARTES_QUARANTE.end();
         case CHOUINE:
             return std::find(CARTES_CHOUINE.begin(), CARTES_CHOUINE.end(), _carte.valeur()) != CARTES_CHOUINE.end();
+        case QUINTE:
+            return false;
     }
     return false;
 }

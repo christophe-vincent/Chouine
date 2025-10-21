@@ -3,7 +3,7 @@
 * @author vincentc
 */
 #ifndef _CHOUINE_H_
-#define _CHOUINE_H
+#define _CHOUINE_H_
 #include <array>
 
 //#include "Carte.h"
@@ -70,7 +70,7 @@ public:
 
     void distribution_cartes();
 
-    Joueur joueur(JOUEUR _id) { return *m_Joueurs[_id];};
+    Joueur& joueur(JOUEUR _id) { return *m_Joueurs[_id];};
 
     // retourne le gagnant du pli
     JOUEUR gagnantPli() { return m_GagnantPli->id() == JOUEUR_A ? JOUEUR_A : JOUEUR_B;};
@@ -93,6 +93,7 @@ public:
     bool finPartie();
 
     int pointsJoueur(JOUEUR _joueur);
+    std::string pointsJoueurStr(JOUEUR _joueur);
 
     // retourne toutes les annonces existantes
     std::set<Annonce*> getAnnonces() { return m_Annonces; }
