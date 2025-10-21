@@ -12,7 +12,8 @@ extends Control
 @onready var zone_jeu: CollisionShape2D = $ZoneJeu/CollisionShape2D
 @onready var texte_gagne: Label = $Scores/Gagne
 @onready var texte_perdu: Label = $Scores/Perdu
-@onready var points: Label = $Scores/Points
+@onready var points_ordi: Label = $Scores/PointsOrdi
+@onready var points_humain: Label = $Scores/PointsHumain
 @onready var dix_de_der: Label = $Scores/DixDeDer
 @onready var annonces_ordi: Node2D = $AnnoncesOrdi
 @onready var annonces_joueur: Node2D = $AnnoncesJoueur
@@ -105,7 +106,8 @@ func init_jeu():
 	
 	texte_perdu.visible = false
 	texte_gagne.visible = false
-	points.visible = false
+	points_ordi.visible = false
+	points_humain.visible = false
 	dix_de_der.visible = false
 	
 	annonces_ordi.reset()
@@ -174,6 +176,8 @@ func _on_texture_button_pressed() -> void:
 	# qui commence ?
 	await get_tree().create_timer(1).timeout
 	await distribution_cartes(5)
+	
+	annonces_joueur.annonces_autorisees(chouine.annonces_en_main_joueur(1))
 	
 	# carte de la retourne
 	var c = cartes_pioche.pop_back()
@@ -276,28 +280,7 @@ func fin_pli():
 		# fin de la partie
 		if gagnant == JOUEURS.HUMAIN:
 			dix_de_der.visible = true
-			zone_jeu.disabled = true
-			texte_gagne.visible = true
-		else:
-			texte_perdu.visible = true
-		var points_ordi = chouine.points_joueur(JOUEURS.ORDI)
-		var points_joueur = chouine.points_joueur(JOUEURS.HUMAIN)
-		points.text = str(points_joueur) + " - " + str(points_ordi)
-		points.visible = true
-		var screen_size = get_viewport_rect().size
-		joueur_gagnees.Type = Pile.TypePile.MAIN
-		joueur_gagnees.size = Vector2(screen_size.x - 2*Settings.DEFAULT_CARD_SIZE.x, Settings.DEFAULT_CARD_SIZE.y)
-		joueur_gagnees.position.x = Settings.DEFAULT_CARD_SIZE.x
-		joueur_gagnees.calcul_positions(0)
-		ordi_gagnees.Type = Pile.TypePile.MAIN
-		ordi_gagnees.visibilite(true)
-		ordi_gagnees.size = Vector2(screen_size.x - 2*Settings.DEFAULT_CARD_SIZE.x, Settings.DEFAULT_CARD_SIZE.y)
-		ordi_gagnees.position.x = Settings.DEFAULT_CARD_SIZE.x
-		ordi_gagnees.calcul_positions(0)
-		annonces_ordi.reset()
-		annonces_ordi.visible = false
-		annonces_joueur.reset()
-		annonces_joueur.visible = false
+		fin_partie()
 		return
 	# debug: affiche les cartes
 	print("Ordi        : " + chouine.cartes_joueur(0))
@@ -310,7 +293,34 @@ func fin_pli():
 
 func annonce_joueur(annonce):
 	var ret: int = chouine.annonce_joueur(annonce)
+	print(ret)
 	if ret == 0:
 		# annonce autorisee
 		annonces_joueur.point(annonce)
 		print("Joueur      : " + annonce)
+
+func fin_partie():
+	zone_jeu.disabled = true
+	if chouine.points_joueur(JOUEURS.ORDI) > chouine.points_joueur(JOUEURS.HUMAIN):
+		texte_perdu.visible = true
+	else:
+		dix_de_der.visible = true
+		texte_gagne.visible = true
+	points_ordi.text = chouine.points_joueur_str(JOUEURS.ORDI)
+	points_humain.text = chouine.points_joueur_str(JOUEURS.HUMAIN)
+	points_ordi.visible = true
+	points_humain.visible = true
+	var screen_size = get_viewport_rect().size
+	joueur_gagnees.Type = Pile.TypePile.MAIN
+	joueur_gagnees.size = Vector2(screen_size.x - 2*Settings.DEFAULT_CARD_SIZE.x, Settings.DEFAULT_CARD_SIZE.y)
+	joueur_gagnees.position.x = Settings.DEFAULT_CARD_SIZE.x
+	joueur_gagnees.calcul_positions(0)
+	ordi_gagnees.Type = Pile.TypePile.MAIN
+	ordi_gagnees.visibilite(true)
+	ordi_gagnees.size = Vector2(screen_size.x - 2*Settings.DEFAULT_CARD_SIZE.x, Settings.DEFAULT_CARD_SIZE.y)
+	ordi_gagnees.position.x = Settings.DEFAULT_CARD_SIZE.x
+	ordi_gagnees.calcul_positions(0)
+	annonces_ordi.reset()
+	annonces_ordi.visible = false
+	annonces_joueur.reset()
+	annonces_joueur.visible = false

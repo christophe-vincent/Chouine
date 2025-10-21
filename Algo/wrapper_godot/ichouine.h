@@ -34,5 +34,6 @@ namespace godot {
         int FinPli();
         int FinPartie();
         int PointsJoueur(int _joueur);
+        String PointsJoueurStr(int _joueur);
     };
 } // namespace godot

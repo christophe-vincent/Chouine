@@ -16,6 +16,7 @@ void IChouine::_bind_methods() {
     ClassDB::bind_method(D_METHOD("fin_partie"), &IChouine::FinPartie);
     ClassDB::bind_method(D_METHOD("cartes_joueur"), &IChouine::CartesJoueur);
     ClassDB::bind_method(D_METHOD("points_joueur"), &IChouine::PointsJoueur);
+    ClassDB::bind_method(D_METHOD("points_joueur_str"), &IChouine::PointsJoueurStr);
     ClassDB::bind_method(D_METHOD("annonces_en_main_joueur"), &IChouine::AnnoncesEnMainJoueur);
     ClassDB::bind_method(D_METHOD("annonce_joueur"), &IChouine::AnnonceJoueur);
     ClassDB::bind_method(D_METHOD("sept_atout_en_main"), &IChouine::SeptAtoutEnMain);
@@ -78,6 +79,7 @@ int IChouine::SetChoixJoueur(String _carte) {
 
 int IChouine::AnnonceJoueur(String _annonce)
 {
+    UtilityFunctions::print(_annonce.utf8().get_data());
     return m_Chouine->setChoixAnnonce(1, std::string(_annonce.utf8().get_data()));
 }
 
@@ -109,4 +111,9 @@ int IChouine::FinPartie()
 int IChouine::PointsJoueur(int _joueur)
 {
     return m_Chouine->pointsJoueur((Chouine::JOUEUR)_joueur);
+}
+
+String IChouine::PointsJoueurStr(int _joueur)
+{
+    return String(m_Chouine->pointsJoueurStr((Chouine::JOUEUR)_joueur).c_str());
 }

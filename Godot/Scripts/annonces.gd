@@ -30,8 +30,15 @@ var trefle_rouge_texture = load("res://Assets/trefle-noir.svg")
 var trefle_gris_texture = load("res://Assets/trefle-gris.svg")
 var trefle_vert_texture = load("res://Assets/trefle-vert.svg")
 
+enum STATUS {
+	INACTIF = 0,
+	POSSIBLE = 1,
+	ACTIF = 2
+}
+
 var annonces = {}
 var partie = null
+var status = {}
 
 func _ready():
 	annonces = {
@@ -58,7 +65,7 @@ func _ready():
 		}
 	}
 
-
+# nom des texture pour chaque couleur
 var couleurs_rouge = {
 	"coeur": coeur_rouge_texture,
 	"carreau": carreau_rouge_texture,
@@ -80,25 +87,57 @@ var couleurs_vert = {
 
 func reset():
 	for a in annonces:
+		status[a] = {}
 		for c in annonces[a]:
+			status[a][c] = STATUS.INACTIF
 			annonces[a][c].texture = couleurs_gris[c]
 
 func annonces_autorisees(annonces_autorisee):
-	for a in annonces_autorisee.split(" "):
-		if a != "":
-			point(a, couleurs_vert)
+	# reset pour remettre à jour
+	for a in annonces:
+		for c in annonces[a]:
+			if status[a][c] == STATUS.POSSIBLE:
+				status[a][c] = STATUS.INACTIF
 
-func point(annonce, couleurs=couleurs_rouge):
-	# Le joueur a déclaré une annonce
+	# change le status des annonces possibles
+	print("Annonces autorisées: ", annonces_autorisee)
+	for a in annonces_autorisee.split(" "):
+		print(a)
+		if a != "":
+			var ann = get_annonce(a)
+			if ann[0] != null:
+				status[ann[0]][ann[1]] = STATUS.POSSIBLE
+	
+	# mets à jour la couleur
+	for a in annonces:
+		for c in annonces[a]:
+			if status[a][c] == STATUS.POSSIBLE:
+				annonces[a][c].texture = couleurs_vert[c]
+			if status[a][c] == STATUS.INACTIF:
+				annonces[a][c].texture = couleurs_gris[c]
+			if status[a][c] == STATUS.ACTIF:
+				annonces[a][c].texture = couleurs_rouge[c]
+
+func get_annonce(annonce: String):
 	var ann = annonce.split("-")
 	if ann[0] == "chouine":
 		# rien à faire, la partie est terminee
-		return
+		return [null, null]
 	if ann[0] == "quinte":
+		print("QUINTE")
 		ann[1] = "coeur"  # une seule quinte par partie possible
+		print(ann)
 	if not annonces.has(ann[0]) or not annonces[ann[0]].has(ann[1]):
 		print("Annnonce non reconnue :" + annonce)
+		return [null, null]
+	return ann
+
+func point(annonce, couleurs=couleurs_rouge):
+	# Le joueur a déclaré une annonce
+	var ann = get_annonce(annonce)
+	if ann[0] == null:
 		return
+	status[ann[0]][ann[1]] = STATUS.ACTIF
 	var texture = annonces[ann[0]][ann[1]]
 	texture.texture = couleurs[ann[1]]
 
@@ -106,8 +145,9 @@ func annonce_joueur(event: InputEvent, annonce: String) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed and partie != null:
+				print("Annonce joueur: " + annonce)
 				partie.annonce_joueur(annonce)
-
+				
 
 func _on_mariage_coeur_gui_input(event: InputEvent) -> void:
 	annonce_joueur(event, "mariage-coeur")
@@ -122,7 +162,7 @@ func _on_quarante_coeur_gui_input(event: InputEvent) -> void:
 
 
 func _on_quinte_coeur_gui_input(event: InputEvent) -> void:
-	annonce_joueur(event, "quinte-coeur")
+	annonce_joueur(event, "quinte-")
 
 
 func _on_mariage_carreau_gui_input(event: InputEvent) -> void:

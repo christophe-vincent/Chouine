@@ -25,6 +25,7 @@ var drag_offset = Vector2.ZERO
 var zone_jeu = false
 var main_joueur = false
 var position_initiale = Vector2(0, 0)
+var card_z_index = 0
 
 
 # Called when the node enters the scene tree for the first time.
@@ -46,14 +47,17 @@ func _ready() -> void:
 	carte.input_event.connect(_on_input_event)
 	carte.position = position
 
-func move(pos, duree_effet):
+func move(pos, duree_effet, _z_index=0):
 	moving = true
 	var tween = get_tree().create_tween()
 	tween.tween_property(carte, "position", pos, duree_effet)
 	tween.connect("finished", stop_moving)
-	
+	card_z_index = _z_index
+
 func stop_moving():
 	moving = false
+	if card_z_index != 0: 
+		carte.z_index = card_z_index
 
 func size():
 	return card_size

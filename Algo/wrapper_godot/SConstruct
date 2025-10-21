@@ -23,6 +23,11 @@ if env["platform"] == "macos":
         ),
         source=sources,
     )
+elif env["platform"] == "web":
+    library = env.SharedLibrary(
+        "../../Godot/bin/libgdchouine{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
+        source=sources,
+    )
 elif env["platform"] == "ios":
     if env["ios_simulator"]:
         library = env.StaticLibrary(

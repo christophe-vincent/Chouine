@@ -18,6 +18,7 @@ var nb_cartes_max = 2
 var duree_effet = Settings.DUREE_MOUVEMENT
 var original_size: Vector2 = Vector2(0, 0)
 var original_position: Vector2 = Vector2(0, 0)
+var rng = RandomNumberGenerator.new()
 
 var _cartes = {}
 
@@ -44,9 +45,14 @@ func ajouter_carte(carte: Carte, duration=-1.0):
 	var duree = duration
 	if duration == -1.0:
 		duree = duree_effet
-	carte.carte.z_index = z_order + _cartes.size()+1
+	#carte.carte.z_index = z_order + _cartes.size() + 1
 	if Type == TypePile.PILE:
-		carte.move(position + size/2, duree)
+		var rnd_x = rng.randf_range(-1.0, 1.0) * size.x / 15
+		var rnd_y = rng.randf_range(-1.0, 1.0) * size.y / 15
+		carte.move(position + size/2 + Vector2(rnd_x, rnd_y),
+			duree, 
+			z_order + _cartes.size() + 1)
+		carte.carte.rotation = rng.randf_range(-1.0, 1.0) / 10
 	else:
 		calcul_positions(duree)
 
@@ -67,4 +73,5 @@ func calcul_positions(effet_duree):
 		#var x = position.x + carte.size().x/2 + (size.x - (carte.size().x * index))/(index + 1)
 		var y = position.y + size.y/2
 		carte.move(Vector2(x, y), effet_duree)
+		carte.carte.rotation = 0
 		index += 1

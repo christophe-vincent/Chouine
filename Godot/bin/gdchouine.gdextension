@@ -22,6 +22,7 @@ android.debug.x86_64 = "res://bin/libgdchouine.android.template_debug.x86_64.so"
 android.release.x86_64 = "res://bin/libgdchouine.android.template_release.x86_64.so"
 android.debug.arm64 = "res://bin/libgdchouine.android.template_debug.arm64.so"
 android.release.arm64 = "res://bin/libgdchouine.android.template_release.arm64.so"
+web.wasm32 = "res://bin/libgdchouine.web.template_release.wasm32.wasm"
 
 [dependencies]
 

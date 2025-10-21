@@ -29,7 +29,9 @@ Algo/Build
 Algo/build
 build
 Godot/godot_cpp
+Godot/html
 *.dblite
+*.wasm
 
 # Godot files
 *.import
