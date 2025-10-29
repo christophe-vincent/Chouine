@@ -88,6 +88,38 @@ void Joueur::supprimerCarte(Carte *_carte)
 }
 
 
+void Joueur::TrierCartesMain()
+{
+    std::vector<Carte *> nouvelOrdre;
+    std::map<Carte::Couleur, int> couleurs = {
+        {Carte::COEUR, 0}, {Carte::TREFLE, 100}, {Carte::CARREAU, 200}, {Carte::PIC, 300}
+    };
+
+    while (m_CartesMain.cartes().size() > 0)
+    {
+        // on recherche la plus petite valeur
+        int min = 1000;
+        Carte *ppc = nullptr;  // plus petite carte
+        for (auto carte: m_CartesMain.cartes())
+        {
+            int poidsCarte = (int)carte->valeur() + couleurs[carte->couleur()];
+            if (carte->atout())
+            {
+                // poids + important pour l'atout
+                poidsCarte += 500;
+            }
+            if (poidsCarte < min)
+            {
+                ppc = carte;
+                min = poidsCarte;
+            }
+        }
+        nouvelOrdre.push_back(ppc);
+        m_CartesMain.supprimer(ppc);
+    }
+    m_CartesMain.setCartes(nouvelOrdre);
+}
+
 // cherche si la carte fait partie d'une annonce en main
 Annonce* Joueur::rechercheAnnonce(Carte &_carte)
 {
@@ -198,6 +230,7 @@ int Joueur::choixAnnonce(std::string& _annonce)
     }
     m_PointsAnnonces += annonce->points();
     m_Annonces[annonce] = annonce->points();
+    m_CouleurAnnonces[annonce->couleur()] = true;
     if (annonce->type() == Annonce::CHOUINE) m_IsChouine = true;
     m_LatestAnnonce = annonce;
     return 0;
@@ -207,17 +240,47 @@ int Joueur::choixAnnonce(std::string& _annonce)
 std::string Joueur::annoncesEnMain()
 {
     std::string annonces;
+    std::map<Carte::Couleur, std::map<Annonce::TypeAnnonce, Annonce*>> annonces_possible;
+
     for (auto* annonce: m_Chouine.getAnnonces()) 
     {
         // le score indique si une annonce est présente, partiellement presente ou absente de la main
         int score = annonce->calculeScore(m_CartesMain, m_CartesJouees);
-        if (score == 100 && m_Annonces.count(annonce) == 0)
+        if (score == 100 && m_Annonces.count(annonce) == 0 && m_CouleurAnnonces[annonce->couleur()] == false)
         {
-            if (annonces.size() > 0)
+            if (annonce->type() == Annonce::TIERCE)
             {
-                annonces += " ";
+                // supprimer l'annonce mariage
+                annonces_possible[annonce->couleur()][Annonce::MARIAGE] = nullptr;
             }
-            annonces += annonce->to_string();
+            if (annonce->type() == Annonce::QUARANTE)
+            {
+                // supprimer l'annonce mariage
+                annonces_possible[annonce->couleur()][Annonce::MARIAGE] = nullptr;
+                annonces_possible[annonce->couleur()][Annonce::TIERCE] = nullptr;
+            }
+            if (annonce->type() == Annonce::CHOUINE)
+            {
+                // supprimer l'annonce mariage
+                annonces_possible[annonce->couleur()][Annonce::MARIAGE] = nullptr;
+                annonces_possible[annonce->couleur()][Annonce::TIERCE] = nullptr;
+                annonces_possible[annonce->couleur()][Annonce::QUARANTE] = nullptr;
+            }
+            annonces_possible[annonce->couleur()][annonce->type()] = annonce;
+        }
+    }
+    for (auto c: annonces_possible)
+    {
+        for (auto annonce: c.second)
+        {
+            if (annonce.second != nullptr)
+            {
+                if (annonces.size() > 0)
+                {
+                    annonces += " ";
+                }
+                annonces += annonce.second->to_string();
+            }
         }
     }
     return annonces;
@@ -317,12 +380,14 @@ Carte* Joueur::choisirCarte(Carte *_carteAdversaire, string& _annonce)
     }
 
     // si la carte jouée est le 7 d'atout, échange avec l'atout de la pioche et on revoit le choix
-    if (m_CarteJouee->valeur() == Carte::SEPT && m_CarteJouee->atout() && m_Chouine.pioche().size() > 2 && m_SecondChoix == false)
+    if (m_Niveau >= Algorithme::ECHANGE_7_ATOUT)
     {
-        // désavantage à faire ceci...
-        //prendreCarteAtout();
-        //m_SecondChoix = true;
-        //m_CarteJouee = choisirCarte(_carteAdversaire, _annonce);
+        if (m_CarteJouee->valeur() == Carte::SEPT && m_CarteJouee->atout() && m_Chouine.pioche().size() > 2 && m_SecondChoix == false)
+        {
+            prendreCarteAtout();
+            m_SecondChoix = true;
+            m_CarteJouee = choisirCarte(_carteAdversaire, _annonce);
+        }
     }
     return m_CarteJouee;
 }

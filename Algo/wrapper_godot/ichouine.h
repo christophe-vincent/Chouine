@@ -23,6 +23,7 @@ namespace godot {
         String Partie();
         String Atout();
         void DistributionCartes();
+        void TrierCartes(int _joueur);
         int GagnantPli();
         int PerdantPli();
         String ChoixJoueur();

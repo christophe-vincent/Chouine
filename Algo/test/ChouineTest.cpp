@@ -14,16 +14,16 @@
 
 
 /*
-0 -> 1: 69.0%
-0 -> 2: 72.4%
-0 -> 3: 80.4%
-0 -> 4: 81.3%
-0 -> 5: 83.7%
+0 -> 1: 64.5%
+0 -> 2: 77.8%
+0 -> 3: 84.3%
+0 -> 4: 85.5%
+0 -> 5: 87.4%
 
-1 -> 2: 68.9%
-2 -> 3: 63.8%
-3 -> 4: 52.8%
-4 -> 5: 53.0%
+1 -> 2: 75.5%
+2 -> 3: 62.8%
+3 -> 4: 54.0%
+4 -> 5: 50.9%
 */
 
 int NB_THREADS = static_cast<int>(std::thread::hardware_concurrency());
@@ -102,7 +102,8 @@ int partie(unsigned int _niveauJoueur1,
 
     Joueur& joueur1 = chouine.joueur(Chouine::JOUEUR_A);
     Joueur& joueur2 = chouine.joueur(Chouine::JOUEUR_B);
-    
+    chouine.trierCartes(Chouine::JOUEUR_B);
+
     log("Atout : ", chouine.atout(), "\n");
     
     std::string choix;
@@ -172,6 +173,7 @@ int partie(unsigned int _niveauJoueur1,
             perdant = chouine.perdantPli();
             stop = chouine.finPartie();
             log("Gagnant pli: ", chouine.gagnantPli() + 1, "\n");
+            chouine.trierCartes(Chouine::JOUEUR_B);
         }
     }
 

@@ -39,6 +39,7 @@ public:
     int getPoints();
 
     std::vector<Carte*>& cartes() { return m_Cartes; }
+    void setCartes(std::vector<Carte*> _cartes) {m_Cartes = _cartes;}
     Carte* septAtout() { return m_SeptAtout; }
     unsigned int size() { return (unsigned int)m_Cartes.size(); }
     Carte *getLastCarte() { return m_Cartes.front(); }

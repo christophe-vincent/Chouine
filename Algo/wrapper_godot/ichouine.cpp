@@ -8,6 +8,7 @@ using namespace godot;
 void IChouine::_bind_methods() {
     ClassDB::bind_method(D_METHOD("partie"), &IChouine::Partie);
     ClassDB::bind_method(D_METHOD("distribution_cartes"), &IChouine::DistributionCartes);
+    ClassDB::bind_method(D_METHOD("trier_cartes"), &IChouine::TrierCartes);
     ClassDB::bind_method(D_METHOD("gagnant_pli"), &IChouine::GagnantPli);
     ClassDB::bind_method(D_METHOD("perdant_pli"), &IChouine::PerdantPli);
     ClassDB::bind_method(D_METHOD("choix_joueur"), &IChouine::ChoixJoueur);
@@ -50,17 +51,25 @@ void IChouine::DistributionCartes()
     m_Chouine->distribution_cartes();
 }
 
-String IChouine::CartesJoueur(int _joueur) {
+void IChouine::TrierCartes(int _joueur)
+{
+    m_Chouine->trierCartes(_joueur);
+}
+
+String IChouine::CartesJoueur(int _joueur)
+{
     std::string cartes = m_Chouine->joueur((Chouine::JOUEUR)_joueur).cartesMainToStr();
     UtilityFunctions::print(cartes.c_str());
     return String(cartes.c_str());
 }
 
-int IChouine::GagnantPli() {
+int IChouine::GagnantPli()
+{
     return m_Chouine->gagnantPli();
 }
 
-int IChouine::PerdantPli() {
+int IChouine::PerdantPli()
+{
     return m_Chouine->perdantPli();
 }
 

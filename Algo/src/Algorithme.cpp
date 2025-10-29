@@ -27,6 +27,7 @@ Carte* Algorithme::choisirCarte()
 
 Carte* Algorithme::calculScores()
 {
+    // Calcule les scores de chaque carte et retourne la carte ayant le plus petit score
     Carte* ret = nullptr;
     int plusPetitScore = 99999;
     ListeCartes& cartesMain = m_Joueur.cartes();
@@ -38,24 +39,18 @@ Carte* Algorithme::calculScores()
         float scoreAnnonces = 0;
         for (auto& annonce: carteMain->annonces())
         {
-            int sa = int(2.3 * annonce.first->points() * (annonce.second/100.0));
+            // calcule un score pour chaque annonce possible associée à la carte
+            int sa = int(0.1 * annonce.first->points() * (annonce.second/100.0));
             if (sa > scoreAnnonces)
             {
+                // on prend le plus grand score
                 scoreAnnonces = sa;
             }
         }
-        score += scoreAnnonces; // / carteMain->annonces().size();
-        if (carteMain->atout()) // && carteMain->getPoints() == 0)
+        score += scoreAnnonces;
+        if (carteMain->atout())
         {
-            if (carteMain->getPoints() == 0)
-            {
-                score += 40;
-            }
-            else
-            {
-                score += 60;
-            }
-            
+            score += 10 + carteMain->getPoints();
         }
         if (score < plusPetitScore)
         {

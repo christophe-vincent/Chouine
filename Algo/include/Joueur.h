@@ -60,6 +60,9 @@ public:
     // supprime une carte de la main
     void supprimerCarte(Carte *_carte);
 
+    // trie les cartes de la main
+    void TrierCartesMain();
+
     // Vérifie si une annonce doit être déclarée avant de jouer cette carte
     Annonce* rechercheAnnonce(Carte &_carte);
 

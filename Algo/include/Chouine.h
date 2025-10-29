@@ -82,6 +82,8 @@ public:
     
     bool piocheVide();
 
+    void trierCartes(int _joueur);
+    std::string cartesJoueur(int _joueur);
     std::string choixJoueur(std::string& _annonce, std::string& _carteAtout);
     int setChoixJoueur(std::string _choice);
     int setChoixAnnonce(int _joueur, std::string _annonce);

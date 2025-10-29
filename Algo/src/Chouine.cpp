@@ -122,6 +122,18 @@ bool Chouine::piocheVide()
     return ret;
 }
 
+void Chouine::trierCartes(int _joueur)
+{
+    if (_joueur < 0 || _joueur > 1) return;
+    m_Joueurs[_joueur]->TrierCartesMain();
+}
+
+std::string Chouine::cartesJoueur(int _joueur)
+{
+    if (_joueur < 0 || _joueur > 1) return "";
+    return m_Joueurs[_joueur]->cartesMainToStr();
+}
+
 string Chouine::choixJoueur(string& _annonce, string& _carteAtout)
 {
     string ret("erreur");
