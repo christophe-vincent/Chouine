@@ -23,3 +23,6 @@ L'algorithme est développé en C++ et la partie graphique grâce à Godot.
 
 Il est popssible de tester l'algorithme grace à
 Testing the algorithm is possible thanks to a test application that can be compiled with a cmakelist file.
+
+
+ANDROID_HOME=/mnt/c/Users/cvincent/AppData/Local/Android/Sdk

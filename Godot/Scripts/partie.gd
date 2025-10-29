@@ -17,7 +17,7 @@ extends Control
 @onready var dix_de_der: Label = $Scores/DixDeDer
 @onready var annonces_ordi: Node2D = $AnnoncesOrdi
 @onready var annonces_joueur: Node2D = $AnnoncesJoueur
-@onready var jouer: TextureButton = $Jouer
+@onready var confirmation_annuler: ConfirmationDialog = $Annuler/ConfirmationDialog
 
 var card_packed_scene = preload("res://Scenes/carte.tscn")
 var cartes: Dictionary[String, Carte] = {}
@@ -39,8 +39,8 @@ func _ready():
 	ordi_gagnees.original_size = ordi_gagnees.size
 	joueur_gagnees.original_position = joueur_gagnees.position
 	ordi_gagnees.original_position = ordi_gagnees.position
-	init_jeu()
 	setup_game()
+	demarrer_jeu()
 
 func setup_game():
 	creer_cartes()
@@ -86,7 +86,7 @@ func init_jeu():
 	tapis.init_cartes()
 	
 	joueur_gagnees.card_size = Settings.DEFAULT_CARD_SIZE
-	joueur_gagnees.Type = Pile.TypePile.PILE
+	joueur_gagnees.type = Pile.TypePile.PILE
 	joueur_gagnees.draggable = false
 	joueur_gagnees.face_visible = true
 	joueur_gagnees.init_cartes()
@@ -94,7 +94,8 @@ func init_jeu():
 	joueur_gagnees.position = joueur_gagnees.original_position
 	
 	ordi_gagnees.card_size = Settings.DEFAULT_CARD_SIZE
-	ordi_gagnees.Type = Pile.TypePile.PILE
+	ordi_gagnees.type = Pile.TypePile.PILE
+	ordi_gagnees.type_position = Pile.TypePosition.EVENTAIL_BAS
 	ordi_gagnees.draggable = false
 	ordi_gagnees.face_visible = false
 	ordi_gagnees.init_cartes()
@@ -116,56 +117,7 @@ func init_jeu():
 	annonces_joueur.visible = true
 
 
-func carte_jouee(nom):
-	if coup_joueur == false:
-		return -1
-	print ("Choix joueur: " + nom)
-	if carte_atout != null && carte_atout.card_name == nom:
-		print("ERREUR: Carte d'atout déposée sur la zone de jeu")
-		return -1
-	var ret = chouine.set_choix_joueur(nom)
-	if ret != 0:
-		print("ERREUR: Erreur dans le choix du joueur")
-		return -1
-	coup_joueur = false
-	tapis.ajouter_carte(cartes[nom], 0.1)
-	main_joueur.supprimer_carte(nom)
-	# est-ce la fin du pli ?
-	ret = chouine.fin_pli()
-	if ret == -1:
-		# l'ordi doit jouer
-		coup_ordi()
-	else:
-		fin_pli()
-	return 0
-
-func carte_main_joueur(nom):
-	# une carte est déposée dans la main du joueur, ca ne peut être que la carte d'atout
-	if carte_atout != null && nom == carte_atout.card_name:
-		# chercher le sept d'atout
-		main_joueur.ajouter_carte(carte_atout)
-		main_joueur.supprimer_carte(sept_atout.card_name)
-		main_joueur.calcul_positions(Settings.DUREE_MOUVEMENT)
-		retourne.ajouter_carte(sept_atout)
-		retourne.supprimer_carte(carte_atout.card_name)
-		chouine.echanger_carte_atout(JOUEURS.HUMAIN)
-		print("Joueur      : Echange carte atout: ", carte_atout.card_name)
-		cartes_pioche.pop_front()
-		cartes_pioche.push_front(sept_atout.card_name)
-		carte_atout = null
-		sept_atout.draggable = false
-		return 0
-	return -1
-
-func melanger():
-	cartes_pioche = []
-	for c in Array(chouine.partie().split(" ")):
-		await get_tree().create_timer(0.05).timeout
-		c = c.replace('*', '')
-		cartes_pioche.append(c)
-		pioche.ajouter_carte(cartes[c])
-
-func _on_texture_button_pressed() -> void:
+func demarrer_jeu() -> void:
 	init_jeu()
 	
 	await melanger()
@@ -197,6 +149,60 @@ func _on_texture_button_pressed() -> void:
 	zone_jeu.disabled = false
 	coup_joueur = true
 
+
+func carte_jouee(nom):
+	if coup_joueur == false:
+		return -1
+	print ("Choix joueur: " + nom)
+	if carte_atout != null && carte_atout.card_name == nom:
+		print("ERREUR: Carte d'atout déposée sur la zone de jeu")
+		return -1
+	var ret = chouine.set_choix_joueur(nom)
+	if ret != 0:
+		print("ERREUR: Erreur dans le choix du joueur")
+		return -1
+	coup_joueur = false
+	tapis.ajouter_carte(cartes[nom], 0.1)
+	main_joueur.supprimer_carte(nom)
+	# est-ce la fin du pli ?
+	ret = chouine.fin_pli()
+	if ret == -1:
+		# l'ordi doit jouer
+		coup_ordi()
+	else:
+		fin_pli()
+	return 0
+
+
+func carte_main_joueur(nom):
+	# une carte est déposée dans la main du joueur, ca ne peut être que la carte d'atout
+	if carte_atout != null && nom == carte_atout.card_name:
+		# chercher le sept d'atout
+		main_joueur.ajouter_carte(carte_atout)
+		main_joueur.supprimer_carte(sept_atout.card_name)
+		main_joueur.calcul_positions(Settings.DUREE_MOUVEMENT)
+		retourne.ajouter_carte(sept_atout)
+		retourne.supprimer_carte(carte_atout.card_name)
+		chouine.echanger_carte_atout(JOUEURS.HUMAIN)
+		print("Joueur      : Echange carte atout: ", carte_atout.card_name)
+		cartes_pioche.pop_front()
+		cartes_pioche.push_front(sept_atout.card_name)
+		carte_atout = null
+		sept_atout.draggable = false
+		annonces_joueur.annonces_autorisees(chouine.annonces_en_main_joueur(1))
+		return 0
+	return -1
+
+
+func melanger():
+	cartes_pioche = []
+	for c in Array(chouine.partie().split(" ")):
+		await get_tree().create_timer(0.05).timeout
+		c = c.replace('*', '')
+		cartes_pioche.append(c)
+		pioche.ajouter_carte(cartes[c])
+
+
 func distribution_carte(joueur):
 	await get_tree().create_timer(Settings.DUREE_DISTRIBUTION).timeout
 	var c = cartes_pioche.pop_back()
@@ -206,9 +212,12 @@ func distribution_carte(joueur):
 	if carte_atout != null && carte_atout.card_name == c:
 		carte_atout = null
 
+
 func distribution_cartes(nb_cartes):
 	var joueur = chouine.gagnant_pli()
 	if cartes_pioche.size() == 0:
+		main_joueur.calcul_positions(Settings.DUREE_MOUVEMENT)
+		main_ordi.calcul_positions(Settings.DUREE_MOUVEMENT)
 		return false
 	for i in range(nb_cartes):
 		await distribution_carte(joueur)
@@ -216,15 +225,24 @@ func distribution_cartes(nb_cartes):
 		await distribution_carte(joueur)
 		joueur = (joueur + 1) % 2
 	
+	# on affiche les carte de la main du joueur dans l'ordre donné par l'algo
+	chouine.trier_cartes(JOUEURS.HUMAIN)
+	var cartes_joueur_str: Array = chouine.cartes_joueur(JOUEURS.HUMAIN).split(" ")
+	for carte in cartes_joueur_str:
+		print("CARTE : " + carte)
+	main_joueur.ordre_cartes(cartes_joueur_str)
+	
+	
 	# le sept d'atout est-il dans la main du joueur ?
 	var sept_atout_en_main: bool = chouine.sept_atout_en_main(JOUEURS.HUMAIN)
-	if sept_atout_en_main && carte_atout != null:
+	if sept_atout_en_main && carte_atout != null && cartes_pioche.size() > 0:
 		carte_atout.draggable = true
 	return true
 
+
 func coup_ordi():
-	var choix_ordi = chouine.choix_joueur().split("|")
-	var choix_carte = choix_ordi[0]
+	var choix_ordi: Array = chouine.choix_joueur().split("|")
+	var choix_carte: String = choix_ordi[0]
 	print("Choix Ordi  : " + choix_carte)
 	var annonce = choix_ordi[1]
 	if annonce != "":
@@ -236,10 +254,11 @@ func coup_ordi():
 			print("ERREUR: La retourne est vide")
 		else:
 			# la carte de joueur rejoint la retourne
-			retourne.ajouter_carte(sept_atout)
+			main_ordi.supprimer_carte(sept_atout.card_name)
 			main_ordi.ajouter_carte(carte_atout)
-			retourne.supprimer_carte(carte_atout)
-			main_ordi.supprimer_carte(sept_atout)
+			main_ordi.calcul_positions(Settings.DUREE_MOUVEMENT)
+			retourne.supprimer_carte(carte_atout.card_name)
+			retourne.ajouter_carte(sept_atout)
 			print("Ordi        : Echange sept atout - ", carte_atout.card_name)
 			cartes_pioche.pop_front()
 			cartes_pioche.push_front(sept_atout.card_name)
@@ -254,6 +273,7 @@ func coup_ordi():
 		fin_pli()
 	else:
 		coup_joueur = true
+
 
 func fin_pli():
 	await get_tree().create_timer(1.0).timeout
@@ -278,8 +298,6 @@ func fin_pli():
 	
 	if chouine.fin_partie() == 1:
 		# fin de la partie
-		if gagnant == JOUEURS.HUMAIN:
-			dix_de_der.visible = true
 		fin_partie()
 		return
 	# debug: affiche les cartes
@@ -299,8 +317,14 @@ func annonce_joueur(annonce):
 		annonces_joueur.point(annonce)
 		print("Joueur      : " + annonce)
 
+
 func fin_partie():
 	zone_jeu.disabled = true
+	for c in main_ordi.cartes():
+		ordi_gagnees.ajouter_carte(main_ordi[c])
+	for c in main_joueur.cartes():
+		joueur_gagnees.ajouter_carte(main_ordi[c])
+		
 	if chouine.points_joueur(JOUEURS.ORDI) > chouine.points_joueur(JOUEURS.HUMAIN):
 		texte_perdu.visible = true
 	else:
@@ -311,16 +335,56 @@ func fin_partie():
 	points_ordi.visible = true
 	points_humain.visible = true
 	var screen_size = get_viewport_rect().size
-	joueur_gagnees.Type = Pile.TypePile.MAIN
+	joueur_gagnees.type = Pile.TypePile.MAIN
 	joueur_gagnees.size = Vector2(screen_size.x - 2*Settings.DEFAULT_CARD_SIZE.x, Settings.DEFAULT_CARD_SIZE.y)
 	joueur_gagnees.position.x = Settings.DEFAULT_CARD_SIZE.x
 	joueur_gagnees.calcul_positions(0)
-	ordi_gagnees.Type = Pile.TypePile.MAIN
+	#ordi_gagnees.inversser()
+	ordi_gagnees.type = Pile.TypePile.MAIN
+	ordi_gagnees.type_position = Pile.TypePosition.NORMAL
 	ordi_gagnees.visibilite(true)
 	ordi_gagnees.size = Vector2(screen_size.x - 2*Settings.DEFAULT_CARD_SIZE.x, Settings.DEFAULT_CARD_SIZE.y)
 	ordi_gagnees.position.x = Settings.DEFAULT_CARD_SIZE.x
+	ordi_gagnees.position.y = 0
 	ordi_gagnees.calcul_positions(0)
 	annonces_ordi.reset()
 	annonces_ordi.visible = false
 	annonces_joueur.reset()
 	annonces_joueur.visible = false
+
+
+func _on_button_pressed() -> void:
+	confirmation_annuler.visible = true
+	return
+	var dialog = ConfirmationDialog.new() 
+	dialog.add_theme_font_size_override("font_size", 60)
+	dialog.title = "Retour à l'écran d'accueil" 
+	dialog.dialog_text = "Etes vous sûr de vouloir annuler cette partie ?"
+
+	# connect signals
+	dialog.cancel_button_text = "Non"
+	dialog.ok_button_text = "Oui"
+	dialog.canceled.connect (dialog_canceled)
+	dialog.confirmed.connect (dialog_confirmed)
+		
+	# show dialog
+	add_child(dialog)
+	dialog.popup_centered() # center on screen
+	dialog.show()
+
+
+func dialog_canceled(): print("User clicked Cancel")
+
+func dialog_confirmed(): 
+	print("User clicked OK")
+	
+
+func _on_confirmation_dialog_confirmed() -> void:
+	confirmation_annuler.visible = true
+	var error = get_tree().change_scene_to_file("res://Scenes/accueil.tscn")
+	if error != OK:
+		print("Scene change failed with error: ", error)
+
+
+func _on_confirmation_dialog_canceled() -> void:
+	confirmation_annuler.visible = true

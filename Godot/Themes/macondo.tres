@@ -1,0 +1,10 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://cwbdq4hxho7qr"]
+
+[ext_resource type="FontFile" uid="uid://bvopnfj4k30sy" path="res://Themes/Macondo-Regular.ttf" id="1_flajs"]
+
+[resource]
+default_font = ExtResource("1_flajs")
+default_font_size = 42
+/font_sizes/titre = 60
+Button/colors/font_color = Color(4.2584004, 4.472266, 0.37322077, 1)
+Button/font_sizes/font_size = 40

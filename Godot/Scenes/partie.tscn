@@ -1,16 +1,15 @@
-[gd_scene load_steps=8 format=3 uid="uid://bftfnuj4mri6h"]
+[gd_scene load_steps=7 format=3 uid="uid://bftfnuj4mri6h"]
 
 [ext_resource type="Script" uid="uid://dftrx4q78fbw7" path="res://Scripts/partie.gd" id="1_m1snf"]
-[ext_resource type="Texture2D" uid="uid://cbp2l4pnc5wl5" path="res://Assets/jouer.png" id="3_1x1o5"]
-[ext_resource type="Texture2D" uid="uid://cxt4m38yrulu8" path="res://Assets/jouer.svg" id="3_up2em"]
 [ext_resource type="Script" uid="uid://dxjbmkokb6h8y" path="res://Scripts/Pile.gd" id="4_1x1o5"]
+[ext_resource type="Theme" uid="uid://cwbdq4hxho7qr" path="res://Themes/macondo.tres" id="4_ek6vc"]
 [ext_resource type="PackedScene" uid="uid://dk71nt6nh05bb" path="res://Scenes/annonces.tscn" id="5_ek6vc"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bjfpd"]
-size = Vector2(706, 157)
+size = Vector2(919, 270.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ek6vc"]
-size = Vector2(784, 56)
+size = Vector2(1038, 115)
 
 [node name="Partie" type="Control"]
 layout_mode = 3
@@ -19,14 +18,14 @@ script = ExtResource("1_m1snf")
 
 [node name="Tapis" type="ColorRect" parent="."]
 layout_mode = 0
-offset_left = 467.0
-offset_top = 349.0
-offset_right = 1380.0
+offset_left = 393.0
+offset_top = 202.0
+offset_right = 1428.0
 offset_bottom = 703.0
 mouse_filter = 2
 color = Color(0.428547, 0.6671001, 0.0071176123, 1)
 script = ExtResource("4_1x1o5")
-Type = 1
+type = 1
 
 [node name="Piles" type="Control" parent="."]
 z_index = 1
@@ -37,93 +36,86 @@ offset_bottom = 40.0
 [node name="JoueurGagnees" type="ColorRect" parent="Piles"]
 visible = false
 layout_mode = 0
-offset_left = 171.0
-offset_top = 755.0
-offset_right = 365.0
-offset_bottom = 1031.0
+offset_left = 61.0
+offset_top = 705.0
+offset_right = 294.0
+offset_bottom = 1016.0
 script = ExtResource("4_1x1o5")
 
 [node name="OrdiGagnees" type="ColorRect" parent="Piles"]
 visible = false
 layout_mode = 0
-offset_left = 196.0
-offset_top = 35.0
-offset_right = 380.0
-offset_bottom = 283.0
+offset_left = 69.0
+offset_top = -101.0
+offset_right = 289.0
+offset_bottom = 208.0
 script = ExtResource("4_1x1o5")
 
 [node name="MainOrdi" type="ColorRect" parent="Piles"]
 visible = false
 layout_mode = 0
-offset_left = 443.0
-offset_top = 22.0
-offset_right = 1401.0
-offset_bottom = 295.0
+offset_left = 438.0
+offset_top = -196.0
+offset_right = 1369.0
+offset_bottom = 176.0
 mouse_filter = 2
 script = ExtResource("4_1x1o5")
-Type = 1
+type = 1
+type_position = 2
 
 [node name="MainJoueur" type="ColorRect" parent="Piles"]
 visible = false
 layout_mode = 0
-offset_left = 417.0
-offset_top = 818.0
-offset_right = 1402.0
-offset_bottom = 1071.0
+offset_left = 446.0
+offset_top = 726.0
+offset_right = 1370.0
+offset_bottom = 1094.0
 mouse_filter = 2
 script = ExtResource("4_1x1o5")
-Type = 1
+type = 1
+type_position = 1
 card_size = Vector2(120, 180)
 z_order = 40
 
 [node name="Retourne" type="ColorRect" parent="Piles"]
 visible = false
 layout_mode = 0
-offset_left = 1441.0
-offset_top = 376.0
-offset_right = 1611.0
-offset_bottom = 628.0
+offset_left = 1478.0
+offset_top = 346.0
+offset_right = 1682.0
+offset_bottom = 652.0
 mouse_filter = 2
 script = ExtResource("4_1x1o5")
 
 [node name="Pioche" type="ColorRect" parent="Piles"]
 visible = false
 layout_mode = 0
-offset_left = 1635.0
-offset_top = 375.0
-offset_right = 1814.0
-offset_bottom = 623.0
+offset_left = 1648.0
+offset_top = 395.0
+offset_right = 1854.0
+offset_bottom = 698.0
 script = ExtResource("4_1x1o5")
 card_size = Vector2(120, 180)
-
-[node name="Jouer" type="TextureButton" parent="."]
-layout_mode = 0
-offset_left = 172.0
-offset_top = 469.0
-offset_right = 358.0
-offset_bottom = 544.0
-texture_normal = ExtResource("3_1x1o5")
-texture_pressed = ExtResource("3_up2em")
-stretch_mode = 0
+z_order = 10
 
 [node name="ZoneJeu" type="Area2D" parent="."]
 position = Vector2(195, 135)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneJeu"]
-position = Vector2(742, 382.5)
+position = Vector2(718.5, 318)
 shape = SubResource("RectangleShape2D_bjfpd")
 
 [node name="MainJoueur" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MainJoueur"]
-position = Vector2(906, 906)
+position = Vector2(921, 943)
 shape = SubResource("RectangleShape2D_ek6vc")
 
 [node name="AnnoncesOrdi" parent="." instance=ExtResource("5_ek6vc")]
-position = Vector2(1449, 14)
+position = Vector2(1494, 13)
 
 [node name="AnnoncesJoueur" parent="." instance=ExtResource("5_ek6vc")]
-position = Vector2(1450, 768)
+position = Vector2(1515, 764)
 
 [node name="Scores" type="Control" parent="."]
 anchors_preset = 0
@@ -182,6 +174,29 @@ offset_bottom = 709.0
 theme_override_font_sizes/font_size = 40
 text = "10 de der !!!"
 
-[connection signal="pressed" from="Jouer" to="." method="_on_texture_button_pressed"]
+[node name="Annuler" type="Button" parent="."]
+layout_mode = 0
+offset_left = 104.0
+offset_top = 412.0
+offset_right = 300.0
+offset_bottom = 475.0
+theme = ExtResource("4_ek6vc")
+theme_override_font_sizes/font_size = 40
+text = "ANNULER"
+
+[node name="ConfirmationDialog" type="ConfirmationDialog" parent="Annuler"]
+oversampling_override = 1.0
+title = ""
+initial_position = 2
+size = Vector2i(700, 160)
+keep_title_visible = false
+theme = ExtResource("4_ek6vc")
+ok_button_text = "Oui"
+dialog_text = "Etes vous sûr de vouloir annuler ?"
+cancel_button_text = "Non"
+
 [connection signal="area_shape_entered" from="ZoneJeu" to="ZoneJeu" method="_on_area_shape_entered"]
 [connection signal="area_shape_exited" from="ZoneJeu" to="ZoneJeu" method="_on_area_shape_exited"]
+[connection signal="pressed" from="Annuler" to="." method="_on_button_pressed"]
+[connection signal="canceled" from="Annuler/ConfirmationDialog" to="." method="_on_confirmation_dialog_canceled"]
+[connection signal="confirmed" from="Annuler/ConfirmationDialog" to="." method="_on_confirmation_dialog_confirmed"]

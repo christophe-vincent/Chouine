@@ -1,0 +1,144 @@
+[gd_scene load_steps=9 format=3 uid="uid://cbig4nyg5d5k8"]
+
+[ext_resource type="Script" uid="uid://b3ddph3lqd14u" path="res://Scripts/accueil.gd" id="1_mwf61"]
+[ext_resource type="Texture2D" uid="uid://d0u2ux7jb7rnj" path="res://Assets/un_point.png" id="2_68w6v"]
+[ext_resource type="Theme" uid="uid://cwbdq4hxho7qr" path="res://Themes/macondo.tres" id="2_cggy0"]
+[ext_resource type="Texture2D" uid="uid://cl7fuofhtvc5a" path="res://Assets/un_point_select.png" id="3_cggy0"]
+[ext_resource type="Texture2D" uid="uid://vm6llepask2m" path="res://Assets/trois_points.png" id="4_n6lxe"]
+[ext_resource type="Texture2D" uid="uid://bel8hhaslw42h" path="res://Assets/trois_points_select.png" id="5_kbk3v"]
+[ext_resource type="Texture2D" uid="uid://cqv1towavsbd3" path="res://Assets/cinq_points.png" id="6_muto7"]
+[ext_resource type="Texture2D" uid="uid://bg38w7oqpbur8" path="res://Assets/cinq_points_select.png" id="7_p3653"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mwf61")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 1301.0
+offset_top = 376.0
+offset_right = 1793.0
+offset_bottom = 881.0
+theme_override_font_sizes/normal_font_size = 30
+text = "blabla
+bla
+"
+
+[node name="Chouine" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -266.0
+offset_top = 41.0
+offset_right = 281.0
+offset_bottom = 206.0
+grow_horizontal = 2
+theme = ExtResource("2_cggy0")
+theme_override_font_sizes/font_size = 120
+text = "CHOUINE"
+
+[node name="Jouer" type="Button" parent="."]
+layout_mode = 0
+offset_left = 385.0
+offset_top = 679.0
+offset_right = 652.0
+offset_bottom = 797.0
+theme = ExtResource("2_cggy0")
+theme_override_font_sizes/font_size = 80
+text = "JOUER"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Partie" type="Label" parent="."]
+layout_mode = 0
+offset_left = 440.0
+offset_top = 232.0
+offset_right = 584.0
+offset_bottom = 301.0
+theme = ExtResource("2_cggy0")
+theme_override_font_sizes/font_size = 50
+text = "Partie"
+
+[node name="1Point" type="Label" parent="."]
+layout_mode = 0
+offset_left = 139.0
+offset_top = 322.0
+offset_right = 277.0
+offset_bottom = 364.0
+theme = ExtResource("2_cggy0")
+theme_override_font_sizes/font_size = 30
+text = "1 point"
+
+[node name="3Points" type="Label" parent="."]
+layout_mode = 0
+offset_left = 443.0
+offset_top = 321.0
+offset_right = 581.0
+offset_bottom = 363.0
+theme = ExtResource("2_cggy0")
+theme_override_font_sizes/font_size = 30
+text = "3 points"
+
+[node name="5Points" type="Label" parent="."]
+layout_mode = 0
+offset_left = 750.0
+offset_top = 316.0
+offset_right = 888.0
+offset_bottom = 358.0
+theme = ExtResource("2_cggy0")
+theme_override_font_sizes/font_size = 30
+text = "5 points"
+
+[node name="UnPoint" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 92.0
+offset_top = 385.0
+offset_right = 292.0
+offset_bottom = 585.0
+toggle_mode = true
+texture_normal = ExtResource("2_68w6v")
+texture_pressed = ExtResource("3_cggy0")
+texture_disabled = ExtResource("3_cggy0")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="TroisPoints" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 386.0
+offset_top = 385.0
+offset_right = 586.0
+offset_bottom = 585.0
+toggle_mode = true
+button_pressed = true
+texture_normal = ExtResource("4_n6lxe")
+texture_pressed = ExtResource("5_kbk3v")
+texture_disabled = ExtResource("5_kbk3v")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="CinqPoints" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 706.0
+offset_top = 370.0
+offset_right = 906.0
+offset_bottom = 570.0
+toggle_mode = true
+texture_normal = ExtResource("6_muto7")
+texture_pressed = ExtResource("7_p3653")
+texture_disabled = ExtResource("7_p3653")
+ignore_texture_size = true
+stretch_mode = 0
+
+[connection signal="pressed" from="Jouer" to="." method="_on_jouer_pressed"]
+[connection signal="pressed" from="UnPoint" to="." method="_on_un_point_pressed"]
+[connection signal="pressed" from="TroisPoints" to="." method="_on_trois_points_pressed"]
+[connection signal="pressed" from="CinqPoints" to="." method="_on_cinq_points_2_pressed"]

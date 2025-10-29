@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="Chouine"
-run/main_scene="uid://bftfnuj4mri6h"
+run/main_scene="uid://cbig4nyg5d5k8"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+Global="*res://Scripts/global.gd"
 
 [display]
 
