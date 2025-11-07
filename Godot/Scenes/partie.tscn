@@ -1,12 +1,16 @@
-[gd_scene load_steps=7 format=3 uid="uid://bftfnuj4mri6h"]
+[gd_scene load_steps=11 format=3 uid="uid://bftfnuj4mri6h"]
 
 [ext_resource type="Script" uid="uid://dftrx4q78fbw7" path="res://Scripts/partie.gd" id="1_m1snf"]
 [ext_resource type="Script" uid="uid://dxjbmkokb6h8y" path="res://Scripts/Pile.gd" id="4_1x1o5"]
 [ext_resource type="Theme" uid="uid://cwbdq4hxho7qr" path="res://Themes/macondo.tres" id="4_ek6vc"]
 [ext_resource type="PackedScene" uid="uid://dk71nt6nh05bb" path="res://Scenes/annonces.tscn" id="5_ek6vc"]
+[ext_resource type="Texture2D" uid="uid://cl4lkxnjxh6tf" path="res://Assets/point_partie_inactif.png" id="5_t3v1o"]
+[ext_resource type="Texture2D" uid="uid://bcxw1g8dm28do" path="res://Assets/point_manche_inactif.png" id="6_kcvnu"]
+[ext_resource type="PackedScene" uid="uid://dicibjashalna" path="res://Scenes/choix_annonces.tscn" id="7_acwto"]
+[ext_resource type="PackedScene" uid="uid://cvnc0r14i4max" path="res://Scenes/scores.tscn" id="7_kcvnu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bjfpd"]
-size = Vector2(919, 270.5)
+size = Vector2(1030, 414)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ek6vc"]
 size = Vector2(1038, 115)
@@ -14,14 +18,15 @@ size = Vector2(1038, 115)
 [node name="Partie" type="Control"]
 layout_mode = 3
 anchors_preset = 0
+theme = ExtResource("4_ek6vc")
 script = ExtResource("1_m1snf")
 
 [node name="Tapis" type="ColorRect" parent="."]
 layout_mode = 0
-offset_left = 393.0
-offset_top = 202.0
-offset_right = 1428.0
-offset_bottom = 703.0
+offset_left = 435.0
+offset_top = 221.0
+offset_right = 1470.0
+offset_bottom = 722.0
 mouse_filter = 2
 color = Color(0.428547, 0.6671001, 0.0071176123, 1)
 script = ExtResource("4_1x1o5")
@@ -34,155 +39,101 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="JoueurGagnees" type="ColorRect" parent="Piles"]
-visible = false
 layout_mode = 0
-offset_left = 61.0
-offset_top = 705.0
-offset_right = 294.0
-offset_bottom = 1016.0
+offset_left = 87.0
+offset_top = 743.0
+offset_right = 320.0
+offset_bottom = 1054.0
+mouse_filter = 1
+color = Color(1, 1, 1, 0)
 script = ExtResource("4_1x1o5")
+z_order = 50
 
 [node name="OrdiGagnees" type="ColorRect" parent="Piles"]
-visible = false
 layout_mode = 0
-offset_left = 69.0
-offset_top = -101.0
-offset_right = 289.0
-offset_bottom = 208.0
+offset_left = 88.0
+offset_top = -97.0
+offset_right = 308.0
+offset_bottom = 212.0
+color = Color(1, 1, 1, 0)
 script = ExtResource("4_1x1o5")
+face_visible = false
+spreadable = false
 
 [node name="MainOrdi" type="ColorRect" parent="Piles"]
-visible = false
 layout_mode = 0
-offset_left = 438.0
-offset_top = -196.0
-offset_right = 1369.0
-offset_bottom = 176.0
+offset_left = 490.0
+offset_top = -161.0
+offset_right = 1421.0
+offset_bottom = 211.0
 mouse_filter = 2
+color = Color(1, 1, 1, 0)
 script = ExtResource("4_1x1o5")
 type = 1
 type_position = 2
+z_order = 40
+spreadable = false
 
 [node name="MainJoueur" type="ColorRect" parent="Piles"]
-visible = false
 layout_mode = 0
-offset_left = 446.0
-offset_top = 726.0
-offset_right = 1370.0
-offset_bottom = 1094.0
+offset_left = 492.0
+offset_top = 719.0
+offset_right = 1416.0
+offset_bottom = 1087.0
 mouse_filter = 2
+color = Color(1, 1, 1, 0)
 script = ExtResource("4_1x1o5")
 type = 1
 type_position = 1
 card_size = Vector2(120, 180)
 z_order = 40
+spreadable = false
 
 [node name="Retourne" type="ColorRect" parent="Piles"]
-visible = false
 layout_mode = 0
-offset_left = 1478.0
-offset_top = 346.0
-offset_right = 1682.0
-offset_bottom = 652.0
+offset_left = 1505.0
+offset_top = 349.0
+offset_right = 1709.0
+offset_bottom = 655.0
 mouse_filter = 2
+color = Color(1, 1, 1, 0)
 script = ExtResource("4_1x1o5")
+spreadable = false
 
 [node name="Pioche" type="ColorRect" parent="Piles"]
-visible = false
 layout_mode = 0
-offset_left = 1648.0
-offset_top = 395.0
-offset_right = 1854.0
-offset_bottom = 698.0
+offset_left = 1671.0
+offset_top = 353.0
+offset_right = 1877.0
+offset_bottom = 656.0
+color = Color(1, 1, 1, 0)
 script = ExtResource("4_1x1o5")
 card_size = Vector2(120, 180)
 z_order = 10
+spreadable = false
 
 [node name="ZoneJeu" type="Area2D" parent="."]
 position = Vector2(195, 135)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneJeu"]
-position = Vector2(718.5, 318)
+position = Vector2(755, 297)
 shape = SubResource("RectangleShape2D_bjfpd")
 
 [node name="MainJoueur" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MainJoueur"]
-position = Vector2(921, 943)
+position = Vector2(955, 937)
 shape = SubResource("RectangleShape2D_ek6vc")
-
-[node name="AnnoncesOrdi" parent="." instance=ExtResource("5_ek6vc")]
-position = Vector2(1494, 13)
-
-[node name="AnnoncesJoueur" parent="." instance=ExtResource("5_ek6vc")]
-position = Vector2(1515, 764)
-
-[node name="Scores" type="Control" parent="."]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="Perdu" type="Label" parent="Scores"]
-visible = false
-layout_mode = 0
-offset_left = 666.0
-offset_top = 459.0
-offset_right = 1191.0
-offset_bottom = 542.0
-theme_override_colors/font_color = Color(0.56078434, 0, 0, 1)
-theme_override_font_sizes/font_size = 60
-text = "Vous avez perdu..."
-
-[node name="PointsHumain" type="Label" parent="Scores"]
-visible = false
-layout_mode = 0
-offset_left = 332.0
-offset_top = 593.0
-offset_right = 436.0
-offset_bottom = 648.0
-theme_override_font_sizes/font_size = 40
-text = "50-70"
-
-[node name="PointsOrdi" type="Label" parent="Scores"]
-visible = false
-layout_mode = 0
-offset_left = 334.0
-offset_top = 372.0
-offset_right = 438.0
-offset_bottom = 427.0
-theme_override_font_sizes/font_size = 40
-text = "50-70"
-
-[node name="Gagne" type="Label" parent="Scores"]
-visible = false
-layout_mode = 0
-offset_left = 668.0
-offset_top = 471.0
-offset_right = 1177.0
-offset_bottom = 554.0
-theme_override_colors/font_color = Color(0, 0.33333334, 0.8627451, 1)
-theme_override_font_sizes/font_size = 60
-text = "Vous avez gagné !"
-
-[node name="DixDeDer" type="Label" parent="Scores"]
-visible = false
-layout_mode = 0
-offset_left = 816.0
-offset_top = 654.0
-offset_right = 1039.0
-offset_bottom = 709.0
-theme_override_font_sizes/font_size = 40
-text = "10 de der !!!"
 
 [node name="Annuler" type="Button" parent="."]
 layout_mode = 0
-offset_left = 104.0
-offset_top = 412.0
-offset_right = 300.0
-offset_bottom = 475.0
+offset_left = 1769.0
+offset_top = 1008.0
+offset_right = 1876.0
+offset_bottom = 1060.0
 theme = ExtResource("4_ek6vc")
 theme_override_font_sizes/font_size = 40
-text = "ANNULER"
+text = "X"
 
 [node name="ConfirmationDialog" type="ConfirmationDialog" parent="Annuler"]
 oversampling_override = 1.0
@@ -195,8 +146,203 @@ ok_button_text = "Oui"
 dialog_text = "Etes vous sûr de vouloir annuler ?"
 cancel_button_text = "Non"
 
+[node name="ScoreJoueur" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 67.0
+offset_top = 536.0
+offset_right = 373.0
+offset_bottom = 702.0
+theme = ExtResource("4_ek6vc")
+
+[node name="Label" type="Label" parent="ScoreJoueur"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 7.0
+offset_right = 304.0
+offset_bottom = 58.0
+theme_override_font_sizes/font_size = 35
+text = "Points"
+horizontal_alignment = 1
+
+[node name="ScoreJoueur" type="VBoxContainer" parent="ScoreJoueur"]
+layout_mode = 0
+offset_left = 17.0
+offset_top = 48.0
+offset_right = 290.0
+offset_bottom = 192.0
+theme_override_constants/separation = 0
+
+[node name="PointsJoueur" type="HBoxContainer" parent="ScoreJoueur/ScoreJoueur"]
+layout_mode = 2
+alignment = 1
+
+[node name="Point1" type="TextureRect" parent="ScoreJoueur/ScoreJoueur/PointsJoueur"]
+custom_minimum_size = Vector2(40, 50)
+layout_mode = 2
+texture = ExtResource("5_t3v1o")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Point2" type="TextureRect" parent="ScoreJoueur/ScoreJoueur/PointsJoueur"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+texture = ExtResource("5_t3v1o")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Point3" type="TextureRect" parent="ScoreJoueur/ScoreJoueur/PointsJoueur"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+texture = ExtResource("5_t3v1o")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Point4" type="TextureRect" parent="ScoreJoueur/ScoreJoueur/PointsJoueur"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+texture = ExtResource("5_t3v1o")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Point5" type="TextureRect" parent="ScoreJoueur/ScoreJoueur/PointsJoueur"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+texture = ExtResource("5_t3v1o")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="ManchesJoueur" type="HBoxContainer" parent="ScoreJoueur/ScoreJoueur"]
+layout_mode = 2
+alignment = 1
+
+[node name="JoueurManche1" type="TextureRect" parent="ScoreJoueur/ScoreJoueur/ManchesJoueur"]
+custom_minimum_size = Vector2(50, 70)
+layout_mode = 2
+texture = ExtResource("6_kcvnu")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="JoueurManche2" type="TextureRect" parent="ScoreJoueur/ScoreJoueur/ManchesJoueur"]
+custom_minimum_size = Vector2(50, 70)
+layout_mode = 2
+texture = ExtResource("6_kcvnu")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="ScoreOrdi" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 68.0
+offset_top = 367.0
+offset_right = 374.0
+offset_bottom = 530.0
+theme = ExtResource("4_ek6vc")
+
+[node name="Label" type="Label" parent="ScoreOrdi"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 7.0
+offset_right = 304.0
+offset_bottom = 58.0
+theme_override_font_sizes/font_size = 35
+text = "Points adversaire"
+horizontal_alignment = 1
+
+[node name="ScoreOrdi" type="VBoxContainer" parent="ScoreOrdi"]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 48.0
+offset_right = 296.0
+offset_bottom = 195.0
+theme_override_constants/separation = 0
+
+[node name="PointsJoueur" type="HBoxContainer" parent="ScoreOrdi/ScoreOrdi"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="Point1" type="TextureRect" parent="ScoreOrdi/ScoreOrdi/PointsJoueur"]
+custom_minimum_size = Vector2(40, 50)
+layout_mode = 2
+texture = ExtResource("5_t3v1o")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Point2" type="TextureRect" parent="ScoreOrdi/ScoreOrdi/PointsJoueur"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+texture = ExtResource("5_t3v1o")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Point3" type="TextureRect" parent="ScoreOrdi/ScoreOrdi/PointsJoueur"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+texture = ExtResource("5_t3v1o")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Point4" type="TextureRect" parent="ScoreOrdi/ScoreOrdi/PointsJoueur"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+texture = ExtResource("5_t3v1o")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Point5" type="TextureRect" parent="ScoreOrdi/ScoreOrdi/PointsJoueur"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+texture = ExtResource("5_t3v1o")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="ManchesJoueur" type="HBoxContainer" parent="ScoreOrdi/ScoreOrdi"]
+layout_mode = 2
+alignment = 1
+
+[node name="JoueurManche1" type="TextureRect" parent="ScoreOrdi/ScoreOrdi/ManchesJoueur"]
+custom_minimum_size = Vector2(50, 70)
+layout_mode = 2
+texture = ExtResource("6_kcvnu")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="JoueurManche2" type="TextureRect" parent="ScoreOrdi/ScoreOrdi/ManchesJoueur"]
+custom_minimum_size = Vector2(50, 70)
+layout_mode = 2
+texture = ExtResource("6_kcvnu")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Scores" parent="." instance=ExtResource("7_kcvnu")]
+layout_mode = 1
+offset_left = 460.0
+offset_top = 352.0
+offset_right = 1460.0
+offset_bottom = 752.0
+
+[node name="AnnoncesOrdi" parent="." instance=ExtResource("5_ek6vc")]
+position = Vector2(1512, 4)
+
+[node name="AnnoncesJoueur" parent="." instance=ExtResource("5_ek6vc")]
+position = Vector2(1508, 729)
+
+[node name="Annonce" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1539.0
+offset_top = 1010.0
+offset_right = 1737.0
+offset_bottom = 1062.0
+text = "ANNONCE"
+
+[node name="ChoixAnnonces" parent="." instance=ExtResource("7_acwto")]
+visible = false
+z_index = 1000
+position = Vector2(332, 348)
+
 [connection signal="area_shape_entered" from="ZoneJeu" to="ZoneJeu" method="_on_area_shape_entered"]
 [connection signal="area_shape_exited" from="ZoneJeu" to="ZoneJeu" method="_on_area_shape_exited"]
 [connection signal="pressed" from="Annuler" to="." method="_on_button_pressed"]
 [connection signal="canceled" from="Annuler/ConfirmationDialog" to="." method="_on_confirmation_dialog_canceled"]
 [connection signal="confirmed" from="Annuler/ConfirmationDialog" to="." method="_on_confirmation_dialog_confirmed"]
+[connection signal="pressed" from="Annonce" to="." method="_on_annonce_pressed"]

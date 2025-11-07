@@ -1,0 +1,197 @@
+[gd_scene load_steps=8 format=3 uid="uid://dicibjashalna"]
+
+[ext_resource type="Script" uid="uid://di7pl0hi1h084" path="res://Scripts/choix_annonces.gd" id="1_oubu8"]
+[ext_resource type="Theme" uid="uid://cwbdq4hxho7qr" path="res://Themes/macondo.tres" id="2_ntqll"]
+[ext_resource type="Texture2D" uid="uid://cg0wg7hidh48i" path="res://Assets/coeur-rouge.svg" id="3_vy2xt"]
+[ext_resource type="Texture2D" uid="uid://ds680rw4umfo4" path="res://Assets/pic-noir.svg" id="4_f1dth"]
+[ext_resource type="Texture2D" uid="uid://cpkfgpkic34pa" path="res://Assets/carreau-rouge.svg" id="5_jmuws"]
+[ext_resource type="Texture2D" uid="uid://dcakh7lpnpxre" path="res://Assets/trefle-noir.svg" id="6_vxn03"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y1o6d"]
+bg_color = Color(0, 0, 0, 0.63529414)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.30588236, 0.31764707, 0.33333334, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="Annonces" type="Node2D"]
+script = ExtResource("1_oubu8")
+
+[node name="Panel" type="Panel" parent="."]
+offset_left = 11.0
+offset_top = 3.0
+offset_right = 1203.0
+offset_bottom = 330.0
+theme = ExtResource("2_ntqll")
+theme_override_styles/panel = SubResource("StyleBoxFlat_y1o6d")
+
+[node name="Grid" type="GridContainer" parent="Panel"]
+layout_mode = 0
+offset_left = 22.0
+offset_top = 14.0
+offset_right = 994.0
+offset_bottom = 97.0
+theme_override_constants/h_separation = 46
+theme_override_constants/v_separation = 26
+columns = 4
+
+[node name="mariage-coeur" type="Button" parent="Panel/Grid"]
+layout_mode = 2
+theme = ExtResource("2_ntqll")
+theme_override_constants/outline_size = 0
+theme_override_constants/h_separation = 5
+disabled = true
+text = "MARIAGE"
+icon = ExtResource("3_vy2xt")
+icon_alignment = 2
+
+[node name="mariage-pic" type="Button" parent="Panel/Grid"]
+layout_mode = 2
+theme = ExtResource("2_ntqll")
+theme_override_constants/outline_size = 0
+theme_override_constants/h_separation = 5
+disabled = true
+text = "MARIAGE"
+icon = ExtResource("4_f1dth")
+icon_alignment = 2
+
+[node name="mariage-carreau" type="Button" parent="Panel/Grid"]
+layout_mode = 2
+theme = ExtResource("2_ntqll")
+theme_override_constants/outline_size = 0
+theme_override_constants/h_separation = 5
+disabled = true
+text = "MARIAGE"
+icon = ExtResource("5_jmuws")
+icon_alignment = 2
+
+[node name="mariage-trefle" type="Button" parent="Panel/Grid"]
+layout_mode = 2
+theme = ExtResource("2_ntqll")
+theme_override_constants/outline_size = 0
+theme_override_constants/h_separation = 5
+disabled = true
+text = "MARIAGE"
+icon = ExtResource("6_vxn03")
+icon_alignment = 2
+
+[node name="tierce-coeur" type="Button" parent="Panel/Grid"]
+layout_mode = 2
+theme = ExtResource("2_ntqll")
+theme_override_constants/outline_size = 0
+theme_override_constants/h_separation = 5
+disabled = true
+text = "TIERCE"
+icon = ExtResource("3_vy2xt")
+icon_alignment = 2
+
+[node name="tierce-pic" type="Button" parent="Panel/Grid"]
+layout_mode = 2
+theme = ExtResource("2_ntqll")
+theme_override_constants/outline_size = 0
+theme_override_constants/h_separation = 5
+disabled = true
+text = "TIERCE"
+icon = ExtResource("4_f1dth")
+icon_alignment = 2
+
+[node name="tierce-carreau" type="Button" parent="Panel/Grid"]
+layout_mode = 2
+theme = ExtResource("2_ntqll")
+theme_override_constants/outline_size = 0
+theme_override_constants/h_separation = 5
+disabled = true
+text = "TIERCE"
+icon = ExtResource("5_jmuws")
+icon_alignment = 2
+
+[node name="tierce-trefle" type="Button" parent="Panel/Grid"]
+layout_mode = 2
+theme = ExtResource("2_ntqll")
+theme_override_constants/outline_size = 0
+theme_override_constants/h_separation = 5
+disabled = true
+text = "TIERCE"
+icon = ExtResource("6_vxn03")
+icon_alignment = 2
+
+[node name="quarante-coeur" type="Button" parent="Panel/Grid"]
+layout_mode = 2
+theme = ExtResource("2_ntqll")
+theme_override_constants/outline_size = 0
+theme_override_constants/h_separation = 5
+disabled = true
+text = "QUARANTE"
+icon = ExtResource("3_vy2xt")
+icon_alignment = 2
+
+[node name="quarante-pic" type="Button" parent="Panel/Grid"]
+layout_mode = 2
+theme = ExtResource("2_ntqll")
+theme_override_constants/outline_size = 0
+theme_override_constants/h_separation = 5
+disabled = true
+text = "QUARANTE"
+icon = ExtResource("4_f1dth")
+icon_alignment = 2
+
+[node name="quarante-carreau" type="Button" parent="Panel/Grid"]
+layout_mode = 2
+theme = ExtResource("2_ntqll")
+theme_override_constants/outline_size = 0
+theme_override_constants/h_separation = 5
+disabled = true
+text = "QUARANTE"
+icon = ExtResource("5_jmuws")
+icon_alignment = 2
+
+[node name="quarante-trefle" type="Button" parent="Panel/Grid"]
+layout_mode = 2
+theme = ExtResource("2_ntqll")
+theme_override_constants/outline_size = 0
+theme_override_constants/h_separation = 5
+disabled = true
+text = "QUARANTE"
+icon = ExtResource("6_vxn03")
+icon_alignment = 2
+
+[node name="Control" type="Control" parent="Panel/Grid"]
+layout_mode = 2
+
+[node name="quinte" type="Button" parent="Panel/Grid"]
+layout_mode = 2
+theme = ExtResource("2_ntqll")
+disabled = true
+text = "QUINTE"
+
+[node name="chouine" type="Button" parent="Panel/Grid"]
+layout_mode = 2
+theme = ExtResource("2_ntqll")
+disabled = true
+text = "CHOUINE"
+
+[node name="Exit" type="Button" parent="Panel/Grid"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = " X "
+
+[connection signal="pressed" from="Panel/Grid/mariage-coeur" to="." method="_on_mariagecoeur_pressed"]
+[connection signal="pressed" from="Panel/Grid/mariage-pic" to="." method="_on_mariagepic_pressed"]
+[connection signal="pressed" from="Panel/Grid/mariage-carreau" to="." method="_on_mariagecarreau_pressed"]
+[connection signal="pressed" from="Panel/Grid/mariage-trefle" to="." method="_on_mariagetrefle_pressed"]
+[connection signal="pressed" from="Panel/Grid/tierce-coeur" to="." method="_on_tiercecoeur_pressed"]
+[connection signal="pressed" from="Panel/Grid/tierce-pic" to="." method="_on_tiercepic_pressed"]
+[connection signal="pressed" from="Panel/Grid/tierce-carreau" to="." method="_on_tiercecarreau_pressed"]
+[connection signal="pressed" from="Panel/Grid/tierce-trefle" to="." method="_on_tiercetrefle_pressed"]
+[connection signal="pressed" from="Panel/Grid/quarante-coeur" to="." method="_on_quarantecoeur_pressed"]
+[connection signal="pressed" from="Panel/Grid/quarante-pic" to="." method="_on_quarantepic_pressed"]
+[connection signal="pressed" from="Panel/Grid/quarante-carreau" to="." method="_on_quarantecarreau_pressed"]
+[connection signal="pressed" from="Panel/Grid/quarante-trefle" to="." method="_on_quarantetrefle_pressed"]
+[connection signal="pressed" from="Panel/Grid/quinte" to="." method="_on_quinte_pressed"]
+[connection signal="pressed" from="Panel/Grid/chouine" to="." method="_on_chouine_pressed"]
+[connection signal="pressed" from="Panel/Grid/Exit" to="." method="_on_button_pressed"]

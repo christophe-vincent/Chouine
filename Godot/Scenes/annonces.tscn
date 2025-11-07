@@ -1,144 +1,62 @@
 [gd_scene load_steps=6 format=3 uid="uid://dk71nt6nh05bb"]
 
 [ext_resource type="Script" uid="uid://dip4qyj0vqhw" path="res://Scripts/annonces.gd" id="1_oy66i"]
-[ext_resource type="Texture2D" uid="uid://dmhq2pen408hr" path="res://Assets/coeur-gris.svg" id="2_fgrtn"]
-[ext_resource type="Texture2D" uid="uid://dhrc7hbl4fkfq" path="res://Assets/carreau-gris.svg" id="3_y1o6d"]
-[ext_resource type="Texture2D" uid="uid://dv4hqjb1um6bl" path="res://Assets/pic-gris.svg" id="4_io67b"]
-[ext_resource type="Texture2D" uid="uid://dqmb6b3n74v8u" path="res://Assets/trefle-gris.svg" id="5_840io"]
+[ext_resource type="Texture2D" uid="uid://b226a4vw1vj67" path="res://Assets/Annonces/quinte.svg" id="3_q43k7"]
+[ext_resource type="Texture2D" uid="uid://do72vt3jsrnlr" path="res://Assets/Annonces/tierce-coeur.svg" id="3_quu6k"]
+[ext_resource type="Theme" uid="uid://cwbdq4hxho7qr" path="res://Themes/macondo.tres" id="6_y1o6d"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y1o6d"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.30588236, 0.31764707, 0.33333334, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [node name="Annonces" type="Node2D"]
 script = ExtResource("1_oy66i")
 
-[node name="Grid" type="GridContainer" parent="."]
-offset_left = 3.0
-offset_top = 2.0
-offset_right = 198.0
-offset_bottom = 158.0
-columns = 5
+[node name="Panel" type="Panel" parent="."]
+offset_left = 11.0
+offset_top = 3.0
+offset_right = 381.0
+offset_bottom = 261.0
+theme = ExtResource("6_y1o6d")
+theme_override_styles/panel = SubResource("StyleBoxFlat_y1o6d")
 
-[node name="Mariage" type="Label" parent="Grid"]
-layout_mode = 2
-text = "Mariage"
+[node name="Label" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 109.0
+offset_top = 5.0
+offset_right = 276.0
+offset_bottom = 56.0
+theme = ExtResource("6_y1o6d")
+text = "Annonces"
 
-[node name="MariageCoeur" type="TextureRect" parent="Grid"]
-custom_minimum_size = Vector2(70, 45)
+[node name="Grid" type="GridContainer" parent="Panel"]
+layout_mode = 0
+offset_left = 26.0
+offset_top = 60.0
+offset_right = 345.0
+offset_bottom = 226.0
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 3
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Grid"]
+custom_minimum_size = Vector2(90, 90)
 layout_mode = 2
-texture = ExtResource("2_fgrtn")
-expand_mode = 4
+texture = ExtResource("3_q43k7")
+expand_mode = 1
 stretch_mode = 5
 
-[node name="MariageCarreau" type="TextureRect" parent="Grid"]
-custom_minimum_size = Vector2(70, 45)
+[node name="TextureRect2" type="TextureRect" parent="Panel/Grid"]
+custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
-texture = ExtResource("3_y1o6d")
-expand_mode = 4
+texture = ExtResource("3_quu6k")
+expand_mode = 1
 stretch_mode = 5
-
-[node name="MariagePic" type="TextureRect" parent="Grid"]
-custom_minimum_size = Vector2(70, 45)
-layout_mode = 2
-texture = ExtResource("4_io67b")
-expand_mode = 4
-stretch_mode = 5
-
-[node name="MariageTrefle" type="TextureRect" parent="Grid"]
-custom_minimum_size = Vector2(70, 45)
-layout_mode = 2
-texture = ExtResource("5_840io")
-expand_mode = 4
-stretch_mode = 5
-
-[node name="Tierce" type="Label" parent="Grid"]
-layout_mode = 2
-text = "Tierce"
-
-[node name="TierceCoeur" type="TextureRect" parent="Grid"]
-layout_mode = 2
-texture = ExtResource("2_fgrtn")
-expand_mode = 4
-stretch_mode = 5
-
-[node name="TierceCarreau" type="TextureRect" parent="Grid"]
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
-texture = ExtResource("3_y1o6d")
-expand_mode = 4
-stretch_mode = 5
-
-[node name="TiercePic" type="TextureRect" parent="Grid"]
-custom_minimum_size = Vector2(25, 25)
-layout_mode = 2
-texture = ExtResource("4_io67b")
-expand_mode = 4
-stretch_mode = 5
-
-[node name="TierceTrefle" type="TextureRect" parent="Grid"]
-custom_minimum_size = Vector2(25, 25)
-layout_mode = 2
-texture = ExtResource("5_840io")
-expand_mode = 4
-stretch_mode = 5
-
-[node name="Quarante" type="Label" parent="Grid"]
-layout_mode = 2
-text = "Quarante"
-
-[node name="QuaranteCoeur" type="TextureRect" parent="Grid"]
-layout_mode = 2
-texture = ExtResource("2_fgrtn")
-expand_mode = 4
-stretch_mode = 5
-
-[node name="QuaranteCarreau" type="TextureRect" parent="Grid"]
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
-texture = ExtResource("3_y1o6d")
-expand_mode = 4
-stretch_mode = 5
-
-[node name="QuarantePic" type="TextureRect" parent="Grid"]
-custom_minimum_size = Vector2(25, 25)
-layout_mode = 2
-texture = ExtResource("4_io67b")
-expand_mode = 4
-stretch_mode = 5
-
-[node name="QuaranteTrefle" type="TextureRect" parent="Grid"]
-custom_minimum_size = Vector2(25, 25)
-layout_mode = 2
-texture = ExtResource("5_840io")
-expand_mode = 4
-stretch_mode = 5
-
-[node name="Quinte" type="Label" parent="Grid"]
-layout_mode = 2
-text = "Quinte"
-
-[node name="QuinteCoeur" type="TextureRect" parent="Grid"]
-layout_mode = 2
-texture = ExtResource("2_fgrtn")
-expand_mode = 4
-stretch_mode = 5
-
-[node name="TextureRect" type="TextureRect" parent="Grid"]
-layout_mode = 2
-
-[node name="TextureRect3" type="TextureRect" parent="Grid"]
-layout_mode = 2
-
-[node name="TextureRect2" type="TextureRect" parent="Grid"]
-layout_mode = 2
-
-[connection signal="gui_input" from="Grid/MariageCoeur" to="." method="_on_mariage_coeur_gui_input"]
-[connection signal="gui_input" from="Grid/MariageCarreau" to="." method="_on_mariage_carreau_gui_input"]
-[connection signal="gui_input" from="Grid/MariagePic" to="." method="_on_mariage_pic_gui_input"]
-[connection signal="gui_input" from="Grid/MariageTrefle" to="." method="_on_mariage_trefle_gui_input"]
-[connection signal="gui_input" from="Grid/TierceCoeur" to="." method="_on_tierce_coeur_gui_input"]
-[connection signal="gui_input" from="Grid/TierceCarreau" to="." method="_on_tierce_carreau_gui_input"]
-[connection signal="gui_input" from="Grid/TiercePic" to="." method="_on_tierce_pic_gui_input"]
-[connection signal="gui_input" from="Grid/TierceTrefle" to="." method="_on_tierce_trefle_gui_input"]
-[connection signal="gui_input" from="Grid/QuaranteCoeur" to="." method="_on_quarante_coeur_gui_input"]
-[connection signal="gui_input" from="Grid/QuaranteCarreau" to="." method="_on_quarante_carreau_gui_input"]
-[connection signal="gui_input" from="Grid/QuarantePic" to="." method="_on_quarante_pic_gui_input"]
-[connection signal="gui_input" from="Grid/QuaranteTrefle" to="." method="_on_quarante_trefle_gui_input"]
-[connection signal="gui_input" from="Grid/QuinteCoeur" to="." method="_on_quinte_coeur_gui_input"]

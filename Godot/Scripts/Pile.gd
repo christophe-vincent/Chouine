@@ -16,9 +16,13 @@ enum TypePosition {
 @export var type_position: TypePosition
 @export var card_size: Vector2
 @export var z_order: int
-
 @export var face_visible: bool = true
+@export var spreadable: bool = true
+
+
 var draggable = true
+var moving = false
+var dragging = false
 # si non adaptatif, alors les cartes ont une position fixe, quelque soit leurs nombre
 var adaptatif = true
 var nb_cartes_max = 2
@@ -26,6 +30,7 @@ var duree_effet = Settings.DUREE_MOUVEMENT
 var original_size: Vector2 = Vector2(0, 0)
 var original_position: Vector2 = Vector2(0, 0)
 var rng = RandomNumberGenerator.new()
+var spread_offset: Vector2 = Vector2(0, 0)
 
 var _cartes: Array = []
 
@@ -142,4 +147,39 @@ func position_eventail(effet_duree):
 			inclinaison -= PI
 		carte.move(Vector2(x, y) + offset, inclinaison, effet_duree, z_order + index + 1)
 		angle -= delta_angle
+		index += 1
+
+func _gui_input(event):
+	if spreadable and (not moving) and event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.pressed:
+				# Start dragging
+				dragging = true
+				spread_offset = get_global_mouse_position() - position
+				print("Start drag")
+				#drag_offset = carte.global_position - get_global_mouse_position()
+			else:
+				# Stop dragging
+				dragging = false
+				_empiler()
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(_delta: float) -> void:
+	if dragging and _cartes.size() > 1:
+		var index: int = 0
+		for carte in _cartes:
+			var offset = index * (get_global_mouse_position() - position - spread_offset) / (_cartes.size() - 1)
+			carte.move(position + size/2 + offset)
+			index += 1
+
+func _empiler():
+	var index: int = 0
+	for carte in _cartes:
+		var rnd_x = rng.randf_range(-1.0, 1.0) * size.x / 15
+		var rnd_y = rng.randf_range(-1.0, 1.0) * size.y / 15
+		carte.move(position + size/2 + Vector2(rnd_x, rnd_y),
+			rng.randf_range(-1.0, 1.0) / 10,
+			0, 
+			z_order + index + 1)
 		index += 1

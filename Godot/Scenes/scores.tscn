@@ -1,0 +1,166 @@
+[gd_scene load_steps=2 format=3 uid="uid://cvnc0r14i4max"]
+
+[ext_resource type="Theme" uid="uid://cwbdq4hxho7qr" path="res://Themes/macondo.tres" id="1_hdn7m"]
+
+[node name="Control" type="Control"]
+custom_minimum_size = Vector2(1000, 400)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -200.0
+offset_right = 500.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Info" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -392.0
+offset_top = 24.0
+offset_right = 395.0
+offset_bottom = 75.0
+grow_horizontal = 2
+theme = ExtResource("1_hdn7m")
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+text = "Vous avez gagné cette partie et cette manche !"
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 638.0
+offset_top = 196.0
+offset_right = 805.0
+offset_bottom = 248.0
+theme = ExtResource("1_hdn7m")
+text = "Continuer"
+
+[node name="Victoire" type="Label" parent="."]
+layout_mode = 0
+offset_left = 364.0
+offset_top = 19.0
+offset_right = 637.0
+offset_bottom = 90.0
+theme = ExtResource("1_hdn7m")
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/font_size = 60
+text = "VICTOIRE !"
+
+[node name="Defaite" type="Label" parent="."]
+layout_mode = 0
+offset_left = 374.0
+offset_top = 22.0
+offset_right = 636.0
+offset_bottom = 94.0
+theme = ExtResource("1_hdn7m")
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 60
+text = "DEFAITE..."
+
+[node name="Scores" type="GridContainer" parent="."]
+layout_mode = 0
+offset_left = 186.0
+offset_top = 102.0
+offset_right = 681.0
+offset_bottom = 358.0
+columns = 3
+
+[node name="Control" type="Control" parent="Scores"]
+layout_mode = 2
+theme = ExtResource("1_hdn7m")
+
+[node name="Vous" type="Label" parent="Scores"]
+layout_mode = 2
+theme = ExtResource("1_hdn7m")
+theme_override_font_sizes/font_size = 40
+text = "vous"
+
+[node name="Control2" type="Control" parent="Scores"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+theme = ExtResource("1_hdn7m")
+
+[node name="Cartes" type="Label" parent="Scores"]
+layout_mode = 2
+theme = ExtResource("1_hdn7m")
+theme_override_font_sizes/font_size = 40
+text = "cartes"
+
+[node name="CartesJoueur" type="Label" parent="Scores"]
+layout_mode = 2
+theme = ExtResource("1_hdn7m")
+theme_override_font_sizes/font_size = 40
+text = "0"
+horizontal_alignment = 1
+
+[node name="CartesOrdi" type="Label" parent="Scores"]
+layout_mode = 2
+theme = ExtResource("1_hdn7m")
+theme_override_font_sizes/font_size = 40
+text = "0"
+horizontal_alignment = 1
+
+[node name="Annonces" type="Label" parent="Scores"]
+layout_mode = 2
+theme = ExtResource("1_hdn7m")
+theme_override_font_sizes/font_size = 40
+text = "annonces"
+
+[node name="AnnoncesJoueur" type="Label" parent="Scores"]
+layout_mode = 2
+theme = ExtResource("1_hdn7m")
+theme_override_font_sizes/font_size = 40
+text = "0"
+horizontal_alignment = 1
+
+[node name="AnnoncesOrdi" type="Label" parent="Scores"]
+layout_mode = 2
+theme = ExtResource("1_hdn7m")
+theme_override_font_sizes/font_size = 40
+text = "0"
+horizontal_alignment = 1
+
+[node name="DixDer" type="Label" parent="Scores"]
+layout_mode = 2
+theme = ExtResource("1_hdn7m")
+theme_override_font_sizes/font_size = 40
+text = "10 de der"
+
+[node name="DixDerJoueur" type="Label" parent="Scores"]
+layout_mode = 2
+theme = ExtResource("1_hdn7m")
+theme_override_font_sizes/font_size = 40
+text = "0"
+horizontal_alignment = 1
+
+[node name="DixDerOrdi" type="Label" parent="Scores"]
+layout_mode = 2
+theme = ExtResource("1_hdn7m")
+theme_override_font_sizes/font_size = 40
+text = "0"
+horizontal_alignment = 1
+
+[node name="Total" type="Label" parent="Scores"]
+layout_mode = 2
+theme = ExtResource("1_hdn7m")
+theme_override_font_sizes/font_size = 40
+text = "TOTAL"
+
+[node name="TotalJoueur" type="Label" parent="Scores"]
+layout_mode = 2
+theme = ExtResource("1_hdn7m")
+theme_override_font_sizes/font_size = 40
+text = "0"
+horizontal_alignment = 1
+
+[node name="TotalOrdi" type="Label" parent="Scores"]
+layout_mode = 2
+theme = ExtResource("1_hdn7m")
+theme_override_font_sizes/font_size = 40
+text = "0"
+horizontal_alignment = 1

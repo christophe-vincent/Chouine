@@ -1,5 +1,6 @@
 @tool
 extends Control
+class_name Partie
 
 # Scene principale
 @onready var pioche: Pile = $Piles/Pioche
@@ -10,16 +11,13 @@ extends Control
 @onready var joueur_gagnees: Pile = $Piles/JoueurGagnees
 @onready var ordi_gagnees: Pile = $Piles/OrdiGagnees
 @onready var zone_jeu: CollisionShape2D = $ZoneJeu/CollisionShape2D
-@onready var texte_gagne: Label = $Scores/Gagne
-@onready var texte_perdu: Label = $Scores/Perdu
-@onready var points_ordi: Label = $Scores/PointsOrdi
-@onready var points_humain: Label = $Scores/PointsHumain
-@onready var dix_de_der: Label = $Scores/DixDeDer
-@onready var annonces_ordi: Node2D = $AnnoncesOrdi
+@onready var annonces_ordi: Annonces = $AnnoncesOrdi
 @onready var annonces_joueur: Node2D = $AnnoncesJoueur
+@onready var choix_annonces: Node2D = $ChoixAnnonces
 @onready var confirmation_annuler: ConfirmationDialog = $Annuler/ConfirmationDialog
 
 var card_packed_scene = preload("res://Scenes/carte.tscn")
+var score_scene = preload("res://Scenes/scores.tscn")
 var cartes: Dictionary[String, Carte] = {}
 var mains: Dictionary[int, Control] = {}
 var cartes_pioche: Array[String] = []
@@ -27,6 +25,23 @@ var chouine = IChouine.new()
 var carte_atout: Carte = null
 var sept_atout: Carte = null
 var coup_joueur: bool = false
+var nb_points_ordi: int = 0
+var nb_points_joueur: int = 0
+var nb_manches_ordi: int = 0
+var nb_manches_joueur: int = 0
+var jeton_point_actif: Resource = load("res://Assets/point_partie_actif.png")
+var jeton_point_inactif: Resource = load("res://Assets/point_partie_inactif.png")
+var manche_actif: Resource = load("res://Assets/point_manche_actif.png")
+var jetons_ordi: Array[TextureRect] = []
+var jetons_joueur: Array[TextureRect] = []
+var manches_ordi: Array[TextureRect] = []
+var manches_joueur: Array[TextureRect] = []
+var partie_terminee: bool = false
+var joueur_gagnees_size := Vector2(0, 0)
+var ordi_gagnees_size := Vector2(0, 0)
+var joueur_gagnees_position := Vector2(0, 0)
+var ordi_gagnees_position := Vector2(0, 0)
+
 
 enum JOUEURS {
 	ORDI = 0,
@@ -35,10 +50,42 @@ enum JOUEURS {
 
 func _ready():
 	mains = {0: main_ordi, 1: main_joueur}
-	joueur_gagnees.original_size = joueur_gagnees.size
-	ordi_gagnees.original_size = ordi_gagnees.size
-	joueur_gagnees.original_position = joueur_gagnees.position
-	ordi_gagnees.original_position = ordi_gagnees.position
+	joueur_gagnees_size = joueur_gagnees.size
+	joueur_gagnees_position = joueur_gagnees.position
+	ordi_gagnees_size = ordi_gagnees.size
+	ordi_gagnees_position = ordi_gagnees.position
+	nb_points_ordi = 0
+	nb_points_joueur = 0
+	nb_manches_ordi = 0
+	nb_manches_joueur = 0
+	if Global.nb_manches == 1:
+		$ScoreJoueur/ScoreJoueur/ManchesJoueur.visible = false
+		$ScoreOrdi/ScoreOrdi/ManchesJoueur.visible = false
+		$ScoreOrdi.size.y = 100
+		$ScoreJoueur.size.y = 100
+	if Global.nb_points == 1:
+		$ScoreJoueur/ScoreJoueur/PointsJoueur.visible = false
+		$ScoreOrdi/ScoreOrdi/PointsJoueur.visible = false
+	elif Global.nb_points <= 3:
+		$ScoreJoueur/ScoreJoueur/PointsJoueur/Point5.visible = false
+		$ScoreOrdi/ScoreOrdi/PointsJoueur/Point5.visible = false
+		$ScoreJoueur/ScoreJoueur/PointsJoueur/Point4.visible = false
+		$ScoreOrdi/ScoreOrdi/PointsJoueur/Point4.visible = false
+	jetons_ordi.push_back($ScoreOrdi/ScoreOrdi/PointsJoueur/Point1)
+	jetons_ordi.push_back($ScoreOrdi/ScoreOrdi/PointsJoueur/Point2)
+	jetons_ordi.push_back($ScoreOrdi/ScoreOrdi/PointsJoueur/Point3)
+	jetons_ordi.push_back($ScoreOrdi/ScoreOrdi/PointsJoueur/Point4)
+	jetons_ordi.push_back($ScoreOrdi/ScoreOrdi/PointsJoueur/Point5)
+	jetons_joueur.push_back($ScoreJoueur/ScoreJoueur/PointsJoueur/Point1)
+	jetons_joueur.push_back($ScoreJoueur/ScoreJoueur/PointsJoueur/Point2)
+	jetons_joueur.push_back($ScoreJoueur/ScoreJoueur/PointsJoueur/Point3)
+	jetons_joueur.push_back($ScoreJoueur/ScoreJoueur/PointsJoueur/Point4)
+	jetons_joueur.push_back($ScoreJoueur/ScoreJoueur/PointsJoueur/Point5)
+	manches_ordi.push_back($ScoreOrdi/ScoreOrdi/ManchesJoueur/JoueurManche1)
+	manches_ordi.push_back($ScoreOrdi/ScoreOrdi/ManchesJoueur/JoueurManche2)
+	manches_joueur.push_back($ScoreJoueur/ScoreJoueur/ManchesJoueur/JoueurManche1)
+	manches_joueur.push_back($ScoreJoueur/ScoreJoueur/ManchesJoueur/JoueurManche2)
+	$Scores/Button.connect("pressed", _partie_suivante.bind())
 	setup_game()
 	demarrer_jeu()
 
@@ -63,8 +110,11 @@ func creer_cartes():
 				cartes[nom_carte] = card_instance
 
 func init_jeu():
+	$Scores.visible = false
 	retourne.draggable = false
-	pioche.card_size = Settings.DEFAULT_CARD_SIZE	
+	
+	pioche.draggable = false
+	pioche.card_size = Settings.DEFAULT_CARD_SIZE
 	pioche.card_size = Settings.DEFAULT_CARD_SIZE
 	pioche.face_visible = false
 	pioche.init_cartes()
@@ -89,9 +139,10 @@ func init_jeu():
 	joueur_gagnees.type = Pile.TypePile.PILE
 	joueur_gagnees.draggable = false
 	joueur_gagnees.face_visible = true
+	joueur_gagnees.spreadable = true
 	joueur_gagnees.init_cartes()
-	joueur_gagnees.size = joueur_gagnees.original_size
-	joueur_gagnees.position = joueur_gagnees.original_position
+	joueur_gagnees.size = joueur_gagnees_size
+	joueur_gagnees.position = joueur_gagnees_position
 	
 	ordi_gagnees.card_size = Settings.DEFAULT_CARD_SIZE
 	ordi_gagnees.type = Pile.TypePile.PILE
@@ -99,22 +150,19 @@ func init_jeu():
 	ordi_gagnees.draggable = false
 	ordi_gagnees.face_visible = false
 	ordi_gagnees.init_cartes()
-	ordi_gagnees.size = ordi_gagnees.original_size
-	ordi_gagnees.position = ordi_gagnees.original_position
+	ordi_gagnees.size = ordi_gagnees_size
+	ordi_gagnees.position = ordi_gagnees_position
 	
 	zone_jeu.disabled = true
-	annonces_joueur.partie = self
-	
-	texte_perdu.visible = false
-	texte_gagne.visible = false
-	points_ordi.visible = false
-	points_humain.visible = false
-	dix_de_der.visible = false
+	choix_annonces.partie = self
 	
 	annonces_ordi.reset()
 	annonces_ordi.visible = true
 	annonces_joueur.reset()
 	annonces_joueur.visible = true
+	choix_annonces.reset()
+	choix_annonces.visible = false
+	choix_annonces.set_partie(self)
 
 
 func demarrer_jeu() -> void:
@@ -129,7 +177,7 @@ func demarrer_jeu() -> void:
 	await get_tree().create_timer(1).timeout
 	await distribution_cartes(5)
 	
-	annonces_joueur.annonces_autorisees(chouine.annonces_en_main_joueur(1))
+	choix_annonces.annonces_autorisees(chouine.annonces_en_main_joueur(1))
 	
 	# carte de la retourne
 	var c = cartes_pioche.pop_back()
@@ -189,7 +237,7 @@ func carte_main_joueur(nom):
 		cartes_pioche.push_front(sept_atout.card_name)
 		carte_atout = null
 		sept_atout.draggable = false
-		annonces_joueur.annonces_autorisees(chouine.annonces_en_main_joueur(1))
+		choix_annonces.annonces_autorisees(chouine.annonces_en_main_joueur(1))
 		return 0
 	return -1
 
@@ -246,7 +294,7 @@ func coup_ordi():
 	print("Choix Ordi  : " + choix_carte)
 	var annonce = choix_ordi[1]
 	if annonce != "":
-		annonces_ordi.point(annonce)
+		annonces_ordi.add(annonce)
 		print("Annonce Ordi: " + annonce)
 	var echange_sept_atout = choix_ordi[2]
 	if echange_sept_atout != "" && carte_atout != null:
@@ -292,7 +340,7 @@ func fin_pli():
 
 	print(" ")
 	await distribution_cartes(1)
-	annonces_joueur.annonces_autorisees(chouine.annonces_en_main_joueur(1))
+	choix_annonces.annonces_autorisees(chouine.annonces_en_main_joueur(1))
 
 	await get_tree().create_timer(1.0).timeout
 	
@@ -311,34 +359,78 @@ func fin_pli():
 
 func annonce_joueur(annonce):
 	var ret: int = chouine.annonce_joueur(annonce)
-	print(ret)
 	if ret == 0:
 		# annonce autorisee
-		annonces_joueur.point(annonce)
+		annonces_joueur.add(annonce)
 		print("Joueur      : " + annonce)
 
 
 func fin_partie():
 	zone_jeu.disabled = true
+	$Scores/Defaite.visible = false
+	$Scores/Victoire.visible = false
+	$Scores.visible = true
 	for c in main_ordi.cartes():
 		ordi_gagnees.ajouter_carte(main_ordi[c])
 	for c in main_joueur.cartes():
 		joueur_gagnees.ajouter_carte(main_ordi[c])
-		
+	
 	if chouine.points_joueur(JOUEURS.ORDI) > chouine.points_joueur(JOUEURS.HUMAIN):
-		texte_perdu.visible = true
+		nb_points_ordi += 1
+		if nb_points_ordi >= Global.nb_points:
+			# manche gagnée par l'ordi
+			nb_manches_ordi += 1
+			nb_points_joueur = 0
+			nb_points_ordi = 0
+			if nb_manches_ordi >= Global.nb_manches:
+				# partie gagnée par l'ordi
+				partie_terminee = true
+				$Scores/Info.visible = false
+				$Scores/Victoire.visible = false
+				$Scores/Defaite.visible = true
+			else:
+				$Scores/Info.visible = true
+				$Scores/Info.text = "Vous avez perdu cette partie et cette manche"
+		else:
+			$Scores/Info.visible = true
+			$Scores/Info.text = "Vous avez perdu cette partie"
 	else:
-		dix_de_der.visible = true
-		texte_gagne.visible = true
-	points_ordi.text = chouine.points_joueur_str(JOUEURS.ORDI)
-	points_humain.text = chouine.points_joueur_str(JOUEURS.HUMAIN)
-	points_ordi.visible = true
-	points_humain.visible = true
+		nb_points_joueur += 1
+		if nb_points_joueur >= Global.nb_points:
+			# manche gagnée par le joueur
+			nb_manches_joueur += 1
+			nb_points_joueur = 0
+			nb_points_ordi = 0
+			if nb_manches_joueur >= Global.nb_manches:
+				# partie gagnée par le joueur
+				partie_terminee = true
+				$Scores/Info.visible = false
+				$Scores/Defaite.visible = false
+				$Scores/Victoire.visible = true
+			else:
+				$Scores/Info.visible = true
+				$Scores/Info.text = "Vous avez gagné cette partie et cette manche"
+		else:
+			$Scores/Info.visible = true
+			$Scores/Info.text = "Vous avez gagné cette partie"
+	
+	var pt_joueur: Array = chouine.points_joueur_str(JOUEURS.HUMAIN).split("|")
+	$Scores/Scores/CartesJoueur.text = pt_joueur[1]
+	$Scores/Scores/AnnoncesJoueur.text = pt_joueur[2]
+	$Scores/Scores/DixDerJoueur.text = pt_joueur[3]
+	$Scores/Scores/TotalJoueur.text = pt_joueur[0]
+	var pt_ordi: Array = chouine.points_joueur_str(JOUEURS.ORDI).split("|")
+	$Scores/Scores/CartesOrdi.text = pt_ordi[1]
+	$Scores/Scores/AnnoncesOrdi.text = pt_ordi[2]
+	$Scores/Scores/DixDerOrdi.text = pt_ordi[3]
+	$Scores/Scores/TotalOrdi.text = pt_ordi[0]
+	
 	var screen_size = get_viewport_rect().size
 	joueur_gagnees.type = Pile.TypePile.MAIN
 	joueur_gagnees.size = Vector2(screen_size.x - 2*Settings.DEFAULT_CARD_SIZE.x, Settings.DEFAULT_CARD_SIZE.y)
 	joueur_gagnees.position.x = Settings.DEFAULT_CARD_SIZE.x
 	joueur_gagnees.calcul_positions(0)
+	joueur_gagnees.spreadable = false
 	#ordi_gagnees.inversser()
 	ordi_gagnees.type = Pile.TypePile.MAIN
 	ordi_gagnees.type_position = Pile.TypePosition.NORMAL
@@ -351,33 +443,37 @@ func fin_partie():
 	annonces_ordi.visible = false
 	annonces_joueur.reset()
 	annonces_joueur.visible = false
+	
+	# gestion des points et manches
+	if Global.nb_points > 1:
+		if nb_points_joueur == 0:
+			for i in range(Global.nb_points):
+				jetons_joueur[i].texture = jeton_point_inactif
+		if nb_points_ordi == 0:
+			for i in range(Global.nb_points):
+				jetons_ordi[i].texture = jeton_point_inactif
+		for i in range(nb_points_joueur):
+			jetons_joueur[i].texture = jeton_point_actif
+		for i in range(nb_points_ordi):
+			jetons_ordi[i].texture = jeton_point_actif
+	if Global.nb_manches > 1:
+		for i in range(nb_manches_joueur):
+			manches_joueur[i].texture = manche_actif
+		for i in range(nb_manches_ordi):
+			manches_ordi[i].texture = manche_actif
 
+
+func _partie_suivante():
+	if partie_terminee == true:
+		var error = get_tree().change_scene_to_file("res://Scenes/accueil.tscn")
+		if error != OK:
+			print("Scene change failed with error: ", error)
+	else:
+		demarrer_jeu()
 
 func _on_button_pressed() -> void:
 	confirmation_annuler.visible = true
-	return
-	var dialog = ConfirmationDialog.new() 
-	dialog.add_theme_font_size_override("font_size", 60)
-	dialog.title = "Retour à l'écran d'accueil" 
-	dialog.dialog_text = "Etes vous sûr de vouloir annuler cette partie ?"
 
-	# connect signals
-	dialog.cancel_button_text = "Non"
-	dialog.ok_button_text = "Oui"
-	dialog.canceled.connect (dialog_canceled)
-	dialog.confirmed.connect (dialog_confirmed)
-		
-	# show dialog
-	add_child(dialog)
-	dialog.popup_centered() # center on screen
-	dialog.show()
-
-
-func dialog_canceled(): print("User clicked Cancel")
-
-func dialog_confirmed(): 
-	print("User clicked OK")
-	
 
 func _on_confirmation_dialog_confirmed() -> void:
 	confirmation_annuler.visible = true
@@ -388,3 +484,7 @@ func _on_confirmation_dialog_confirmed() -> void:
 
 func _on_confirmation_dialog_canceled() -> void:
 	confirmation_annuler.visible = true
+
+
+func _on_annonce_pressed() -> void:
+	choix_annonces.visible = true

@@ -1,201 +1,42 @@
 extends Node2D
+class_name Annonces
 
-@onready var mariage_coeur: TextureRect = $Grid/MariageCoeur
-@onready var mariage_carreau: TextureRect = $Grid/MariageCarreau
-@onready var mariage_pic: TextureRect = $Grid/MariagePic
-@onready var mariage_trefle: TextureRect = $Grid/MariageTrefle
-
-@onready var tierce_coeur: TextureRect = $Grid/TierceCoeur
-@onready var tierce_carreau: TextureRect = $Grid/TierceCarreau
-@onready var tierce_pic: TextureRect = $Grid/TiercePic
-@onready var tierce_trefle: TextureRect = $Grid/TierceTrefle
-
-@onready var quarante_coeur: TextureRect = $Grid/QuaranteCoeur
-@onready var quarante_carreau: TextureRect = $Grid/QuaranteCarreau
-@onready var quarante_pic: TextureRect = $Grid/QuarantePic
-@onready var quarante_trefle: TextureRect = $Grid/QuaranteTrefle
-
-@onready var quinte_coeur: TextureRect = $Grid/QuinteCoeur
-
-var coeur_rouge_texture = load("res://Assets/coeur-rouge.svg")
-var coeur_vert_texture = load("res://Assets/coeur-vert.svg")
-var coeur_gris_texture = load("res://Assets/coeur-gris.svg")
-var carreau_rouge_texture = load("res://Assets/carreau-rouge.svg")
-var carreau_vert_texture = load("res://Assets/carreau-vert.svg")
-var carreau_gris_texture = load("res://Assets/carreau-gris.svg")
-var pic_rouge_texture = load("res://Assets/pic-noir.svg")
-var pic_vert_texture = load("res://Assets/pic-vert.svg")
-var pic_gris_texture = load("res://Assets/pic-gris.svg")
-var trefle_rouge_texture = load("res://Assets/trefle-noir.svg")
-var trefle_gris_texture = load("res://Assets/trefle-gris.svg")
-var trefle_vert_texture = load("res://Assets/trefle-vert.svg")
-
-enum STATUS {
-	INACTIF = 0,
-	POSSIBLE = 1,
-	ACTIF = 2
-}
-
-var annonces = {}
 var partie = null
-var status = {}
+var annonces = {}
 
 func _ready():
-	annonces = {
-		"mariage": {
-			"coeur": mariage_coeur,
-			"carreau": mariage_carreau,
-			"pic": mariage_pic,
-			"trefle": mariage_trefle
-		},
-		"tierce": {
-			"coeur": tierce_coeur,
-			"carreau": tierce_carreau,
-			"pic": tierce_pic,
-			"trefle": tierce_trefle
-		},
-		"quarante": {
-			"coeur": quarante_coeur,
-			"carreau": quarante_carreau,
-			"pic": quarante_pic,
-			"trefle": quarante_trefle
-		},
-		"quinte": {
-			"coeur": quinte_coeur
-		}
-	}
-
-# nom des texture pour chaque couleur
-var couleurs_rouge = {
-	"coeur": coeur_rouge_texture,
-	"carreau": carreau_rouge_texture,
-	"pic": pic_rouge_texture,
-	"trefle": trefle_rouge_texture,
-}
-var couleurs_gris = {
-	"coeur": coeur_gris_texture,
-	"carreau": carreau_gris_texture,
-	"pic": pic_gris_texture,
-	"trefle": trefle_gris_texture,
-}
-var couleurs_vert = {
-	"coeur": coeur_vert_texture,
-	"carreau": carreau_vert_texture,
-	"pic": pic_vert_texture,
-	"trefle": trefle_vert_texture,
-}
+	var json_as_text = FileAccess.get_file_as_string("res://Assets/Data/annonces.json")
+	var _annonces = JSON.parse_string(json_as_text)
+	for annonce in _annonces:
+		print(annonce)
+		if annonce != "quinte":
+			for couleur in _annonces[annonce]:
+				var image := load("res://Assets/Annonces/" + _annonces[annonce][couleur])
+				var TR := TextureRect.new()
+				TR.texture = image
+				TR.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+				TR.custom_minimum_size = Vector2(Settings.TAILLE_ANNONCE, Settings.TAILLE_ANNONCE)  # Set size
+				TR.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+				TR.name = annonce + "-" + couleur
+				annonces[annonce + "-" + couleur] = TR
+		else:
+			var image := load("res://Assets/Annonces/" + _annonces[annonce])
+			var TR := TextureRect.new()
+			TR.texture = image
+			TR.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			TR.custom_minimum_size = Vector2(Settings.TAILLE_ANNONCE, Settings.TAILLE_ANNONCE)  # Set size
+			TR.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			TR.name = annonce
+			annonces[annonce] = TR
 
 func reset():
-	for a in annonces:
-		status[a] = {}
-		for c in annonces[a]:
-			status[a][c] = STATUS.INACTIF
-			annonces[a][c].texture = couleurs_gris[c]
-
-func annonces_autorisees(annonces_autorisee):
 	# reset pour remettre à jour
-	for a in annonces:
-		for c in annonces[a]:
-			if status[a][c] == STATUS.POSSIBLE:
-				status[a][c] = STATUS.INACTIF
+	var grid := $Panel/Grid
+	var children = grid.get_children()
+	for c in children:
+		self.remove_child(c)
+		c.queue_free()
 
-	# change le status des annonces possibles
-	print("Annonces autorisées: ", annonces_autorisee)
-	for a in annonces_autorisee.split(" "):
-		print(a)
-		if a != "":
-			var ann = get_annonce(a)
-			if ann[0] != null:
-				status[ann[0]][ann[1]] = STATUS.POSSIBLE
-	
-	# mets à jour la couleur
-	for a in annonces:
-		for c in annonces[a]:
-			if status[a][c] == STATUS.POSSIBLE:
-				annonces[a][c].texture = couleurs_vert[c]
-			if status[a][c] == STATUS.INACTIF:
-				annonces[a][c].texture = couleurs_gris[c]
-			if status[a][c] == STATUS.ACTIF:
-				annonces[a][c].texture = couleurs_rouge[c]
-
-func get_annonce(annonce: String):
-	var ann = annonce.split("-")
-	if ann[0] == "chouine":
-		# rien à faire, la partie est terminee
-		return [null, null]
-	if ann[0] == "quinte":
-		print("QUINTE")
-		ann[1] = "coeur"  # une seule quinte par partie possible
-		print(ann)
-	if not annonces.has(ann[0]) or not annonces[ann[0]].has(ann[1]):
-		print("Annnonce non reconnue :" + annonce)
-		return [null, null]
-	return ann
-
-func point(annonce, couleurs=couleurs_rouge):
-	# Le joueur a déclaré une annonce
-	var ann = get_annonce(annonce)
-	if ann[0] == null:
-		return
-	status[ann[0]][ann[1]] = STATUS.ACTIF
-	var texture = annonces[ann[0]][ann[1]]
-	texture.texture = couleurs[ann[1]]
-
-func annonce_joueur(event: InputEvent, annonce: String) -> void:
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			if event.pressed and partie != null:
-				print("Annonce joueur: " + annonce)
-				partie.annonce_joueur(annonce)
-				
-
-func _on_mariage_coeur_gui_input(event: InputEvent) -> void:
-	annonce_joueur(event, "mariage-coeur")
-
-
-func _on_tierce_coeur_gui_input(event: InputEvent) -> void:
-	annonce_joueur(event, "tierce-coeur")
-
-
-func _on_quarante_coeur_gui_input(event: InputEvent) -> void:
-	annonce_joueur(event, "quarante-coeur")
-
-
-func _on_quinte_coeur_gui_input(event: InputEvent) -> void:
-	annonce_joueur(event, "quinte-")
-
-
-func _on_mariage_carreau_gui_input(event: InputEvent) -> void:
-	annonce_joueur(event, "mariage-carreau")
-
-
-func _on_tierce_carreau_gui_input(event: InputEvent) -> void:
-	annonce_joueur(event, "tierce-carreau")
-
-
-func _on_quarante_carreau_gui_input(event: InputEvent) -> void:
-	annonce_joueur(event, "quarante-carreau")
-
-
-func _on_mariage_pic_gui_input(event: InputEvent) -> void:
-	annonce_joueur(event, "mariage-pic")
-
-
-func _on_tierce_pic_gui_input(event: InputEvent) -> void:
-	annonce_joueur(event, "tierce-pic")
-
-
-func _on_quarante_pic_gui_input(event: InputEvent) -> void:
-	annonce_joueur(event, "quarante-pic")
-
-
-func _on_mariage_trefle_gui_input(event: InputEvent) -> void:
-	annonce_joueur(event, "mariage-trefle")
-
-
-func _on_tierce_trefle_gui_input(event: InputEvent) -> void:
-	annonce_joueur(event, "tierce-trefle")
-
-
-func _on_quarante_trefle_gui_input(event: InputEvent) -> void:
-	annonce_joueur(event, "quarante-trefle")
+func add(annonce):
+	if annonces.has(annonce):
+		$Panel/Grid.add_child(annonces[annonce])

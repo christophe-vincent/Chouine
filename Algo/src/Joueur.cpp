@@ -487,13 +487,12 @@ string Joueur::cartesGagneesToStr()
 // points en string
 std::string Joueur::pointsToStr()
 {
-    std::string ret = std::to_string(points()) + " points   ";
-    ret += "Cartes: " + std::to_string(m_CartesGagnees.getPoints());
-    ret += "pts, Annonces: " + std::to_string(m_PointsAnnonces);
-    ret += "pts";
+    std::string ret = std::to_string(points()) + "|";
+    ret += std::to_string(m_CartesGagnees.getPoints()) + "|";
+    ret += std::to_string(m_PointsAnnonces) + "|";
     if (m_10Der > 0)
     {
-        ret += ", 10 de der";
+        ret += "10";
     }
     return ret;
 }

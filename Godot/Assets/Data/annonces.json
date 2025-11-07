@@ -1,0 +1,24 @@
+{
+    "mariage":
+	{
+		"coeur": "mariage-coeur.svg",
+		"carreau": "mariage-carreau.svg",
+		"pic": "mariage-pic.svg",
+		"trefle": "mariage-trefle.svg"
+	},
+	"tierce":
+	{
+		"coeur": "tierce-coeur.svg",
+		"carreau": "tierce-carreau.svg",
+		"pic": "tierce-pic.svg",
+		"trefle": "tierce-trefle.svg"
+	},
+	"quarante":
+	{
+		"coeur": "quarante-coeur.svg",
+		"carreau": "quarante-carreau.svg",
+		"pic": "quarante-pic.svg",
+		"trefle": "quarante-trefle.svg"
+	},
+	"quinte": "quinte.svg"
+}

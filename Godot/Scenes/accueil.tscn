@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cbig4nyg5d5k8"]
+[gd_scene load_steps=13 format=3 uid="uid://cbig4nyg5d5k8"]
 
 [ext_resource type="Script" uid="uid://b3ddph3lqd14u" path="res://Scripts/accueil.gd" id="1_mwf61"]
 [ext_resource type="Texture2D" uid="uid://d0u2ux7jb7rnj" path="res://Assets/un_point.png" id="2_68w6v"]
@@ -8,6 +8,10 @@
 [ext_resource type="Texture2D" uid="uid://bel8hhaslw42h" path="res://Assets/trois_points_select.png" id="5_kbk3v"]
 [ext_resource type="Texture2D" uid="uid://cqv1towavsbd3" path="res://Assets/cinq_points.png" id="6_muto7"]
 [ext_resource type="Texture2D" uid="uid://bg38w7oqpbur8" path="res://Assets/cinq_points_select.png" id="7_p3653"]
+[ext_resource type="Texture2D" uid="uid://bm063xd506t3" path="res://Assets/un_blason.png" id="9_muto7"]
+[ext_resource type="Texture2D" uid="uid://cpjtlantk26qq" path="res://Assets/un_blason_select.png" id="10_p3653"]
+[ext_resource type="Texture2D" uid="uid://sj7cb71b3amk" path="res://Assets/deux_blasons.png" id="11_2kwed"]
+[ext_resource type="Texture2D" uid="uid://cawbq8qkfqyc4" path="res://Assets/deux_blasons_select.png" id="12_tiwth"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -45,10 +49,10 @@ text = "CHOUINE"
 
 [node name="Jouer" type="Button" parent="."]
 layout_mode = 0
-offset_left = 385.0
-offset_top = 679.0
-offset_right = 652.0
-offset_bottom = 797.0
+offset_left = 396.0
+offset_top = 920.0
+offset_right = 663.0
+offset_bottom = 1038.0
 theme = ExtResource("2_cggy0")
 theme_override_font_sizes/font_size = 80
 text = "JOUER"
@@ -60,50 +64,60 @@ offset_bottom = 40.0
 
 [node name="Partie" type="Label" parent="."]
 layout_mode = 0
-offset_left = 440.0
-offset_top = 232.0
-offset_right = 584.0
-offset_bottom = 301.0
+offset_left = 442.0
+offset_top = 186.0
+offset_right = 586.0
+offset_bottom = 255.0
 theme = ExtResource("2_cggy0")
 theme_override_font_sizes/font_size = 50
 text = "Partie"
 
 [node name="1Point" type="Label" parent="."]
 layout_mode = 0
-offset_left = 139.0
-offset_top = 322.0
-offset_right = 277.0
-offset_bottom = 364.0
+offset_left = 137.0
+offset_top = 258.0
+offset_right = 275.0
+offset_bottom = 300.0
 theme = ExtResource("2_cggy0")
 theme_override_font_sizes/font_size = 30
 text = "1 point"
 
 [node name="3Points" type="Label" parent="."]
 layout_mode = 0
-offset_left = 443.0
-offset_top = 321.0
-offset_right = 581.0
-offset_bottom = 363.0
+offset_left = 441.0
+offset_top = 257.0
+offset_right = 579.0
+offset_bottom = 299.0
 theme = ExtResource("2_cggy0")
 theme_override_font_sizes/font_size = 30
 text = "3 points"
 
 [node name="5Points" type="Label" parent="."]
 layout_mode = 0
-offset_left = 750.0
-offset_top = 316.0
-offset_right = 888.0
-offset_bottom = 358.0
+offset_left = 748.0
+offset_top = 252.0
+offset_right = 886.0
+offset_bottom = 294.0
 theme = ExtResource("2_cggy0")
 theme_override_font_sizes/font_size = 30
 text = "5 points"
 
+[node name="Manches" type="Label" parent="."]
+layout_mode = 0
+offset_left = 308.0
+offset_top = 544.0
+offset_right = 714.0
+offset_bottom = 613.0
+theme = ExtResource("2_cggy0")
+theme_override_font_sizes/font_size = 50
+text = "Manches gagnantes"
+
 [node name="UnPoint" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 92.0
-offset_top = 385.0
-offset_right = 292.0
-offset_bottom = 585.0
+offset_left = 91.0
+offset_top = 302.0
+offset_right = 291.0
+offset_bottom = 502.0
 toggle_mode = true
 texture_normal = ExtResource("2_68w6v")
 texture_pressed = ExtResource("3_cggy0")
@@ -113,10 +127,10 @@ stretch_mode = 0
 
 [node name="TroisPoints" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 386.0
-offset_top = 385.0
-offset_right = 586.0
-offset_bottom = 585.0
+offset_left = 385.0
+offset_top = 302.0
+offset_right = 585.0
+offset_bottom = 502.0
 toggle_mode = true
 button_pressed = true
 texture_normal = ExtResource("4_n6lxe")
@@ -127,10 +141,10 @@ stretch_mode = 0
 
 [node name="CinqPoints" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 706.0
-offset_top = 370.0
-offset_right = 906.0
-offset_bottom = 570.0
+offset_left = 705.0
+offset_top = 287.0
+offset_right = 905.0
+offset_bottom = 487.0
 toggle_mode = true
 texture_normal = ExtResource("6_muto7")
 texture_pressed = ExtResource("7_p3653")
@@ -138,7 +152,57 @@ texture_disabled = ExtResource("7_p3653")
 ignore_texture_size = true
 stretch_mode = 0
 
+[node name="UneManche" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 233.0
+offset_top = 698.0
+offset_right = 421.0
+offset_bottom = 877.0
+disabled = true
+toggle_mode = true
+keep_pressed_outside = true
+texture_normal = ExtResource("9_muto7")
+texture_pressed = ExtResource("10_p3653")
+texture_disabled = ExtResource("10_p3653")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="DeuxManches" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 565.0
+offset_top = 697.0
+offset_right = 753.0
+offset_bottom = 876.0
+toggle_mode = true
+texture_normal = ExtResource("11_2kwed")
+texture_pressed = ExtResource("12_tiwth")
+texture_disabled = ExtResource("12_tiwth")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="1MancheGagante" type="Label" parent="."]
+layout_mode = 0
+offset_left = 271.0
+offset_top = 633.0
+offset_right = 409.0
+offset_bottom = 675.0
+theme = ExtResource("2_cggy0")
+theme_override_font_sizes/font_size = 30
+text = "1 manche"
+
+[node name="2ManchesGagantes" type="Label" parent="."]
+layout_mode = 0
+offset_left = 585.0
+offset_top = 630.0
+offset_right = 723.0
+offset_bottom = 672.0
+theme = ExtResource("2_cggy0")
+theme_override_font_sizes/font_size = 30
+text = "2 manches"
+
 [connection signal="pressed" from="Jouer" to="." method="_on_jouer_pressed"]
 [connection signal="pressed" from="UnPoint" to="." method="_on_un_point_pressed"]
 [connection signal="pressed" from="TroisPoints" to="." method="_on_trois_points_pressed"]
 [connection signal="pressed" from="CinqPoints" to="." method="_on_cinq_points_2_pressed"]
+[connection signal="pressed" from="UneManche" to="." method="_on_une_manche_pressed"]
+[connection signal="pressed" from="DeuxManches" to="." method="_on_deux_manches_pressed"]

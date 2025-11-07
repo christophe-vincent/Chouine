@@ -53,6 +53,8 @@ func _ready() -> void:
 func move(pos: Vector2, orientation: float=0, duree_effet: float=0, _z_index: int=0):
 	moving = true
 	card_z_index = _z_index
+	if card_z_index != 0: 
+		carte.z_index = card_z_index
 	position_initiale = pos
 	orientation_initiale = orientation
 	var tween = get_tree().create_tween()

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="95.699181mm"
+   height="78.572128mm"
+   viewBox="0 0 95.699181 78.572128"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   sodipodi:docname="tierce-coeur.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.581264"
+     inkscape:cx="135.65097"
+     inkscape:cy="266.8751"
+     inkscape:window-width="1712"
+     inkscape:window-height="1735"
+     inkscape:window-x="188"
+     inkscape:window-y="174"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-25.664581,-62.177076)">
+    <g
+       id="1_heart-1-1"
+       transform="matrix(0.25484173,-0.07076716,0.07076716,0.25484173,3.2854506,17.248724)"
+       inkscape:label="tierce-coeur">
+      <g
+         id="use820-7-3"
+         transform="translate(31.339774,476.3628)"
+         inkscape:label="carte">
+        <path
+           style="fill:#89c0ff;fill-opacity:1;stroke:#000000;stroke-width:2.5"
+           d="m 0,0 c 0,3.78 3.09,6.87 6.87,6.87 h 152.845 c 3.77,0 6.86,-3.09 6.86,-6.87 v -228.4 c 0,-3.78 -3.09,-6.87 -6.86,-6.87 H 6.87 c -3.78,0 -6.87,3.09 -6.87,6.87 z"
+           id="path912-1-8" />
+      </g>
+      <g
+         id="1_heart-1-7-7"
+         transform="rotate(29.846779,116.37531,644.48543)"
+         inkscape:label="carte">
+        <g
+           id="use820-7-6-4"
+           transform="translate(0,486.27499)">
+          <path
+             style="fill:#89c0ff;fill-opacity:1;stroke:#000000;stroke-width:2.5"
+             d="m 0,0 c 0,3.78 3.09,6.87 6.87,6.87 h 152.845 c 3.77,0 6.86,-3.09 6.86,-6.87 v -228.4 c 0,-3.78 -3.09,-6.87 -6.86,-6.87 H 6.87 c -3.78,0 -6.87,3.09 -6.87,6.87 z"
+             id="path912-1-1-2" />
+        </g>
+      </g>
+      <g
+         id="1_heart"
+         transform="rotate(15.519475,128.15795,720.54292)"
+         inkscape:label="carte">
+        <g
+           id="use820"
+           transform="translate(0,486.27499)">
+          <path
+             style="fill:#89c0ff;fill-opacity:1;stroke:#000000;stroke-width:2.5"
+             d="m 0,0 c 0,3.78 3.09,6.87 6.87,6.87 h 152.845 c 3.77,0 6.86,-3.09 6.86,-6.87 v -228.4 c 0,-3.78 -3.09,-6.87 -6.86,-6.87 H 6.87 c -3.78,0 -6.87,3.09 -6.87,6.87 z"
+             id="path912" />
+        </g>
+      </g>
+      <g
+         id="use825-7"
+         transform="matrix(-8.3881549,-2.329312,2.329312,-8.3881549,179.65424,374.93184)"
+         inkscape:label="heart">
+        <path
+           style="fill:#e6180a"
+           d="m -7.67,3.93 c 0.01,-4.71 5.91,-8.14 7.64,-11.87 1.75,3.72 7.66,7.12 7.7,11.83 C 7.68,6.11 5.96,7.92 3.85,7.92 1.73,7.92 0,6.13 0,3.91 0,6.14 -1.71,7.94 -3.82,7.94 -5.94,7.95 -7.66,6.15 -7.67,3.93 Z"
+           id="path915-7" />
+      </g>
+    </g>
+  </g>
+</svg>

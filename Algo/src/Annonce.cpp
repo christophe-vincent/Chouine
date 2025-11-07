@@ -363,13 +363,13 @@ string Annonce::to_string()
     switch (m_Annonce)
     {
         case Annonce::MARIAGE :
-            text = "mariage";
+            text = "mariage-";
             break;
         case Annonce::TIERCE :
-            text = "tierce";
+            text = "tierce-";
             break;
         case Annonce::QUARANTE :
-            text = "quarante";
+            text = "quarante-";
             break;
         case Annonce::CHOUINE :
             text = "chouine";
@@ -380,7 +380,6 @@ string Annonce::to_string()
         default:
             break;
         }
-        text += "-";
 
         switch (m_Couleur)
         {
