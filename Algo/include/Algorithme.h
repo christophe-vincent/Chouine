@@ -26,12 +26,10 @@ enum NIVEAUX
     Carte* calculScores();
     Carte* choisirCarte(Carte *_choixAdversaire);
     Carte* choisirCartePiocheVide(Carte *_choixAdversaire);
-    
 
 private:
     int m_Niveau;
     Joueur &m_Joueur;
-
 };
 
 #endif

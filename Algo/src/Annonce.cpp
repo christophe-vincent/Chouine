@@ -372,7 +372,7 @@ string Annonce::to_string()
             text = "quarante-";
             break;
         case Annonce::CHOUINE :
-            text = "chouine";
+            text = "chouine-";
             break;
         case Annonce::QUINTE :
             text = "quinte";

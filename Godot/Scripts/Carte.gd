@@ -27,15 +27,17 @@ var main_joueur: bool = false
 var position_initiale: Vector2 = Vector2(0, 0)
 var orientation_initiale: float = 0
 var card_z_index: int = 0
-var screen_center: Vector2 = get_viewport_rect().size / 2.0
+var screen_center: Vector2 = Vector2(0, 0)
+var move_tween: Tween
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	screen_center = get_viewport_rect().size / 2.0
 	collision.shape.size = Settings.DEFAULT_CARD_SIZE
 	front_face_texture.texture = front_image
 	back_face_texture.texture = back_image
-	var texture_scale = Settings.DEFAULT_CARD_SIZE / front_image.get_size() 
+	var texture_scale: Vector2 = Settings.DEFAULT_CARD_SIZE / front_image.get_size() 
 	front_face_texture.scale = texture_scale
 	back_face_texture.scale = texture_scale
 	if show_front:
@@ -44,34 +46,35 @@ func _ready() -> void:
 	else:
 		front_face_texture.visible = false
 		back_face_texture.visible = true
-	carte.mouse_entered.connect(_on_mouse_entered)
-	carte.mouse_exited.connect(_on_mouse_exited)
 	carte.input_event.connect(_on_input_event)
 	carte.position = position
 	screen_center = get_viewport_rect().size / 2.0
 
-func move(pos: Vector2, orientation: float=0, duree_effet: float=0, _z_index: int=0):
+func move(pos: Vector2, orientation: float=0, duree_effet: float=0, _z_index: int=0) -> void:
 	moving = true
 	card_z_index = _z_index
 	if card_z_index != 0: 
 		carte.z_index = card_z_index
 	position_initiale = pos
 	orientation_initiale = orientation
-	var tween = get_tree().create_tween()
-	tween.tween_property(carte, "position", pos, duree_effet)
-	tween.connect("finished", stop_moving)
+	if move_tween:
+		move_tween.kill()
+	move_tween = get_tree().create_tween()
+	move_tween.tween_property(carte, "position", pos, duree_effet)
+	move_tween.connect("finished", stop_moving)
 	if orientation != -100:
-		tween.tween_property(carte, "rotation", orientation, duree_effet)
+		move_tween.tween_property(carte, "rotation", orientation, duree_effet)
 
-func stop_moving():
+func stop_moving() -> void:
+	move_tween = null
 	moving = false
 	if card_z_index != 0: 
 		carte.z_index = card_z_index
 
-func size():
+func size() -> Vector2:
 	return card_size
 	
-func face_visible(v):
+func face_visible(v: bool) -> void:
 	if v:
 		front_face_texture.visible = true
 		back_face_texture.visible = false
@@ -81,20 +84,20 @@ func face_visible(v):
 
 
 func is_topmost_card_at_position(pos: Vector2) -> bool:
-	var space_state = get_world_2d().direct_space_state
-	var query = PhysicsPointQueryParameters2D.new()
+	var space_state: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
+	var query: PhysicsPointQueryParameters2D = PhysicsPointQueryParameters2D.new()
 	query.position = pos
 	query.collide_with_areas = true
 	query.collide_with_bodies = false
 	
-	var results = space_state.intersect_point(query)
+	var results: Array[Dictionary] = space_state.intersect_point(query)
 	
 	# Find the highest z_index among all cards at this position
-	var highest_z = carte.z_index
-	var is_topmost = true
+	var highest_z: int = carte.z_index
+	var is_topmost: bool = true
 	
-	for result in results:
-		var collider = result.collider
+	for result: Dictionary in results:
+		var collider: CollisionObject2D = result.collider
 		# Check if it's a card's Area2D
 		if collider != carte and collider.get_parent() is Carte:
 			if collider.z_index > highest_z:
@@ -104,7 +107,7 @@ func is_topmost_card_at_position(pos: Vector2) -> bool:
 	return is_topmost
 
 
-func _on_input_event(_viewport, event, _shape_idx):
+func _on_input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
 	if draggable and (not moving) and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and is_topmost_card_at_position(get_global_mouse_position()):
 			if event.pressed:
@@ -134,12 +137,6 @@ func _process(_delta: float) -> void:
 		if get_global_mouse_position().y > screen_center.y:
 			carte.rotation = orientation_initiale*(get_global_mouse_position().y - screen_center.y)/(position_initiale.y-screen_center.y)
 		carte.global_position = get_global_mouse_position() + drag_offset
-
-func _on_mouse_entered():
-	pass
-
-func _on_mouse_exited():
-	pass
 
 
 func _on_area_2d_area_shape_entered(_area_rid: RID, area: Area2D, _area_shape_index: int, _local_shape_index: int) -> void:

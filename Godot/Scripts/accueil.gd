@@ -6,19 +6,23 @@ extends Node
 @onready var UneManche: TextureButton = $UneManche
 @onready var DeuxManches: TextureButton = $DeuxManches
 
-#var scene_partie = preload("res://Scenes/partie.tscn")
+var scene_partie: Resource = preload("res://Scenes/partie.tscn")
+var scene_regles: Resource = preload("res://Scenes/regles.tscn")
 
-func _ready():
+func _ready() -> void:
 	if Global.nb_points == 1:
 		_on_un_point_pressed()
 	if Global.nb_points == 5:
 		_on_cinq_points_2_pressed()
 	if Global.nb_manches == 2:
 		_on_deux_manches_pressed()
+	$Intro.text = Settings.TEXT_INTRO
+
 
 func _on_jouer_pressed() -> void:
-	#get_tree().change_scene_to_packed(scene_partie)
-	get_tree().change_scene_to_file("res://Scenes/partie.tscn")
+	Global.cartes_visibles = $CartesVisibles.button_pressed
+	get_tree().change_scene_to_packed(scene_partie)
+	#get_tree().change_scene_to_file("res://Scenes/partie.tscn")
 
 
 func _on_un_point_pressed() -> void:
@@ -62,3 +66,7 @@ func _on_deux_manches_pressed() -> void:
 	DeuxManches.disabled = true
 	UneManche.disabled = false
 	UneManche.set_pressed(false)
+
+
+func _on_regles_pressed() -> void:
+	get_tree().change_scene_to_packed(scene_regles)

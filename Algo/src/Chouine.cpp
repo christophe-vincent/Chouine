@@ -59,6 +59,7 @@ void Chouine::newGame()
     }
 
     m_Pioche.shuffle(m_OrdreCartes);
+    m_isChouine = false;
 }
 
 void Chouine::distribution_cartes()

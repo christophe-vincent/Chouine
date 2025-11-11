@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=7 format=3 uid="uid://cwbdq4hxho7qr"]
+[gd_resource type="Theme" load_steps=9 format=3 uid="uid://cwbdq4hxho7qr"]
 
 [ext_resource type="FontFile" uid="uid://bvopnfj4k30sy" path="res://Themes/Macondo-Regular.ttf" id="1_flajs"]
 
@@ -13,9 +13,8 @@ corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
-expand_margin_left = 8.0
 expand_margin_right = 8.0
-shadow_color = Color(1, 1, 0.38431373, 0.42352942)
+shadow_color = Color(0, 0, 0, 0.5882353)
 shadow_size = 4
 shadow_offset = Vector2(3, 3)
 
@@ -30,11 +29,10 @@ corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
-expand_margin_left = 8.0
 expand_margin_right = 8.0
-shadow_color = Color(0, 0, 0, 1)
+shadow_color = Color(0, 0, 0, 0.5882353)
 shadow_size = 4
-shadow_offset = Vector2(4, 4)
+shadow_offset = Vector2(3, 3)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rnjal"]
 bg_color = Color(0.9172937, 0.89504015, 0.5552124, 1)
@@ -47,8 +45,8 @@ corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
-shadow_color = Color(1, 1, 0.38431373, 0.42352942)
-shadow_size = 5
+expand_margin_right = 8.0
+shadow_color = Color(0, 0, 0, 0.5882353)
 shadow_offset = Vector2(3, 3)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qow8s"]
@@ -62,9 +60,10 @@ corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
-shadow_color = Color(1, 1, 0.38431373, 0.42352942)
-shadow_size = 3
-shadow_offset = Vector2(1, 1)
+expand_margin_right = 8.0
+shadow_color = Color(0, 0, 0, 0.5882353)
+shadow_size = 4
+shadow_offset = Vector2(3, 3)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_orha4"]
 bg_color = Color(0, 0, 0, 1)
@@ -77,6 +76,14 @@ corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
+
+[sub_resource type="FontVariation" id="FontVariation_rnjal"]
+base_font = ExtResource("1_flajs")
+variation_embolden = 0.7
+
+[sub_resource type="FontVariation" id="FontVariation_qow8s"]
+base_font = ExtResource("1_flajs")
+variation_embolden = 0.06
 
 [resource]
 default_font = ExtResource("1_flajs")
@@ -97,3 +104,5 @@ Button/styles/hover_pressed = SubResource("StyleBoxFlat_qow8s")
 Button/styles/normal = SubResource("StyleBoxFlat_flajs")
 Button/styles/pressed = SubResource("StyleBoxFlat_qow8s")
 Panel/styles/panel = SubResource("StyleBoxFlat_orha4")
+RichTextLabel/fonts/bold_font = SubResource("FontVariation_rnjal")
+RichTextLabel/fonts/normal_font = SubResource("FontVariation_qow8s")

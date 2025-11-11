@@ -12,16 +12,16 @@ class_name Partie
 @onready var ordi_gagnees: Pile = $Piles/OrdiGagnees
 @onready var zone_jeu: CollisionShape2D = $ZoneJeu/CollisionShape2D
 @onready var annonces_ordi: Annonces = $AnnoncesOrdi
-@onready var annonces_joueur: Node2D = $AnnoncesJoueur
+@onready var annonces_joueur: Annonces = $AnnoncesJoueur
 @onready var choix_annonces: Node2D = $ChoixAnnonces
 @onready var confirmation_annuler: ConfirmationDialog = $Annuler/ConfirmationDialog
 
-var card_packed_scene = preload("res://Scenes/carte.tscn")
-var score_scene = preload("res://Scenes/scores.tscn")
+var card_packed_scene: Resource = preload("res://Scenes/carte.tscn")
+var score_scene: Resource = preload("res://Scenes/scores.tscn")
 var cartes: Dictionary[String, Carte] = {}
 var mains: Dictionary[int, Control] = {}
 var cartes_pioche: Array[String] = []
-var chouine = IChouine.new()
+var chouine: IChouine = IChouine.new()
 var carte_atout: Carte = null
 var sept_atout: Carte = null
 var coup_joueur: bool = false
@@ -37,10 +37,10 @@ var jetons_joueur: Array[TextureRect] = []
 var manches_ordi: Array[TextureRect] = []
 var manches_joueur: Array[TextureRect] = []
 var partie_terminee: bool = false
-var joueur_gagnees_size := Vector2(0, 0)
-var ordi_gagnees_size := Vector2(0, 0)
-var joueur_gagnees_position := Vector2(0, 0)
-var ordi_gagnees_position := Vector2(0, 0)
+var joueur_gagnees_size: Vector2 = Vector2(0, 0)
+var ordi_gagnees_size: Vector2 = Vector2(0, 0)
+var joueur_gagnees_position: Vector2 = Vector2(0, 0)
+var ordi_gagnees_position: Vector2 = Vector2(0, 0)
 
 
 enum JOUEURS {
@@ -48,7 +48,7 @@ enum JOUEURS {
 	HUMAIN = 1
 }
 
-func _ready():
+func _ready() -> void:
 	mains = {0: main_ordi, 1: main_joueur}
 	joueur_gagnees_size = joueur_gagnees.size
 	joueur_gagnees_position = joueur_gagnees.position
@@ -85,22 +85,21 @@ func _ready():
 	manches_ordi.push_back($ScoreOrdi/ScoreOrdi/ManchesJoueur/JoueurManche2)
 	manches_joueur.push_back($ScoreJoueur/ScoreJoueur/ManchesJoueur/JoueurManche1)
 	manches_joueur.push_back($ScoreJoueur/ScoreJoueur/ManchesJoueur/JoueurManche2)
+	annonces_ordi.set_milieu_tapis(tapis.position + tapis.size/2)
+	annonces_joueur.set_milieu_tapis(tapis.position + tapis.size/2)
 	$Scores/Button.connect("pressed", _partie_suivante.bind())
-	setup_game()
+	creer_cartes()
 	demarrer_jeu()
 
-func setup_game():
-	creer_cartes()
-	
-func creer_cartes():
+func creer_cartes() -> void:
 	# lecture du fichier de la description des cartes
-	var json_as_text = FileAccess.get_file_as_string("res://Assets/Data/jeu-carte.json")
-	var jeu_cartes = JSON.parse_string(json_as_text)
-	for couleur in jeu_cartes:
-		for valeur in jeu_cartes[couleur]:
-			var nom_carte = valeur + "-" + couleur
+	var json_as_text: String = FileAccess.get_file_as_string("res://Assets/Data/jeu-carte.json")
+	var jeu_cartes: Variant = JSON.parse_string(json_as_text)
+	for couleur: String in jeu_cartes:
+		for valeur: String in jeu_cartes[couleur]:
+			var nom_carte: String = valeur + "-" + couleur
 			if not cartes.has(nom_carte):
-				var card_instance = card_packed_scene.instantiate()
+				var card_instance: Node = card_packed_scene.instantiate()
 				card_instance.card_name = nom_carte
 				card_instance.front_image = load("res://Assets/Cartes/" + jeu_cartes[couleur][valeur]['image'])
 				card_instance.back_image = load("res://Assets/Cartes/back_1.svg")
@@ -109,7 +108,7 @@ func creer_cartes():
 				add_child(card_instance)
 				cartes[nom_carte] = card_instance
 
-func init_jeu():
+func init_jeu() -> void:
 	$Scores.visible = false
 	retourne.draggable = false
 	
@@ -126,7 +125,7 @@ func init_jeu():
 	
 	main_ordi.card_size = Settings.DEFAULT_CARD_SIZE
 	main_ordi.draggable = false
-	main_ordi.face_visible = true
+	main_ordi.face_visible = Global.cartes_visibles
 	main_ordi.init_cartes()
 	
 	tapis.card_size = Settings.DEFAULT_CARD_SIZE
@@ -180,7 +179,7 @@ func demarrer_jeu() -> void:
 	choix_annonces.annonces_autorisees(chouine.annonces_en_main_joueur(1))
 	
 	# carte de la retourne
-	var c = cartes_pioche.pop_back()
+	var c: String = cartes_pioche.pop_back()
 	pioche.supprimer_carte(c)
 	retourne.ajouter_carte(cartes[c])
 	cartes_pioche.push_front(c)
@@ -193,19 +192,18 @@ func demarrer_jeu() -> void:
 	await get_tree().create_timer(1).timeout
 	if chouine.gagnant_pli() == JOUEURS.ORDI:
 		coup_ordi()
-	#	print(choix_ordi)
 	zone_jeu.disabled = false
 	coup_joueur = true
 
 
-func carte_jouee(nom):
+func carte_jouee(nom: String) -> int:
 	if coup_joueur == false:
 		return -1
 	print ("Choix joueur: " + nom)
 	if carte_atout != null && carte_atout.card_name == nom:
 		print("ERREUR: Carte d'atout déposée sur la zone de jeu")
 		return -1
-	var ret = chouine.set_choix_joueur(nom)
+	var ret: int = chouine.set_choix_joueur(nom)
 	if ret != 0:
 		print("ERREUR: Erreur dans le choix du joueur")
 		return -1
@@ -222,7 +220,7 @@ func carte_jouee(nom):
 	return 0
 
 
-func carte_main_joueur(nom):
+func carte_main_joueur(nom: String) -> int:
 	# une carte est déposée dans la main du joueur, ca ne peut être que la carte d'atout
 	if carte_atout != null && nom == carte_atout.card_name:
 		# chercher le sept d'atout
@@ -242,18 +240,18 @@ func carte_main_joueur(nom):
 	return -1
 
 
-func melanger():
+func melanger() -> void:
 	cartes_pioche = []
-	for c in Array(chouine.partie().split(" ")):
+	for c: String in Array(chouine.partie().split(" ")):
 		await get_tree().create_timer(0.05).timeout
 		c = c.replace('*', '')
 		cartes_pioche.append(c)
 		pioche.ajouter_carte(cartes[c])
 
 
-func distribution_carte(joueur):
+func distribution_carte(joueur: int) -> void:
 	await get_tree().create_timer(Settings.DUREE_DISTRIBUTION).timeout
-	var c = cartes_pioche.pop_back()
+	var c: String = cartes_pioche.pop_back()
 	pioche.supprimer_carte(c)
 	mains[joueur].ajouter_carte(cartes[c])
 	# Si la carte d'atout se retrouve dans une main alors elle devient une carte normale
@@ -261,13 +259,13 @@ func distribution_carte(joueur):
 		carte_atout = null
 
 
-func distribution_cartes(nb_cartes):
-	var joueur = chouine.gagnant_pli()
+func distribution_cartes(nb_cartes: int) -> bool:
+	var joueur: int = chouine.gagnant_pli()
 	if cartes_pioche.size() == 0:
 		main_joueur.calcul_positions(Settings.DUREE_MOUVEMENT)
 		main_ordi.calcul_positions(Settings.DUREE_MOUVEMENT)
 		return false
-	for i in range(nb_cartes):
+	for i: int in range(nb_cartes):
 		await distribution_carte(joueur)
 		joueur = (joueur + 1) % 2
 		await distribution_carte(joueur)
@@ -275,9 +273,7 @@ func distribution_cartes(nb_cartes):
 	
 	# on affiche les carte de la main du joueur dans l'ordre donné par l'algo
 	chouine.trier_cartes(JOUEURS.HUMAIN)
-	var cartes_joueur_str: Array = chouine.cartes_joueur(JOUEURS.HUMAIN).split(" ")
-	for carte in cartes_joueur_str:
-		print("CARTE : " + carte)
+	var cartes_joueur_str: PackedStringArray = chouine.cartes_joueur(JOUEURS.HUMAIN).split(" ")
 	main_joueur.ordre_cartes(cartes_joueur_str)
 	
 	
@@ -288,15 +284,43 @@ func distribution_cartes(nb_cartes):
 	return true
 
 
-func coup_ordi():
+func annonce_ordi(_annonce: String) -> void:
+	annonces_ordi.add(_annonce)
+	var annonce: String = _annonce
+	var couleur: String = ""
+	if "-" in _annonce:
+		couleur = _annonce.split("-")[1]
+		annonce = _annonce.split("-")[0]
+	if annonce == "quarante":
+		main_ordi.afficher_cartes("as-" + couleur)
+		annonce = "tierce"
+	if annonce == "tierce":
+		main_ordi.afficher_cartes("valet-" + couleur)
+		annonce = "mariage"
+	if annonce == "mariage":
+		main_ordi.afficher_cartes("roi-" + couleur)
+		main_ordi.afficher_cartes("dame-" + couleur)
+	if annonce == "quinte" or annonce == "chouine":
+		for c: String in main_ordi.cartes():
+			main_ordi.afficher_cartes(c)
+	await get_tree().create_timer(4.0).timeout
+	main_ordi.calcul_positions(0.5)
+	await get_tree().create_timer(0.5).timeout
+
+
+func fin_annonce_ordi() -> void:
+	pass
+
+func coup_ordi() -> void:
 	var choix_ordi: Array = chouine.choix_joueur().split("|")
 	var choix_carte: String = choix_ordi[0]
 	print("Choix Ordi  : " + choix_carte)
-	var annonce = choix_ordi[1]
+	var annonce: String = choix_ordi[1]
 	if annonce != "":
-		annonces_ordi.add(annonce)
 		print("Annonce Ordi: " + annonce)
-	var echange_sept_atout = choix_ordi[2]
+		await annonce_ordi(annonce)
+
+	var echange_sept_atout: String = choix_ordi[2]
 	if echange_sept_atout != "" && carte_atout != null:
 		if retourne.cartes().size() == 0:
 			print("ERREUR: La retourne est vide")
@@ -316,27 +340,33 @@ func coup_ordi():
 	main_ordi.supprimer_carte(choix_carte)
 	tapis.ajouter_carte(cartes[choix_carte])
 	# est-ce la fin du pli ?
-	var ret = chouine.fin_pli()
+	var ret: int = chouine.fin_pli()
 	if ret >= 0:
 		fin_pli()
 	else:
 		coup_joueur = true
 
 
-func fin_pli():
+func fin_pli() -> void:
 	await get_tree().create_timer(1.0).timeout
-	var gagnant = chouine.gagnant_pli()
-	var cartes_tapis = tapis.cartes()
-	for c in cartes_tapis:
+	var gagnant: int = chouine.gagnant_pli()
+	var cartes_tapis: Dictionary[String, Carte] = tapis.cartes()
+	for c: String in cartes_tapis:
 		tapis.supprimer_carte(c)
 	if gagnant == JOUEURS.ORDI:
 		print("Gagnant     : Ordi")
-		for c in cartes_tapis:
+		for c: String in cartes_tapis:
 			ordi_gagnees.ajouter_carte(cartes_tapis[c])
 	else:
 		print("Gagnant     : Joueur")
-		for c in cartes_tapis:
+		for c: String in cartes_tapis:
 			joueur_gagnees.ajouter_carte(cartes_tapis[c])
+
+	if chouine.fin_partie() == 1:
+		# fin de la partie
+		await get_tree().create_timer(2.0).timeout
+		fin_partie()
+		return
 
 	print(" ")
 	await distribution_cartes(1)
@@ -344,10 +374,6 @@ func fin_pli():
 
 	await get_tree().create_timer(1.0).timeout
 	
-	if chouine.fin_partie() == 1:
-		# fin de la partie
-		fin_partie()
-		return
 	# debug: affiche les cartes
 	print("Ordi        : " + chouine.cartes_joueur(0))
 	print("Joueur      : " + chouine.cartes_joueur(1))
@@ -357,26 +383,31 @@ func fin_pli():
 		coup_joueur = true
 
 
-func annonce_joueur(annonce):
+func annonce_joueur(annonce: String) -> void:
 	var ret: int = chouine.annonce_joueur(annonce)
 	if ret == 0:
 		# annonce autorisee
 		annonces_joueur.add(annonce)
 		print("Joueur      : " + annonce)
+		if chouine.fin_partie():
+			fin_partie()
 
 
-func fin_partie():
+func fin_partie() -> void:
 	zone_jeu.disabled = true
 	$Scores/Defaite.visible = false
 	$Scores/Victoire.visible = false
 	$Scores.visible = true
-	for c in main_ordi.cartes():
-		ordi_gagnees.ajouter_carte(main_ordi[c])
-	for c in main_joueur.cartes():
-		joueur_gagnees.ajouter_carte(main_ordi[c])
+	for c: String in main_ordi.cartes():
+		ordi_gagnees.ajouter_carte(main_ordi.cartes()[c])
+	main_ordi.init_cartes()
+	for c: String in main_joueur.cartes():
+		joueur_gagnees.ajouter_carte(main_joueur.cartes()[c])
+	main_joueur.init_cartes()
 	
 	if chouine.points_joueur(JOUEURS.ORDI) > chouine.points_joueur(JOUEURS.HUMAIN):
 		nb_points_ordi += 1
+		$Scores/Info.add_theme_color_override("font_color", Color.RED)
 		if nb_points_ordi >= Global.nb_points:
 			# manche gagnée par l'ordi
 			nb_manches_ordi += 1
@@ -395,6 +426,7 @@ func fin_partie():
 			$Scores/Info.visible = true
 			$Scores/Info.text = "Vous avez perdu cette partie"
 	else:
+		$Scores/Info.add_theme_color_override("font_color", Color.GREEN)
 		nb_points_joueur += 1
 		if nb_points_joueur >= Global.nb_points:
 			# manche gagnée par le joueur
@@ -425,7 +457,7 @@ func fin_partie():
 	$Scores/Scores/DixDerOrdi.text = pt_ordi[3]
 	$Scores/Scores/TotalOrdi.text = pt_ordi[0]
 	
-	var screen_size = get_viewport_rect().size
+	var screen_size: Vector2 = get_viewport_rect().size
 	joueur_gagnees.type = Pile.TypePile.MAIN
 	joueur_gagnees.size = Vector2(screen_size.x - 2*Settings.DEFAULT_CARD_SIZE.x, Settings.DEFAULT_CARD_SIZE.y)
 	joueur_gagnees.position.x = Settings.DEFAULT_CARD_SIZE.x
@@ -447,25 +479,25 @@ func fin_partie():
 	# gestion des points et manches
 	if Global.nb_points > 1:
 		if nb_points_joueur == 0:
-			for i in range(Global.nb_points):
+			for i: int in range(Global.nb_points):
 				jetons_joueur[i].texture = jeton_point_inactif
 		if nb_points_ordi == 0:
-			for i in range(Global.nb_points):
+			for i: int in range(Global.nb_points):
 				jetons_ordi[i].texture = jeton_point_inactif
-		for i in range(nb_points_joueur):
+		for i: int in range(nb_points_joueur):
 			jetons_joueur[i].texture = jeton_point_actif
-		for i in range(nb_points_ordi):
+		for i: int in range(nb_points_ordi):
 			jetons_ordi[i].texture = jeton_point_actif
 	if Global.nb_manches > 1:
-		for i in range(nb_manches_joueur):
+		for i: int in range(nb_manches_joueur):
 			manches_joueur[i].texture = manche_actif
-		for i in range(nb_manches_ordi):
+		for i: int in range(nb_manches_ordi):
 			manches_ordi[i].texture = manche_actif
 
 
-func _partie_suivante():
+func _partie_suivante() -> void:
 	if partie_terminee == true:
-		var error = get_tree().change_scene_to_file("res://Scenes/accueil.tscn")
+		var error: Error = get_tree().change_scene_to_file("res://Scenes/accueil.tscn")
 		if error != OK:
 			print("Scene change failed with error: ", error)
 	else:
@@ -477,7 +509,7 @@ func _on_button_pressed() -> void:
 
 func _on_confirmation_dialog_confirmed() -> void:
 	confirmation_annuler.visible = true
-	var error = get_tree().change_scene_to_file("res://Scenes/accueil.tscn")
+	var error: Error = get_tree().change_scene_to_file("res://Scenes/accueil.tscn")
 	if error != OK:
 		print("Scene change failed with error: ", error)
 

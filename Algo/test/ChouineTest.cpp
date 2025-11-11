@@ -26,19 +26,19 @@
 4 -> 5: 50.9%
 */
 
-int NB_THREADS = static_cast<int>(std::thread::hardware_concurrency());
-//int NB_THREADS = 1;
+//int NB_THREADS = static_cast<int>(std::thread::hardware_concurrency());
+int NB_THREADS = 1;
 
-unsigned int niveau1 = 0;
+unsigned int niveau1 = 5;
 unsigned int niveau2 = 5;
-int nbParties = 100000;
+int nbParties = 2000;
 
 
 std::vector<std::string> vecteur_quinte = {
     "10-coeur", "*", "as-coeur", "*", "10-pic", "*", "as-pic", "*", "10-trefle"};
 
 
-bool verbose = nbParties == 1 ? true : false;
+bool verbose = nbParties < 3 ? true : false;
 
 void log() {}
 
@@ -88,13 +88,15 @@ bool testChoix(const std::string& _choix, bool& _erreur)
     return false;
 }
 
+Chouine chouine(niveau1, niveau2);
+
 int partie(unsigned int _niveauJoueur1,
            unsigned int _niveauJoueur2, 
            int& _pointsJoueur1, 
            int& _pointsJoueur2)
 {
-    Chouine chouine(_niveauJoueur1, _niveauJoueur2);
-    //chouine.setOrdreCartes(vecteur_quinte);
+    //Chouine chouine(_niveauJoueur1, _niveauJoueur2);
+    chouine.setOrdreCartes(vecteur_quinte);
 
     chouine.newGame();
     log("Pioche  : ", chouine.pioche().nomCartes(), "\n");
@@ -127,19 +129,19 @@ int partie(unsigned int _niveauJoueur1,
         if (annonces.length() > 0)
         {
             log("----------------->" + chouine.annoncesEnMainJoueur(gagnant) + "\n");
-            //cout << "----------------->" << chouine.annoncesEnMainJoueur(gagnant) << endl;
-            // std::size_t pos = annonces.find(" ");
-            // string annonce;
-            // if (pos != string::npos)
-            // {
-            //     annonce = annonces.substr(pos + 1);
-            // }
-            // else
-            // {
-            //     annonce = annonces;
-            // }
-            // log("----------------->" + annonce + "\n");
-            // chouine.setChoixAnnonce(gagnant, annonce);
+            cout << "----------------->" << chouine.annoncesEnMainJoueur(gagnant) << endl;
+            std::size_t pos = annonces.find(" ");
+            string annonce;
+            if (pos != string::npos)
+            {
+                annonce = annonces.substr(pos + 1);
+            }
+            else
+            {
+                annonce = annonces;
+            }
+            log("----------------->" + annonce + "\n");
+            chouine.setChoixAnnonce(gagnant, annonce);
         }
 
         choix = chouine.choixJoueur(annonce, priseAtout);

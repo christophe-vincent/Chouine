@@ -1,0 +1,73 @@
+[gd_scene load_steps=4 format=3 uid="uid://t4xg8ymwm2vm"]
+
+[ext_resource type="Script" uid="uid://xfglsjp7dq42" path="res://Scripts/regles.gd" id="1_g45cx"]
+[ext_resource type="Theme" uid="uid://cwbdq4hxho7qr" path="res://Themes/macondo.tres" id="1_hsyxg"]
+[ext_resource type="Texture2D" uid="uid://dctgyb7pec8sr" path="res://Assets/hintergrund.jpg" id="2_g45cx"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_g45cx")
+
+[node name="Parchemin" type="TextureRect" parent="."]
+modulate = Color(0.23921569, 0.22352941, 0.20392157, 1)
+show_behind_parent = true
+z_index = -2
+layout_mode = 1
+offset_left = 60.0
+offset_top = 66.0
+offset_right = 1838.0
+offset_bottom = 959.0
+texture = ExtResource("2_g45cx")
+expand_mode = 2
+stretch_mode = 6
+
+[node name="Regles" type="RichTextLabel" parent="."]
+top_level = true
+z_index = 4
+layout_mode = 0
+offset_left = 84.0
+offset_top = 67.0
+offset_right = 1848.0
+offset_bottom = 953.0
+theme = ExtResource("1_hsyxg")
+bbcode_enabled = true
+text = "sdsqdsdqsd
+qsdsqd
+qsd
+qsd
+sqd
+sdfsd
+fsd
+ds
+fsd
+f
+grfrfgt
+h
+rh
+fdgb
+dfg
+rtg
+dfg
+drf
+ger
+tg
+fdv
+rte
+ge
+frv"
+
+[node name="Retour" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1774.0
+offset_top = 1004.0
+offset_right = 1891.0
+offset_bottom = 1056.0
+theme = ExtResource("1_hsyxg")
+text = "Accueil"
+
+[connection signal="pressed" from="Retour" to="." method="_on_retour_pressed"]

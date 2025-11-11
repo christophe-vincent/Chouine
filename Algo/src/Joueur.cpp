@@ -27,6 +27,7 @@ m_Chouine(_chouine), m_Algo(_niveau, *this), m_Niveau(_niveau)
     {
         m_CouleurAnnonces[Carte::ALL_COLORS[i]] = false;
     }
+    m_CouleurAnnonces[Carte::UNDEF_COLOR] = false;
     m_Quinte = false;
 }
 
@@ -50,7 +51,9 @@ void Joueur::nouvellePartie()
     {
         m_CouleurAnnonces[Carte::ALL_COLORS[i]] = false;
     }
+    m_CouleurAnnonces[Carte::UNDEF_COLOR] = false;
     m_Quinte = false;
+    m_SecondChoix = false;
 }
 
 int Joueur::points()
@@ -205,7 +208,8 @@ int Joueur::choixAnnonce(std::string& _annonce)
     Annonce* annonce = nullptr;
     for (auto* ann: m_Chouine.getAnnonces()) 
     {
-        if (ann->to_string().compare(_annonce) == 0)
+        if (ann->to_string().compare(_annonce) == 0 ||
+            (_annonce == "chouine" && ann->type() == Annonce::CHOUINE))
         {
             int score = ann->calculeScore(m_CartesMain, m_CartesJouees);
             if (score == 100 && m_Annonces.count(ann) == 0)

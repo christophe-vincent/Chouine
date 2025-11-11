@@ -27,9 +27,19 @@ def upload_files(folder, bucket, prefix=''):
             local_path = os.path.join(root, file)
             relative_path = os.path.relpath(local_path, folder)
             s3_key = os.path.join(prefix, relative_path).replace("\\", "/")
+            if s3_key.endswith('.DS_Store'):
+                continue  # Skip macOS system files
+            if s3_key.endswith('html'):
+                extra_args = {'ContentType': 'text/html'}
+            elif s3_key.endswith('css'):
+                extra_args = {'ContentType': 'text/css'}
+            elif s3_key.endswith('js'):
+                extra_args = {'ContentType': 'application/javascript'}
+            else:
+                extra_args = {}
 
             try:
-                s3.upload_file(local_path, bucket, s3_key)
+                s3.upload_file(local_path, bucket, s3_key, ExtraArgs=extra_args)
                 print(f"✅ Uploaded: {local_path} → s3://{bucket}/{s3_key}")
             except FileNotFoundError:
                 print(f"❌ File not found: {local_path}")

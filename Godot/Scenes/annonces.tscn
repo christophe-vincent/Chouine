@@ -1,8 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://dk71nt6nh05bb"]
+[gd_scene load_steps=4 format=3 uid="uid://dk71nt6nh05bb"]
 
 [ext_resource type="Script" uid="uid://dip4qyj0vqhw" path="res://Scripts/annonces.gd" id="1_oy66i"]
-[ext_resource type="Texture2D" uid="uid://b226a4vw1vj67" path="res://Assets/Annonces/quinte.svg" id="3_q43k7"]
-[ext_resource type="Texture2D" uid="uid://do72vt3jsrnlr" path="res://Assets/Annonces/tierce-coeur.svg" id="3_quu6k"]
 [ext_resource type="Theme" uid="uid://cwbdq4hxho7qr" path="res://Themes/macondo.tres" id="6_y1o6d"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y1o6d"]
@@ -46,17 +44,3 @@ offset_bottom = 226.0
 theme_override_constants/h_separation = 10
 theme_override_constants/v_separation = 10
 columns = 3
-
-[node name="TextureRect" type="TextureRect" parent="Panel/Grid"]
-custom_minimum_size = Vector2(90, 90)
-layout_mode = 2
-texture = ExtResource("3_q43k7")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="TextureRect2" type="TextureRect" parent="Panel/Grid"]
-custom_minimum_size = Vector2(90, 0)
-layout_mode = 2
-texture = ExtResource("3_quu6k")
-expand_mode = 1
-stretch_mode = 5

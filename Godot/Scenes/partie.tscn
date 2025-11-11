@@ -1,6 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://bftfnuj4mri6h"]
+[gd_scene load_steps=12 format=3 uid="uid://bftfnuj4mri6h"]
 
 [ext_resource type="Script" uid="uid://dftrx4q78fbw7" path="res://Scripts/partie.gd" id="1_m1snf"]
+[ext_resource type="Texture2D" uid="uid://yq0t6mow51h6" path="res://Assets/tapis.png" id="4_0ghg4"]
 [ext_resource type="Script" uid="uid://dxjbmkokb6h8y" path="res://Scripts/Pile.gd" id="4_1x1o5"]
 [ext_resource type="Theme" uid="uid://cwbdq4hxho7qr" path="res://Themes/macondo.tres" id="4_ek6vc"]
 [ext_resource type="PackedScene" uid="uid://dk71nt6nh05bb" path="res://Scenes/annonces.tscn" id="5_ek6vc"]
@@ -21,6 +22,13 @@ anchors_preset = 0
 theme = ExtResource("4_ek6vc")
 script = ExtResource("1_m1snf")
 
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 1929.0
+offset_bottom = 1091.0
+mouse_filter = 2
+color = Color(0.13205302, 0, 0.011307192, 1)
+
 [node name="Tapis" type="ColorRect" parent="."]
 layout_mode = 0
 offset_left = 435.0
@@ -31,6 +39,16 @@ mouse_filter = 2
 color = Color(0.428547, 0.6671001, 0.0071176123, 1)
 script = ExtResource("4_1x1o5")
 type = 1
+
+[node name="TextureRect" type="TextureRect" parent="Tapis"]
+layout_mode = 0
+offset_left = -76.0
+offset_top = -100.0
+offset_right = 1068.0
+offset_bottom = 644.0
+mouse_filter = 2
+texture = ExtResource("4_0ghg4")
+expand_mode = 2
 
 [node name="Piles" type="Control" parent="."]
 z_index = 1
@@ -62,10 +80,10 @@ spreadable = false
 
 [node name="MainOrdi" type="ColorRect" parent="Piles"]
 layout_mode = 0
-offset_left = 490.0
-offset_top = -161.0
-offset_right = 1421.0
-offset_bottom = 211.0
+offset_left = 505.0
+offset_top = -123.0
+offset_right = 1436.0
+offset_bottom = 249.0
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
 script = ExtResource("4_1x1o5")
@@ -148,9 +166,9 @@ cancel_button_text = "Non"
 
 [node name="ScoreJoueur" type="Panel" parent="."]
 layout_mode = 0
-offset_left = 67.0
+offset_left = 24.0
 offset_top = 536.0
-offset_right = 373.0
+offset_right = 330.0
 offset_bottom = 702.0
 theme = ExtResource("4_ek6vc")
 
@@ -231,9 +249,9 @@ stretch_mode = 4
 
 [node name="ScoreOrdi" type="Panel" parent="."]
 layout_mode = 0
-offset_left = 68.0
+offset_left = 25.0
 offset_top = 367.0
-offset_right = 374.0
+offset_right = 331.0
 offset_bottom = 530.0
 theme = ExtResource("4_ek6vc")
 
@@ -329,7 +347,7 @@ position = Vector2(1508, 729)
 
 [node name="Annonce" type="Button" parent="."]
 layout_mode = 0
-offset_left = 1539.0
+offset_left = 1538.0
 offset_top = 1010.0
 offset_right = 1737.0
 offset_bottom = 1062.0
@@ -337,7 +355,7 @@ text = "ANNONCE"
 
 [node name="ChoixAnnonces" parent="." instance=ExtResource("7_acwto")]
 visible = false
-z_index = 1000
+z_index = 100
 position = Vector2(332, 348)
 
 [connection signal="area_shape_entered" from="ZoneJeu" to="ZoneJeu" method="_on_area_shape_entered"]

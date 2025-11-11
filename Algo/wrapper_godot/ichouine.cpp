@@ -33,9 +33,27 @@ IChouine::~IChouine()
     delete m_Chouine;
 }
 
+std::vector<std::string> vecteur_quinte = {
+    "10-coeur", "roi-trefle", "as-coeur", "dame-trefle", "10-pic", "roi-coeur", "as-pic", "dame-coeur", "10-trefle"};
+std::vector<std::string> vecteur_chouine = {
+    "roi-coeur", "roi-trefle",
+    "dame-coeur", "dame-trefle",
+    "7-trefle", "7-coeur",
+    "8-pic", "8-coeur",
+    "9-trefle", "9-pic",
+    "9-coeur",
+    "valet-pic", "7-pic",
+    "dame-pic", "7-carreau",
+    "roi-pic", "8-trefle",
+    "10-pic", "8-carreau",
+    "as-pic"};
+
+
 String IChouine::Partie()
 {
     printf("Nouvelle partie\n");
+    //m_Chouine->setOrdreCartes(vecteur_quinte);
+    //m_Chouine->setOrdreCartes(vecteur_chouine);
     m_Chouine->newGame();
     UtilityFunctions::print(m_Chouine->pioche().nomCartes().c_str());
     return m_Chouine->pioche().nomCartes().c_str();

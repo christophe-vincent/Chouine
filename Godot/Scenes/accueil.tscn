@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cbig4nyg5d5k8"]
+[gd_scene load_steps=19 format=3 uid="uid://cbig4nyg5d5k8"]
 
 [ext_resource type="Script" uid="uid://b3ddph3lqd14u" path="res://Scripts/accueil.gd" id="1_mwf61"]
 [ext_resource type="Texture2D" uid="uid://d0u2ux7jb7rnj" path="res://Assets/un_point.png" id="2_68w6v"]
@@ -13,6 +13,18 @@
 [ext_resource type="Texture2D" uid="uid://sj7cb71b3amk" path="res://Assets/deux_blasons.png" id="11_2kwed"]
 [ext_resource type="Texture2D" uid="uid://cawbq8qkfqyc4" path="res://Assets/deux_blasons_select.png" id="12_tiwth"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_muto7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1dle6"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p3653"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2kwed"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tiwth"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_aujfu"]
+
 [node name="Control" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -22,13 +34,14 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_mwf61")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="."]
+[node name="Intro" type="RichTextLabel" parent="."]
 layout_mode = 0
-offset_left = 1301.0
-offset_top = 376.0
-offset_right = 1793.0
-offset_bottom = 881.0
-theme_override_font_sizes/normal_font_size = 30
+offset_left = 1108.0
+offset_top = 263.0
+offset_right = 1836.0
+offset_bottom = 870.0
+theme = ExtResource("2_cggy0")
+theme_override_font_sizes/normal_font_size = 50
 text = "blabla
 bla
 "
@@ -49,10 +62,10 @@ text = "CHOUINE"
 
 [node name="Jouer" type="Button" parent="."]
 layout_mode = 0
-offset_left = 396.0
-offset_top = 920.0
-offset_right = 663.0
-offset_bottom = 1038.0
+offset_left = 365.0
+offset_top = 925.0
+offset_right = 632.0
+offset_bottom = 1043.0
 theme = ExtResource("2_cggy0")
 theme_override_font_sizes/font_size = 80
 text = "JOUER"
@@ -200,9 +213,41 @@ theme = ExtResource("2_cggy0")
 theme_override_font_sizes/font_size = 30
 text = "2 manches"
 
+[node name="CartesVisibles" type="CheckButton" parent="."]
+layout_mode = 0
+offset_left = 1443.0
+offset_top = 1004.0
+offset_right = 1881.0
+offset_bottom = 1059.0
+theme = ExtResource("2_cggy0")
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("StyleBoxEmpty_muto7")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_1dle6")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_p3653")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_2kwed")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_tiwth")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_aujfu")
+text = "Cartes adversaire visibles"
+
+[node name="Regles" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1199.0
+offset_top = 958.0
+offset_right = 1384.0
+offset_bottom = 1053.0
+theme = ExtResource("2_cggy0")
+theme_override_font_sizes/font_size = 60
+text = "Règles"
+
 [connection signal="pressed" from="Jouer" to="." method="_on_jouer_pressed"]
 [connection signal="pressed" from="UnPoint" to="." method="_on_un_point_pressed"]
 [connection signal="pressed" from="TroisPoints" to="." method="_on_trois_points_pressed"]
 [connection signal="pressed" from="CinqPoints" to="." method="_on_cinq_points_2_pressed"]
 [connection signal="pressed" from="UneManche" to="." method="_on_une_manche_pressed"]
 [connection signal="pressed" from="DeuxManches" to="." method="_on_deux_manches_pressed"]
+[connection signal="pressed" from="Regles" to="." method="_on_regles_pressed"]

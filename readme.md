@@ -36,10 +36,16 @@ Il sera donc nécessaire de compiler l'algorithme séparemment.
 Pour cela créer un virtualenv python et installer 'scons'.
 
 Compilation pour **html5**:
+Activation de **emsdk**:
+> <*repertoire emsdk*>/emsdk_env.bat
+
+> cd Chouine\Algo\wrapper_godot \
 > scons platform=web target=template_release
+
 Les fichiers sont automatiquement copiés dans le répertoire bin de godot.
 
 Compilation pour **Windows** (pour lancer le jeu avec Godot):
+> cd Chouine\Algo\wrapper_godot \
 > scons platform=windows
 
 ## Exporter vers HTML5
