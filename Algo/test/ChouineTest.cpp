@@ -19,26 +19,28 @@
 0 -> 3: 84.3%
 0 -> 4: 85.5%
 0 -> 5: 87.4%
+0 -> 6: 94.9%
 
 1 -> 2: 75.5%
 2 -> 3: 62.8%
 3 -> 4: 54.0%
 4 -> 5: 50.9%
+5 -> 6: 67.5%
 */
 
-//int NB_THREADS = static_cast<int>(std::thread::hardware_concurrency());
-int NB_THREADS = 1;
+int NB_THREADS = static_cast<int>(std::thread::hardware_concurrency());
+//int NB_THREADS = 1;
 
-unsigned int niveau1 = 5;
-unsigned int niveau2 = 5;
-int nbParties = 2000;
+unsigned int niveau1 = 0;
+unsigned int niveau2 = 6;
+int nbParties = 100000;
 
 
 std::vector<std::string> vecteur_quinte = {
     "10-coeur", "*", "as-coeur", "*", "10-pic", "*", "as-pic", "*", "10-trefle"};
 
 
-bool verbose = nbParties < 3 ? true : false;
+bool verbose = nbParties < 30 ? true : false;
 
 void log() {}
 
@@ -88,15 +90,15 @@ bool testChoix(const std::string& _choix, bool& _erreur)
     return false;
 }
 
-Chouine chouine(niveau1, niveau2);
+//Chouine chouine(niveau1, niveau2);
 
 int partie(unsigned int _niveauJoueur1,
            unsigned int _niveauJoueur2, 
            int& _pointsJoueur1, 
            int& _pointsJoueur2)
 {
-    //Chouine chouine(_niveauJoueur1, _niveauJoueur2);
-    chouine.setOrdreCartes(vecteur_quinte);
+    Chouine chouine(_niveauJoueur1, _niveauJoueur2);
+    //chouine.setOrdreCartes(vecteur_quinte);
 
     chouine.newGame();
     log("Pioche  : ", chouine.pioche().nomCartes(), "\n");
@@ -125,24 +127,21 @@ int partie(unsigned int _niveauJoueur1,
         chouine.septAtoutEnMain(gagnant);
 
         // simule un humain qui déclare une annonce
-        string annonces = chouine.annoncesEnMainJoueur(gagnant);
-        if (annonces.length() > 0)
-        {
-            log("----------------->" + chouine.annoncesEnMainJoueur(gagnant) + "\n");
-            cout << "----------------->" << chouine.annoncesEnMainJoueur(gagnant) << endl;
-            std::size_t pos = annonces.find(" ");
-            string annonce;
-            if (pos != string::npos)
-            {
-                annonce = annonces.substr(pos + 1);
-            }
-            else
-            {
-                annonce = annonces;
-            }
-            log("----------------->" + annonce + "\n");
-            chouine.setChoixAnnonce(gagnant, annonce);
-        }
+        // string annonces = chouine.annoncesEnMainJoueur(gagnant);
+        // if (annonces.length() > 0)
+        // {
+        //     std::size_t pos = annonces.find(" ");
+        //     string annonce;
+        //     if (pos != string::npos)
+        //     {
+        //         annonce = annonces.substr(pos + 1);
+        //     }
+        //     else
+        //     {
+        //         annonce = annonces;
+        //     }
+        //     chouine.setChoixAnnonce(gagnant, annonce);
+        // }
 
         choix = chouine.choixJoueur(annonce, priseAtout);
         log("Cartes joueur ", gagnant + 1, ": ", chouine.joueur(gagnant).cartesMainToStr(), "\n");

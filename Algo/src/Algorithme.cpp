@@ -11,11 +11,11 @@ static std::mt19937 mt(rd());
 static std::uniform_int_distribution<int> dist(0, 4);
 
 
-Carte* Algorithme::choisirCarte()
+Carte* Algorithme::choisirCarteAlgo(Carte *_choixAdversaire)
 {
     if (m_Niveau >= NIVEAUX::PROBA_ANNONCE)
     {
-        return calculScores();
+        return calculScores(_choixAdversaire);
     }
     if (m_Niveau >= NIVEAUX::CARTE_PLUS_FAIBLE)
     {
@@ -25,7 +25,7 @@ Carte* Algorithme::choisirCarte()
     return m_Joueur.carteMain(dist(mt) % m_Joueur.quantiteCartesMain());
 }
 
-Carte* Algorithme::calculScores()
+Carte* Algorithme::calculScores(Carte *_choixAdversaire)
 {
     // Calcule les scores de chaque carte et retourne la carte ayant le plus petit score
     Carte* ret = nullptr;
@@ -36,6 +36,18 @@ Carte* Algorithme::calculScores()
         int score = 0;
         // pour les cartes ayant des points
         score = carteMain->getPoints();
+
+        // introduire la carte adverse pour attribuer des points supplementaires si l'on peut conserver une carte à points
+        if (_choixAdversaire != nullptr && m_Niveau >= NIVEAUX::SAUVER_BRISQUES && _choixAdversaire->gagnante(*carteMain))
+        {
+            // si la carte est à points, vérifions si elle peut être sauvée
+            if (carteMain->getPoints() > 0 && !carteMain->atout())
+            {
+                // cette carte peut être sauvée
+                score -= 2 * carteMain->getPoints();
+                score -= 2 * _choixAdversaire->getPoints();
+            }
+        }
         float scoreAnnonces = 0;
         for (auto& annonce: carteMain->annonces())
         {
@@ -70,7 +82,7 @@ Carte* Algorithme::choisirCarte(Carte *_choixAdversaire)
     // premier à jouer
     if (_choixAdversaire == nullptr)
     {
-        choix = choisirCarte();
+        choix = choisirCarteAlgo();
     } else
     {
         // l'autre joueur a deja joué une carte
@@ -80,11 +92,20 @@ Carte* Algorithme::choisirCarte(Carte *_choixAdversaire)
             if (_choixAdversaire->brisque())
             {
                 choix = m_Joueur.cartes().choisirPlusForte(_choixAdversaire);
+                if (choix->getPoints() > 10 && choix->atout() == true)
+                {
+                    // ne peut pas prendre la brisque avec l'as d'atout (gain tres faible voire nul)
+                    choix = nullptr;
+                } else if (choix->gagnante(*_choixAdversaire) == true)
+                {
+                    // on ne peut pas gagner, on joue la plus faible, gain pas évident
+                    choix = choisirCarteAlgo(_choixAdversaire);
+                }
             }
         }
         if (choix == nullptr)
         {
-            choix = choisirCarte();
+            choix = choisirCarteAlgo(_choixAdversaire);
         }
     }
 
@@ -96,7 +117,7 @@ Carte* Algorithme::choisirCartePiocheVide(Carte *_choixAdversaire)
 {
     if (_choixAdversaire == nullptr)
     {
-         return choisirCarte();
+        return choisirCarte(_choixAdversaire);
     }
 
     Carte* carte = m_Joueur.cartes().choisirPlusForte(_choixAdversaire);

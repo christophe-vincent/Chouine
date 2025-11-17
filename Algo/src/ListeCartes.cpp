@@ -239,19 +239,36 @@ Carte *ListeCartes::plusFaible(bool _sansAtout)
 ///////////////////////////////
 Carte* ListeCartes::choisirPlusForte(Carte* _carte)
 {
-    Carte* carte = nullptr; 
+    Carte* carte = nullptr;
+    Carte* carteHorsAtout = nullptr;
 
     for (auto it=m_Cartes.begin(); it!=m_Cartes.end(); ++it)
     {
         if (_carte->gagnante(**it))
         {
+            if ((*it)->atout() == false)
+            {
+                // de préférence on choisit une carte hors atout
+                if (carteHorsAtout == nullptr)
+                {
+                    carteHorsAtout = *it;
+                }
+                else
+                {
+                    // comparer les points semble plus pertinent ici
+                    if ((*it)->getPoints() < carte->getPoints())
+                    {
+                        // la carte choisie precedement est plus forte
+                        carteHorsAtout = *it;
+                    }
+                }
+            }
             if (carte == nullptr)
             {
                 carte = *it;
             }
             else
             {
-                // TODO: utiliser le score pourrait être pertinent ?
                 if ((*it)->getPoints() < carte->getPoints())
                 {
                     // la carte choisie precedement est plus forte
@@ -263,6 +280,9 @@ Carte* ListeCartes::choisirPlusForte(Carte* _carte)
     if (carte == nullptr)
     {
         carte = plusFaible();
+    } else if (carteHorsAtout != nullptr)
+    {
+        carte = carteHorsAtout;
     }
     return carte;
 }
