@@ -24,6 +24,7 @@ Desktop.ini
 
 # compilation
 *.o
+*.os
 *.a
 Algo/Build
 Algo/build
@@ -32,6 +33,9 @@ Godot/godot_cpp
 Godot/html
 *.dblite
 *.wasm
+*.so
+*.apk
+*.apk.*
 
 # Godot files
 *.import

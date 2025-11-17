@@ -15,14 +15,22 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[node name="Annonces" type="Node2D"]
+[node name="Annonces" type="Control"]
+layout_mode = 3
+anchor_left = 0.096
+anchor_top = 0.120000005
+anchor_right = 0.096
+anchor_bottom = 0.120000005
+offset_left = -184.32
+offset_top = -129.6
+offset_right = 185.68
+offset_bottom = 130.4
 script = ExtResource("1_oy66i")
 
 [node name="Panel" type="Panel" parent="."]
-offset_left = 11.0
-offset_top = 3.0
-offset_right = 381.0
-offset_bottom = 261.0
+layout_mode = 0
+offset_right = 370.0
+offset_bottom = 228.0
 theme = ExtResource("6_y1o6d")
 theme_override_styles/panel = SubResource("StyleBoxFlat_y1o6d")
 
@@ -37,10 +45,10 @@ text = "Annonces"
 
 [node name="Grid" type="GridContainer" parent="Panel"]
 layout_mode = 0
-offset_left = 26.0
-offset_top = 60.0
-offset_right = 345.0
-offset_bottom = 226.0
+offset_left = 19.0
+offset_top = 53.0
+offset_right = 350.0
+offset_bottom = 218.0
 theme_override_constants/h_separation = 10
 theme_override_constants/v_separation = 10
 columns = 3

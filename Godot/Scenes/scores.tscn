@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://cvnc0r14i4max"]
+[gd_scene load_steps=3 format=3 uid="uid://cvnc0r14i4max"]
 
 [ext_resource type="Theme" uid="uid://cwbdq4hxho7qr" path="res://Themes/macondo.tres" id="1_hdn7m"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hdn7m"]
 
 [node name="Control" type="Control"]
 custom_minimum_size = Vector2(1000, 400)
@@ -34,11 +36,12 @@ horizontal_alignment = 1
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 0
-offset_left = 680.0
-offset_top = 204.0
-offset_right = 847.0
-offset_bottom = 256.0
+offset_left = 663.0
+offset_top = 156.0
+offset_right = 927.0
+offset_bottom = 260.0
 theme = ExtResource("1_hdn7m")
+theme_override_font_sizes/font_size = 56
 text = "Continuer"
 
 [node name="Victoire" type="Label" parent="."]
@@ -66,9 +69,9 @@ text = "DEFAITE..."
 [node name="Scores" type="GridContainer" parent="."]
 layout_mode = 0
 offset_left = 156.0
-offset_top = 102.0
+offset_top = 87.0
 offset_right = 681.0
-offset_bottom = 361.0
+offset_bottom = 353.0
 theme_override_constants/h_separation = 17
 columns = 3
 
@@ -151,6 +154,7 @@ horizontal_alignment = 1
 layout_mode = 2
 theme = ExtResource("1_hdn7m")
 theme_override_font_sizes/font_size = 46
+theme_override_styles/focus = SubResource("StyleBoxTexture_hdn7m")
 text = "TOTAL"
 
 [node name="TotalJoueur" type="Label" parent="Scores"]

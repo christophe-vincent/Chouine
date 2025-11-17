@@ -34,6 +34,14 @@ var spread_offset: Vector2 = Vector2(0, 0)
 
 var _cartes: Array[Carte] = []
 
+func _ready() -> void:
+	get_tree().root.size_changed.connect(on_viewport_size_changed)
+
+
+func on_viewport_size_changed() -> void:
+	calcul_positions(0)
+
+
 func init_cartes() -> void:
 	_cartes = []
 	
@@ -65,10 +73,12 @@ func afficher_cartes(carte: String) -> void:
 			await get_tree().create_timer(0.5).timeout
 			c.face_visible(face_visible)
 
-func supprimer_carte(nom: String) -> void:
+func supprimer_carte(nom: String) -> bool:
 	for c: Carte in _cartes:
 		if c.card_name == nom:
 			_cartes.erase(c)
+			return true
+	return false
 
 func ordre_cartes(ordre: PackedStringArray) -> void:
 	var index: int = 0
@@ -105,10 +115,21 @@ func ajouter_carte(carte: Carte, duration: float=-1.0) -> void:
 	carte.draggable = draggable
 
 func calcul_positions(effet_duree: float) -> void:
-	if type_position == TypePosition.NORMAL:
+	if type == TypePile.PILE:
+		position_pile(effet_duree)
+	elif type_position == TypePosition.NORMAL:
 		position_normal(effet_duree)
 	else:
 		position_eventail(effet_duree)
+		
+func position_pile(effet_duree: float) -> void:
+	for carte: Carte in _cartes:
+		var rnd_x: float = rng.randf_range(-1.0, 1.0) * size.x / 15
+		var rnd_y: float = rng.randf_range(-1.0, 1.0) * size.y / 15
+		carte.move(position + size/2 + Vector2(rnd_x, rnd_y),
+			rng.randf_range(-1.0, 1.0) / 10,
+			effet_duree, 
+			z_order + _cartes.size() + 1)
 
 func position_normal(effet_duree: float) -> void:
 	var nb_cartes: int = _cartes.size()

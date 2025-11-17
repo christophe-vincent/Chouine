@@ -14,27 +14,51 @@ grow_vertical = 2
 script = ExtResource("1_g45cx")
 
 [node name="Parchemin" type="TextureRect" parent="."]
-modulate = Color(0.23921569, 0.22352941, 0.20392157, 1)
+modulate = Color(1, 1, 1, 0.33900002)
 show_behind_parent = true
 z_index = -2
 layout_mode = 1
-offset_left = 60.0
-offset_top = 66.0
-offset_right = 1838.0
-offset_bottom = 959.0
+anchors_preset = -1
+anchor_left = 0.032
+anchor_top = 0.062000003
+anchor_right = 0.952
+anchor_bottom = 0.84400004
+offset_left = 0.55999756
+offset_top = 0.039993286
+offset_right = -0.8400879
+offset_bottom = -0.52001953
 texture = ExtResource("2_g45cx")
 expand_mode = 2
 stretch_mode = 6
 
+[node name="ColorRect" type="ColorRect" parent="."]
+z_index = -4
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.031000001
+anchor_top = 0.061000004
+anchor_right = 0.952
+anchor_bottom = 0.84400004
+offset_left = 3.4799957
+offset_top = 0.11999512
+offset_right = 0.15991211
+offset_bottom = -0.52001953
+
 [node name="Regles" type="RichTextLabel" parent="."]
 top_level = true
 z_index = 4
-layout_mode = 0
-offset_left = 84.0
-offset_top = 67.0
-offset_right = 1848.0
-offset_bottom = 953.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.044000003
+anchor_top = 0.062000003
+anchor_right = 0.9620001
+anchor_bottom = 0.84000003
+offset_left = -0.48000336
+offset_top = 0.039993286
+offset_right = -5.040161
+offset_bottom = -0.2000122
 theme = ExtResource("1_hsyxg")
+theme_override_colors/default_color = Color(0, 0, 0, 1)
 bbcode_enabled = true
 text = "sdsqdsdqsd
 qsdsqd
@@ -62,12 +86,18 @@ ge
 frv"
 
 [node name="Retour" type="Button" parent="."]
-layout_mode = 0
-offset_left = 1774.0
-offset_top = 1004.0
-offset_right = 1891.0
-offset_bottom = 1056.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.938
+anchor_top = 0.93600005
+anchor_right = 0.938
+anchor_bottom = 0.93600005
+offset_left = -89.96008
+offset_top = -45.880066
+offset_right = 90.03992
+offset_bottom = 45.119934
 theme = ExtResource("1_hsyxg")
+theme_override_font_sizes/font_size = 45
 text = "Accueil"
 
 [connection signal="pressed" from="Retour" to="." method="_on_retour_pressed"]

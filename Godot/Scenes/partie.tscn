@@ -1,7 +1,7 @@
 [gd_scene load_steps=12 format=3 uid="uid://bftfnuj4mri6h"]
 
 [ext_resource type="Script" uid="uid://dftrx4q78fbw7" path="res://Scripts/partie.gd" id="1_m1snf"]
-[ext_resource type="Texture2D" uid="uid://yq0t6mow51h6" path="res://Assets/tapis.png" id="4_0ghg4"]
+[ext_resource type="Texture2D" uid="uid://dfygaiu6gj12k" path="res://Assets/tapis.png" id="4_0ghg4"]
 [ext_resource type="Script" uid="uid://dxjbmkokb6h8y" path="res://Scripts/Pile.gd" id="4_1x1o5"]
 [ext_resource type="Theme" uid="uid://cwbdq4hxho7qr" path="res://Themes/macondo.tres" id="4_ek6vc"]
 [ext_resource type="PackedScene" uid="uid://dk71nt6nh05bb" path="res://Scenes/annonces.tscn" id="5_ek6vc"]
@@ -11,93 +11,134 @@
 [ext_resource type="PackedScene" uid="uid://cvnc0r14i4max" path="res://Scenes/scores.tscn" id="7_kcvnu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bjfpd"]
-size = Vector2(1030, 414)
+size = Vector2(1222, 439)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ek6vc"]
 size = Vector2(1038, 115)
 
 [node name="Partie" type="Control"]
 layout_mode = 3
-anchors_preset = 0
-theme = ExtResource("4_ek6vc")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+mouse_filter = 1
 script = ExtResource("1_m1snf")
 
 [node name="ColorRect" type="ColorRect" parent="."]
-layout_mode = 0
-offset_right = 1929.0
-offset_bottom = 1091.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
-color = Color(0.13205302, 0, 0.011307192, 1)
+color = Color(0.09985284, 0.09985284, 0.09985284, 1)
 
-[node name="Tapis" type="ColorRect" parent="."]
-layout_mode = 0
-offset_left = 435.0
-offset_top = 221.0
-offset_right = 1470.0
-offset_bottom = 722.0
-mouse_filter = 2
-color = Color(0.428547, 0.6671001, 0.0071176123, 1)
-script = ExtResource("4_1x1o5")
-type = 1
-
-[node name="TextureRect" type="TextureRect" parent="Tapis"]
-layout_mode = 0
-offset_left = -76.0
-offset_top = -100.0
-offset_right = 1068.0
-offset_bottom = 644.0
+[node name="Tapis" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.009000001
+anchor_top = 0.467
+anchor_right = 0.989
+anchor_bottom = 0.467
+offset_left = -0.2800007
+offset_top = -487.79007
+offset_right = -0.8800049
+offset_bottom = 488.63998
 mouse_filter = 2
 texture = ExtResource("4_0ghg4")
 expand_mode = 2
 
+[node name="DeposeCartes" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.46800002
+anchor_top = 0.5
+anchor_right = 0.46800002
+anchor_bottom = 0.5
+offset_left = -455.56006
+offset_top = -238.0
+offset_right = 454.43994
+offset_bottom = 106.0
+mouse_filter = 2
+color = Color(0.42754805, 0.66668326, 0.012920001, 0.017)
+script = ExtResource("4_1x1o5")
+type = 1
+
+[node name="Pioche" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.93000007
+anchor_top = 0.5
+anchor_right = 0.93000007
+anchor_bottom = 0.5
+offset_left = -102.6001
+offset_top = -199.0
+offset_right = 103.3999
+offset_bottom = 104.0
+color = Color(1, 1, 1, 0)
+script = ExtResource("4_1x1o5")
+card_size = Vector2(120, 180)
+z_order = 10
+spreadable = false
+
 [node name="Piles" type="Control" parent="."]
 z_index = 1
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+layout_mode = 1
+anchor_left = 0.001
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.07999992
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="JoueurGagnees" type="ColorRect" parent="Piles"]
-layout_mode = 0
-offset_left = 87.0
-offset_top = 743.0
-offset_right = 320.0
-offset_bottom = 1054.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.093
+anchor_top = 0.5
+anchor_right = 0.093
+anchor_bottom = 0.5
+offset_left = -108.37401
+offset_top = 217.0
+offset_right = 108.62599
+offset_bottom = 528.0
 mouse_filter = 1
 color = Color(1, 1, 1, 0)
 script = ExtResource("4_1x1o5")
 z_order = 50
 
 [node name="OrdiGagnees" type="ColorRect" parent="Piles"]
-layout_mode = 0
-offset_left = 88.0
-offset_top = -97.0
-offset_right = 308.0
-offset_bottom = 212.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.087000005
+anchor_top = 0.5
+anchor_right = 0.087000005
+anchor_bottom = 0.5
+offset_left = -124.86601
+offset_top = -548.0
+offset_right = 124.308
+offset_bottom = -239.0
 color = Color(1, 1, 1, 0)
 script = ExtResource("4_1x1o5")
 face_visible = false
 spreadable = false
 
-[node name="MainOrdi" type="ColorRect" parent="Piles"]
-layout_mode = 0
-offset_left = 505.0
-offset_top = -123.0
-offset_right = 1436.0
-offset_bottom = 249.0
-mouse_filter = 2
-color = Color(1, 1, 1, 0)
-script = ExtResource("4_1x1o5")
-type = 1
-type_position = 2
-z_order = 40
-spreadable = false
-
 [node name="MainJoueur" type="ColorRect" parent="Piles"]
-layout_mode = 0
-offset_left = 492.0
-offset_top = 719.0
-offset_right = 1416.0
-offset_bottom = 1087.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.47700003
+anchor_top = 0.5
+anchor_right = 0.47700003
+anchor_bottom = 0.5
+offset_left = -496.98212
+offset_top = 180.0
+offset_right = 495.47394
+offset_bottom = 548.0
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
 script = ExtResource("4_1x1o5")
@@ -107,69 +148,90 @@ card_size = Vector2(120, 180)
 z_order = 40
 spreadable = false
 
-[node name="Retourne" type="ColorRect" parent="Piles"]
-layout_mode = 0
-offset_left = 1505.0
-offset_top = 349.0
-offset_right = 1709.0
-offset_bottom = 655.0
+[node name="MainOrdi" type="ColorRect" parent="Piles"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.49
+anchor_top = 0.5
+anchor_right = 0.49
+anchor_bottom = 0.5
+offset_left = -465.80005
+offset_top = -695.0
+offset_right = 465.2
+offset_bottom = -323.0
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
 script = ExtResource("4_1x1o5")
+type = 1
+type_position = 2
+z_order = 40
 spreadable = false
 
-[node name="Pioche" type="ColorRect" parent="Piles"]
-layout_mode = 0
-offset_left = 1671.0
-offset_top = 353.0
-offset_right = 1877.0
-offset_bottom = 656.0
+[node name="Retourne" type="ColorRect" parent="Piles"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.832
+anchor_top = 0.5
+anchor_right = 0.832
+anchor_bottom = 0.5
+offset_left = -99.44006
+offset_top = -204.0
+offset_right = 99.079956
+offset_bottom = 102.71997
+mouse_filter = 2
 color = Color(1, 1, 1, 0)
 script = ExtResource("4_1x1o5")
-card_size = Vector2(120, 180)
-z_order = 10
+card_size = Vector2(320, 240)
 spreadable = false
 
-[node name="ZoneJeu" type="Area2D" parent="."]
-position = Vector2(195, 135)
+[node name="ZoneJeu" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.49500003
+anchor_top = 0.5
+anchor_right = 0.49500003
+anchor_bottom = 0.5
+offset_left = -581.4001
+offset_top = -292.0
+offset_right = 549.5999
+offset_bottom = 111.0
+mouse_filter = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneJeu"]
-position = Vector2(755, 297)
+[node name="ZoneJeu" type="Area2D" parent="ZoneJeu"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneJeu/ZoneJeu"]
+position = Vector2(551, 159.5)
 shape = SubResource("RectangleShape2D_bjfpd")
 
-[node name="MainJoueur" type="Area2D" parent="."]
+[node name="MainJoueur" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.49800003
+anchor_top = 0.5
+anchor_right = 0.49800003
+anchor_bottom = 0.5
+offset_left = -522.16003
+offset_top = 336.0
+offset_right = 523.83997
+offset_bottom = 464.0
+mouse_filter = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="MainJoueur"]
+[node name="MainJoueur" type="Area2D" parent="MainJoueur"]
+position = Vector2(-434, -876)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MainJoueur/MainJoueur"]
 position = Vector2(955, 937)
 shape = SubResource("RectangleShape2D_ek6vc")
 
-[node name="Annuler" type="Button" parent="."]
-layout_mode = 0
-offset_left = 1769.0
-offset_top = 1008.0
-offset_right = 1876.0
-offset_bottom = 1060.0
-theme = ExtResource("4_ek6vc")
-theme_override_font_sizes/font_size = 40
-text = "X"
-
-[node name="ConfirmationDialog" type="ConfirmationDialog" parent="Annuler"]
-oversampling_override = 1.0
-title = ""
-initial_position = 2
-size = Vector2i(700, 160)
-keep_title_visible = false
-theme = ExtResource("4_ek6vc")
-ok_button_text = "Oui"
-dialog_text = "Etes vous sûr de vouloir annuler ?"
-cancel_button_text = "Non"
-
 [node name="ScoreJoueur" type="Panel" parent="."]
-layout_mode = 0
-offset_left = 24.0
-offset_top = 536.0
-offset_right = 330.0
-offset_bottom = 702.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.09200001
+anchor_top = 0.5
+anchor_right = 0.09200001
+anchor_bottom = 0.5
+offset_left = -152.64001
+offset_top = -4.0
+offset_right = 153.35999
+offset_bottom = 162.0
 theme = ExtResource("4_ek6vc")
 
 [node name="Label" type="Label" parent="ScoreJoueur"]
@@ -248,11 +310,16 @@ expand_mode = 1
 stretch_mode = 4
 
 [node name="ScoreOrdi" type="Panel" parent="."]
-layout_mode = 0
-offset_left = 25.0
-offset_top = 367.0
-offset_right = 331.0
-offset_bottom = 530.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.093
+anchor_top = 0.49100003
+anchor_right = 0.093
+anchor_bottom = 0.49100003
+offset_left = -153.56
+offset_top = -163.28003
+offset_right = 152.44
+offset_bottom = -0.2800293
 theme = ExtResource("4_ek6vc")
 
 [node name="Label" type="Label" parent="ScoreOrdi"]
@@ -334,32 +401,107 @@ stretch_mode = 4
 
 [node name="Scores" parent="." instance=ExtResource("7_kcvnu")]
 layout_mode = 1
-offset_left = 460.0
-offset_top = 352.0
-offset_right = 1460.0
-offset_bottom = 752.0
+anchors_preset = -1
+anchor_left = 0.49018753
+anchor_top = 0.5046296
+anchor_right = 0.49018753
+anchor_bottom = 0.5046296
+offset_left = -499.16003
+offset_right = 500.83997
+grow_horizontal = 1
+grow_vertical = 1
+mouse_filter = 2
+metadata/_edit_use_anchors_ = true
 
 [node name="AnnoncesOrdi" parent="." instance=ExtResource("5_ek6vc")]
-position = Vector2(1512, 4)
+layout_mode = 1
+anchor_left = 0.88600004
+anchor_top = 0.5
+anchor_right = 0.88600004
+anchor_bottom = 0.5
+offset_left = -184.12012
+offset_top = -507.0
+offset_right = 185.59973
+offset_bottom = -281.0
 
 [node name="AnnoncesJoueur" parent="." instance=ExtResource("5_ek6vc")]
-position = Vector2(1508, 729)
+layout_mode = 1
+anchor_left = 0.88500005
+anchor_top = 0.5
+anchor_right = 0.88500005
+anchor_bottom = 0.5
+offset_left = -185.20007
+offset_top = 217.0
+offset_right = 184.79993
+offset_bottom = 446.0
+
+[node name="Annuler" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.9480001
+anchor_top = 0.5
+anchor_right = 0.9480001
+anchor_bottom = 0.5
+offset_left = -47.160156
+offset_top = 460.0
+offset_right = 46.839844
+offset_bottom = 519.0
+theme = ExtResource("4_ek6vc")
+theme_override_font_sizes/font_size = 40
+text = "X"
+
+[node name="ConfirmationDialog" type="ConfirmationDialog" parent="Annuler"]
+oversampling_override = 1.0
+title = ""
+initial_position = 2
+size = Vector2i(700, 160)
+keep_title_visible = false
+theme = ExtResource("4_ek6vc")
+ok_button_text = "Oui"
+dialog_text = "Etes vous sûr de vouloir annuler ?"
+cancel_button_text = "Non"
 
 [node name="Annonce" type="Button" parent="."]
-layout_mode = 0
-offset_left = 1538.0
-offset_top = 1010.0
-offset_right = 1737.0
-offset_bottom = 1062.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.85200006
+anchor_top = 0.5
+anchor_right = 0.85200006
+anchor_bottom = 0.5
+offset_left = -102.84009
+offset_top = 460.0
+offset_right = 108.15991
+offset_bottom = 519.0
+theme = ExtResource("4_ek6vc")
 text = "ANNONCE"
 
 [node name="ChoixAnnonces" parent="." instance=ExtResource("7_acwto")]
-visible = false
 z_index = 100
 position = Vector2(332, 348)
 
-[connection signal="area_shape_entered" from="ZoneJeu" to="ZoneJeu" method="_on_area_shape_entered"]
-[connection signal="area_shape_exited" from="ZoneJeu" to="ZoneJeu" method="_on_area_shape_exited"]
+[node name="Portrait" type="Control" parent="."]
+visible = false
+anchors_preset = 0
+offset_right = 1080.0
+offset_bottom = 1920.0
+theme = ExtResource("4_ek6vc")
+
+[node name="Tapis" type="ColorRect" parent="Portrait"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -503.0
+offset_top = -297.0
+offset_right = 523.0
+offset_bottom = 304.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[connection signal="area_shape_entered" from="ZoneJeu/ZoneJeu" to="ZoneJeu/ZoneJeu" method="_on_area_shape_entered"]
+[connection signal="area_shape_exited" from="ZoneJeu/ZoneJeu" to="ZoneJeu/ZoneJeu" method="_on_area_shape_exited"]
 [connection signal="pressed" from="Annuler" to="." method="_on_button_pressed"]
 [connection signal="canceled" from="Annuler/ConfirmationDialog" to="." method="_on_confirmation_dialog_canceled"]
 [connection signal="confirmed" from="Annuler/ConfirmationDialog" to="." method="_on_confirmation_dialog_confirmed"]

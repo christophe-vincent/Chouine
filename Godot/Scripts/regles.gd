@@ -59,21 +59,24 @@ Si la couleur de l'annonce est celle de l'atout, les points sont doublés (40 po
 [b] 10 de der[/b]
 
 Le joueur qui remporte le dernier pli gagne 10 points, appelés "10 de der".
-
-
-
 """
+var coef: float = 1
+var offset: float = -0.42
+
 
 func _ready() -> void:
 	$Regles.text = regles
 	setup_scrolling_shader()
 	var scrollbar: VScrollBar = $Regles.get_v_scroll_bar()
 	scrollbar.value_changed.connect(_on_rich_text_scrolled)
+	coef = $Parchemin.size.y/$Parchemin.size.x
+	if coef >= 1:
+		offset = 0
+	$Parchemin.material.set_shader_parameter("scroll_offset", offset)
 
 
 func _on_rich_text_scrolled(value: float) -> void:
 	var scrollbar: VScrollBar = $Regles.get_v_scroll_bar()
-	
 	# Calculate scroll percentage (0.0 to 1.0)
 	var scroll_range: float = scrollbar.max_value - scrollbar.min_value
 	var scroll_percent: float = 0.0
@@ -82,19 +85,24 @@ func _on_rich_text_scrolled(value: float) -> void:
 		scroll_percent = value / scroll_range
 	
 	# Apply to texture shader
-	$Parchemin.material.set_shader_parameter("scroll_offset", scroll_percent/2)
+	$Parchemin.material.set_shader_parameter("scroll_offset", offset + scroll_percent*coef)
 
 func setup_scrolling_shader() -> void:
 	# Create shader material
+	
+	#uniform vec4 tint_color : source_color = vec4(1, 1, 1, 0.9);
+	#uniform vec4 tint_color : source_color = vec4(0.47, 0.41, 0.34, 0.9);
+
 	var shader_code: String = """
 shader_type canvas_item;
 
 uniform float scroll_offset = 0.0;
-uniform vec4 tint_color : source_color = vec4(0.47, 0.41, 0.34, 0.9);
+uniform vec4 tint_color : source_color = vec4(1, 1, 1, 0.9) ;
+
 
 void fragment() {
     vec2 uv = UV;
-    uv.y += -0.4 + scroll_offset;
+    uv.y += scroll_offset;
     COLOR = texture(TEXTURE, uv)* tint_color;
 }
 """

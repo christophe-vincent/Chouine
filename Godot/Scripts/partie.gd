@@ -3,14 +3,14 @@ extends Control
 class_name Partie
 
 # Scene principale
-@onready var pioche: Pile = $Piles/Pioche
+@onready var pioche: Pile = $Pioche
 @onready var retourne: Pile = $Piles/Retourne
 @onready var main_joueur: Pile = $Piles/MainJoueur
 @onready var main_ordi: Pile = $Piles/MainOrdi
-@onready var tapis: Pile = $Tapis
+@onready var tapis: Pile = $DeposeCartes
 @onready var joueur_gagnees: Pile = $Piles/JoueurGagnees
 @onready var ordi_gagnees: Pile = $Piles/OrdiGagnees
-@onready var zone_jeu: CollisionShape2D = $ZoneJeu/CollisionShape2D
+@onready var zone_jeu: CollisionShape2D = $ZoneJeu/ZoneJeu/CollisionShape2D
 @onready var annonces_ordi: Annonces = $AnnoncesOrdi
 @onready var annonces_joueur: Annonces = $AnnoncesJoueur
 @onready var choix_annonces: Node2D = $ChoixAnnonces
@@ -39,8 +39,8 @@ var manches_joueur: Array[TextureRect] = []
 var partie_terminee: bool = false
 var joueur_gagnees_size: Vector2 = Vector2(0, 0)
 var ordi_gagnees_size: Vector2 = Vector2(0, 0)
-var joueur_gagnees_position: Vector2 = Vector2(0, 0)
-var ordi_gagnees_position: Vector2 = Vector2(0, 0)
+var joueur_gagnees_position: Vector4 = Vector4(0, 0, 0, 0)
+var ordi_gagnees_position: Vector4 = Vector4(0, 0, 0, 0)
 
 
 enum JOUEURS {
@@ -51,9 +51,17 @@ enum JOUEURS {
 func _ready() -> void:
 	mains = {0: main_ordi, 1: main_joueur}
 	joueur_gagnees_size = joueur_gagnees.size
-	joueur_gagnees_position = joueur_gagnees.position
+	joueur_gagnees_position = Vector4(
+		joueur_gagnees.anchor_bottom,
+		joueur_gagnees.anchor_left,
+		joueur_gagnees.anchor_right,
+		joueur_gagnees.anchor_top)
 	ordi_gagnees_size = ordi_gagnees.size
-	ordi_gagnees_position = ordi_gagnees.position
+	ordi_gagnees_position = Vector4(
+		ordi_gagnees.anchor_bottom,
+		ordi_gagnees.anchor_left,
+		ordi_gagnees.anchor_right,
+		ordi_gagnees.anchor_top)
 	nb_points_ordi = 0
 	nb_points_joueur = 0
 	nb_manches_ordi = 0
@@ -90,6 +98,11 @@ func _ready() -> void:
 	$Scores/Button.connect("pressed", _partie_suivante.bind())
 	creer_cartes()
 	demarrer_jeu()
+	get_tree().root.size_changed.connect(on_viewport_size_changed)
+
+func on_viewport_size_changed() -> void:
+	annonces_ordi.set_milieu_tapis(tapis.position + tapis.size/2)
+	annonces_joueur.set_milieu_tapis(tapis.position + tapis.size/2)
 
 func creer_cartes() -> void:
 	# lecture du fichier de la description des cartes
@@ -141,8 +154,9 @@ func init_jeu() -> void:
 	joueur_gagnees.spreadable = true
 	joueur_gagnees.init_cartes()
 	joueur_gagnees.size = joueur_gagnees_size
-	joueur_gagnees.position = joueur_gagnees_position
-	
+	joueur_gagnees.set_anchor_and_offset(SIDE_LEFT, joueur_gagnees_position.y, -Settings.DEFAULT_CARD_SIZE.x/2, false)
+	joueur_gagnees.set_anchor_and_offset(SIDE_RIGHT, joueur_gagnees_position.z, Settings.DEFAULT_CARD_SIZE.x/2, false)
+
 	ordi_gagnees.card_size = Settings.DEFAULT_CARD_SIZE
 	ordi_gagnees.type = Pile.TypePile.PILE
 	ordi_gagnees.type_position = Pile.TypePosition.EVENTAIL_BAS
@@ -150,7 +164,8 @@ func init_jeu() -> void:
 	ordi_gagnees.face_visible = false
 	ordi_gagnees.init_cartes()
 	ordi_gagnees.size = ordi_gagnees_size
-	ordi_gagnees.position = ordi_gagnees_position
+	ordi_gagnees.set_anchor_and_offset(SIDE_LEFT, ordi_gagnees_position.y, -Settings.DEFAULT_CARD_SIZE.x/2, false)
+	ordi_gagnees.set_anchor_and_offset(SIDE_RIGHT, ordi_gagnees_position.z, Settings.DEFAULT_CARD_SIZE.x/2, false)
 	
 	zone_jeu.disabled = true
 	choix_annonces.partie = self
@@ -228,7 +243,7 @@ func carte_main_joueur(nom: String) -> int:
 		main_joueur.supprimer_carte(sept_atout.card_name)
 		main_joueur.calcul_positions(Settings.DUREE_MOUVEMENT)
 		retourne.ajouter_carte(sept_atout)
-		retourne.supprimer_carte(carte_atout.card_name)
+		retourne.init_cartes()
 		chouine.echanger_carte_atout(JOUEURS.HUMAIN)
 		print("Joueur      : Echange carte atout: ", carte_atout.card_name)
 		cartes_pioche.pop_front()
@@ -252,7 +267,9 @@ func melanger() -> void:
 func distribution_carte(joueur: int) -> void:
 	await get_tree().create_timer(Settings.DUREE_DISTRIBUTION).timeout
 	var c: String = cartes_pioche.pop_back()
-	pioche.supprimer_carte(c)
+	var ret: bool = pioche.supprimer_carte(c)
+	if ret == false:
+		retourne.init_cartes()
 	mains[joueur].ajouter_carte(cartes[c])
 	# Si la carte d'atout se retrouve dans une main alors elle devient une carte normale
 	if carte_atout != null && carte_atout.card_name == c:
@@ -329,7 +346,7 @@ func coup_ordi() -> void:
 			main_ordi.supprimer_carte(sept_atout.card_name)
 			main_ordi.ajouter_carte(carte_atout)
 			main_ordi.calcul_positions(Settings.DUREE_MOUVEMENT)
-			retourne.supprimer_carte(carte_atout.card_name)
+			retourne.init_cartes()
 			retourne.ajouter_carte(sept_atout)
 			print("Ordi        : Echange sept atout - ", carte_atout.card_name)
 			cartes_pioche.pop_front()
@@ -383,6 +400,7 @@ func fin_pli() -> void:
 		coup_joueur = true
 
 
+
 func annonce_joueur(annonce: String) -> void:
 	var ret: int = chouine.annonce_joueur(annonce)
 	if ret == 0:
@@ -390,7 +408,7 @@ func annonce_joueur(annonce: String) -> void:
 		annonces_joueur.add(annonce)
 		print("Joueur      : " + annonce)
 		if chouine.fin_partie():
-			fin_partie()
+			fin_pli()
 
 
 func fin_partie() -> void:
@@ -457,19 +475,21 @@ func fin_partie() -> void:
 	$Scores/Scores/DixDerOrdi.text = pt_ordi[3]
 	$Scores/Scores/TotalOrdi.text = pt_ordi[0]
 	
-	var screen_size: Vector2 = get_viewport_rect().size
+	var size_main: float = get_viewport_rect().size.x - 2*Settings.DEFAULT_CARD_SIZE.x
 	joueur_gagnees.type = Pile.TypePile.MAIN
-	joueur_gagnees.size = Vector2(screen_size.x - 2*Settings.DEFAULT_CARD_SIZE.x, Settings.DEFAULT_CARD_SIZE.y)
-	joueur_gagnees.position.x = Settings.DEFAULT_CARD_SIZE.x
+	joueur_gagnees.size = Vector2(size_main, Settings.DEFAULT_CARD_SIZE.y)
+	joueur_gagnees.set_anchor_and_offset(SIDE_LEFT, 0.5, -size_main/2, true)
+	joueur_gagnees.set_anchor_and_offset(SIDE_RIGHT, 0.5, size_main/2, true)
+	
 	joueur_gagnees.calcul_positions(0)
 	joueur_gagnees.spreadable = false
 	#ordi_gagnees.inversser()
 	ordi_gagnees.type = Pile.TypePile.MAIN
 	ordi_gagnees.type_position = Pile.TypePosition.NORMAL
 	ordi_gagnees.visibilite(true)
-	ordi_gagnees.size = Vector2(screen_size.x - 2*Settings.DEFAULT_CARD_SIZE.x, Settings.DEFAULT_CARD_SIZE.y)
-	ordi_gagnees.position.x = Settings.DEFAULT_CARD_SIZE.x
-	ordi_gagnees.position.y = 0
+	ordi_gagnees.size = Vector2(size_main, Settings.DEFAULT_CARD_SIZE.y)
+	ordi_gagnees.set_anchor_and_offset(SIDE_LEFT, 0.5, -size_main/2, true)
+	ordi_gagnees.set_anchor_and_offset(SIDE_RIGHT, 0.5, size_main/2, true)
 	ordi_gagnees.calcul_positions(0)
 	annonces_ordi.reset()
 	annonces_ordi.visible = false
