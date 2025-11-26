@@ -1,19 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://dk71nt6nh05bb"]
+[gd_scene load_steps=3 format=3 uid="uid://dk71nt6nh05bb"]
 
 [ext_resource type="Script" uid="uid://dip4qyj0vqhw" path="res://Scripts/annonces.gd" id="1_oy66i"]
-[ext_resource type="Theme" uid="uid://cwbdq4hxho7qr" path="res://Themes/macondo.tres" id="6_y1o6d"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y1o6d"]
-bg_color = Color(0, 0, 0, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.30588236, 0.31764707, 0.33333334, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+[ext_resource type="Theme" uid="uid://c7oakm7pw0gx8" path="res://Themes/macondo2.tres" id="2_ets74"]
 
 [node name="Annonces" type="Control"]
 layout_mode = 3
@@ -28,11 +16,13 @@ offset_bottom = 130.4
 script = ExtResource("1_oy66i")
 
 [node name="Panel" type="Panel" parent="."]
-layout_mode = 0
-offset_right = 370.0
-offset_bottom = 228.0
-theme = ExtResource("6_y1o6d")
-theme_override_styles/panel = SubResource("StyleBoxFlat_y1o6d")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_ets74")
 
 [node name="Label" type="Label" parent="Panel"]
 layout_mode = 0
@@ -40,7 +30,8 @@ offset_left = 109.0
 offset_top = 5.0
 offset_right = 276.0
 offset_bottom = 56.0
-theme = ExtResource("6_y1o6d")
+theme = ExtResource("2_ets74")
+theme_override_colors/font_color = Color(0.9019608, 0.7607843, 0.16078432, 1)
 text = "Annonces"
 
 [node name="Grid" type="GridContainer" parent="Panel"]

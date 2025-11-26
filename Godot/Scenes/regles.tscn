@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://t4xg8ymwm2vm"]
+[gd_scene load_steps=5 format=3 uid="uid://t4xg8ymwm2vm"]
 
 [ext_resource type="Script" uid="uid://xfglsjp7dq42" path="res://Scripts/regles.gd" id="1_g45cx"]
-[ext_resource type="Theme" uid="uid://cwbdq4hxho7qr" path="res://Themes/macondo.tres" id="1_hsyxg"]
 [ext_resource type="Texture2D" uid="uid://dctgyb7pec8sr" path="res://Assets/hintergrund.jpg" id="2_g45cx"]
+[ext_resource type="Theme" uid="uid://c7oakm7pw0gx8" path="res://Themes/macondo2.tres" id="3_8f28q"]
+[ext_resource type="Texture2D" uid="uid://4hnyodmak7su" path="res://Assets/home.png" id="4_8f28q"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -13,7 +14,25 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_g45cx")
 
+[node name="Retour" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.947
+anchor_top = 0.95400006
+anchor_right = 0.947
+anchor_bottom = 0.95400006
+offset_left = -41.23999
+offset_top = -30.320068
+offset_right = 40.76001
+offset_bottom = 29.679932
+theme = ExtResource("3_8f28q")
+theme_override_constants/icon_max_width = 42
+theme_override_font_sizes/font_size = 45
+icon = ExtResource("4_8f28q")
+icon_alignment = 1
+
 [node name="Parchemin" type="TextureRect" parent="."]
+visible = false
 modulate = Color(1, 1, 1, 0.33900002)
 show_behind_parent = true
 z_index = -2
@@ -35,30 +54,33 @@ stretch_mode = 6
 z_index = -4
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.031000001
-anchor_top = 0.061000004
-anchor_right = 0.952
-anchor_bottom = 0.84400004
-offset_left = 3.4799957
-offset_top = 0.11999512
-offset_right = 0.15991211
-offset_bottom = -0.52001953
+anchor_left = 0.015000001
+anchor_top = 0.024
+anchor_right = 0.97800004
+anchor_bottom = 0.9110001
+offset_left = -0.80000114
+offset_top = 0.07999992
+offset_right = 0.23986816
+offset_bottom = 0.11993408
+mouse_filter = 2
+color = Color(0.019607844, 0.019607844, 0.14117648, 1)
 
 [node name="Regles" type="RichTextLabel" parent="."]
 top_level = true
 z_index = 4
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.044000003
-anchor_top = 0.062000003
-anchor_right = 0.9620001
-anchor_bottom = 0.84000003
-offset_left = -0.48000336
-offset_top = 0.039993286
-offset_right = -5.040161
-offset_bottom = -0.2000122
-theme = ExtResource("1_hsyxg")
-theme_override_colors/default_color = Color(0, 0, 0, 1)
+anchor_left = 0.016
+anchor_top = 0.033
+anchor_right = 0.984
+anchor_bottom = 0.91
+offset_left = 0.27999878
+offset_top = -5.6399994
+offset_right = 0.7199707
+offset_bottom = 0.19995117
+mouse_filter = 1
+theme = ExtResource("3_8f28q")
+theme_override_colors/default_color = Color(0.85882354, 0.85882354, 0.98039216, 1)
 bbcode_enabled = true
 text = "sdsqdsdqsd
 qsdsqd
@@ -84,20 +106,5 @@ fdv
 rte
 ge
 frv"
-
-[node name="Retour" type="Button" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.938
-anchor_top = 0.93600005
-anchor_right = 0.938
-anchor_bottom = 0.93600005
-offset_left = -89.96008
-offset_top = -45.880066
-offset_right = 90.03992
-offset_bottom = 45.119934
-theme = ExtResource("1_hsyxg")
-theme_override_font_sizes/font_size = 45
-text = "Accueil"
 
 [connection signal="pressed" from="Retour" to="." method="_on_retour_pressed"]

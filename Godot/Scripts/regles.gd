@@ -4,21 +4,21 @@ extends Control
 
 var regles: String = """[center][font_size={60}][b]Règles[/b][/font_size][/center]
 [p][/p]
-Le but de la Chouine est de gagner le plus de points possibles qui serviront à gagner des parties.
-Une Chouine se joue en généralement en 3 ou 5 parties constituant une manche et en 1 ou 2 manches gagnantes.
+Le but de la Chouine est de gagner le plus de points possible qui serviront à gagner des parties.
+Une Chouine se joue généralement en 3 ou 5 parties constituant une manche et en 1 ou 2 manches gagnantes.
 
-[b] Déroulé du jeu[/b]
+[b] Déroulement du jeu[/b]
 
 Chaque joueur reçoit [b]5[/b] cartes d'un jeu de 32 cartes.
-Après la distribution des cartes, la carte se trouvant au dessus de la pioche est retournée et placée à coté de la pioche. 
-Cette carte détermine la couleur de l'[b]atout[/b]. Une carte de la couleur de l'atout est plus forte q'une carte d'une autre couleur.
+Après la distribution des cartes, la carte se trouvant au-dessus de la pioche est retournée et placée à côté de la pioche. 
+Cette carte détermine la couleur de l'[b]atout[/b]. Une carte de la couleur de l'atout est plus forte qu'une carte d'une autre couleur.
 
-Tant qu'il reste des cartes dans la pioche, il n'est pas nécessaire de monter, c'est à dire prendre la carte de l'adversaire si cela est possible.
+Tant qu'il reste des cartes dans la pioche, il n'est pas nécessaire de monter, c'est-à-dire prendre la carte de l'adversaire si cela est possible.
 Quand la pioche est vide, monter est obligatoire si une carte plus forte le permet.
 
 [b] Points des cartes[/b]
 
-Voici la valeur des points pour chaque carte:
+Voici la valeur des points pour chaque carte :
 [ul][b]7, 8, 9[/b]: 0 point[/ul]
 [ul][b]Valet[/b]: 2 points[/ul]
 [ul][b]Dame[/b]: 3 points[/ul]
@@ -30,8 +30,8 @@ Les [b]10[/b] et les [b]As[/b] sont appelés [b]Brisques[/b].
 
 [b] Annonces[/b]
 
-Certaines combinaisons de cartes permettent de réaliser des annonces. Ces dernières ajouterons des points au décompte final.
-Les cartes des annonces, excepté la quinte seront toutes de la même couleur.
+Certaines combinaisons de cartes permettent de réaliser des annonces. Ces dernières ajouteront des points au décompte final.
+Les cartes des annonces, excepté la quinte, seront toutes de la même couleur.
 Si la couleur de l'annonce est celle de l'atout, les points sont doublés (40 pour un mariage).
 
 [table=4,center,center]

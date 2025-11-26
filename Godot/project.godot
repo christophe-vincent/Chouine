@@ -11,9 +11,12 @@ config_version=5
 [application]
 
 config/name="Chouine"
+config/version="0.9.1rc"
 run/main_scene="uid://cbig4nyg5d5k8"
 config/features=PackedStringArray("4.5", "GL Compatibility")
-config/icon="res://icon.svg"
+boot_splash/image="uid://dxwofdjavkqv6"
+config/icon="uid://bmunaj6yjdy1v"
+boot_splash/minimum_display_time=4000
 
 [autoload]
 

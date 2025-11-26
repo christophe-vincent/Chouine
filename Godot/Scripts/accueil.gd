@@ -17,12 +17,20 @@ func _ready() -> void:
 	if Global.nb_manches == 2:
 		_on_deux_manches_pressed()
 	$Intro.text = Settings.TEXT_INTRO
+	if FileAccess.file_exists(Settings.SAVE_FILE):
+		$PartieEnCours.visible = true
+
+func _on_partie_en_cours_pressed() -> void:
+	Global.cartes_visibles = $CartesVisibles.button_pressed
+	get_tree().change_scene_to_packed(scene_partie)
 
 
 func _on_jouer_pressed() -> void:
+	# la partie en cours est supprimée
+	if FileAccess.file_exists(Settings.SAVE_FILE):
+		DirAccess.remove_absolute(Settings.SAVE_FILE)
 	Global.cartes_visibles = $CartesVisibles.button_pressed
 	get_tree().change_scene_to_packed(scene_partie)
-	#get_tree().change_scene_to_file("res://Scenes/partie.tscn")
 
 
 func _on_un_point_pressed() -> void:

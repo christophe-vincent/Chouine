@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cvnc0r14i4max"]
 
-[ext_resource type="Theme" uid="uid://cwbdq4hxho7qr" path="res://Themes/macondo.tres" id="1_hdn7m"]
+[ext_resource type="Theme" uid="uid://c7oakm7pw0gx8" path="res://Themes/macondo2.tres" id="1_hdn7m"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hdn7m"]
 
@@ -14,65 +14,79 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -500.0
 offset_top = -200.0
-offset_right = 500.0
-offset_bottom = 200.0
+offset_right = 778.0
+offset_bottom = 252.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Info" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -392.0
-offset_top = 24.0
-offset_right = 395.0
-offset_bottom = 75.0
-grow_horizontal = 2
-theme = ExtResource("1_hdn7m")
-theme_override_colors/font_color = Color(0, 1, 0, 1)
-text = "Vous avez gagné cette partie et cette manche !"
-horizontal_alignment = 1
-
-[node name="Button" type="Button" parent="."]
+[node name="Panel" type="Panel" parent="."]
 layout_mode = 0
-offset_left = 663.0
-offset_top = 156.0
-offset_right = 927.0
-offset_bottom = 260.0
+offset_right = 1275.0
+offset_bottom = 399.0
+theme = ExtResource("1_hdn7m")
+
+[node name="Continuer" type="Button" parent="."]
+layout_mode = 0
+offset_left = 750.0
+offset_top = 225.0
+offset_right = 1014.0
+offset_bottom = 329.0
 theme = ExtResource("1_hdn7m")
 theme_override_font_sizes/font_size = 56
 text = "Continuer"
 
-[node name="Victoire" type="Label" parent="."]
-layout_mode = 0
-offset_left = 364.0
-offset_top = 19.0
-offset_right = 637.0
-offset_bottom = 90.0
+[node name="Info" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -600.0
+offset_top = 34.0
+offset_right = 595.0
+offset_bottom = 110.0
+grow_horizontal = 2
 theme = ExtResource("1_hdn7m")
 theme_override_colors/font_color = Color(0, 1, 0, 1)
-theme_override_font_sizes/font_size = 60
+theme_override_font_sizes/font_size = 64
+text = "Vous avez gagné cette partie et cette manche !"
+horizontal_alignment = 1
+
+[node name="Victoire" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.48900002
+anchor_right = 0.48900002
+offset_left = -227.94202
+offset_top = 35.0
+offset_right = 234.05798
+offset_bottom = 154.0
+theme = ExtResource("1_hdn7m")
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/font_size = 100
 text = "VICTOIRE !"
 
 [node name="Defaite" type="Label" parent="."]
-layout_mode = 0
-offset_left = 374.0
-offset_top = 22.0
-offset_right = 636.0
-offset_bottom = 94.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.49800003
+anchor_right = 0.49800003
+offset_left = -217.44403
+offset_top = 29.0
+offset_right = 219.55597
+offset_bottom = 148.0
 theme = ExtResource("1_hdn7m")
 theme_override_colors/font_color = Color(1, 0, 0, 1)
-theme_override_font_sizes/font_size = 60
+theme_override_font_sizes/font_size = 100
 text = "DEFAITE..."
 
 [node name="Scores" type="GridContainer" parent="."]
 layout_mode = 0
-offset_left = 156.0
-offset_top = 87.0
-offset_right = 681.0
-offset_bottom = 353.0
+offset_left = 126.0
+offset_top = 137.0
+offset_right = 651.0
+offset_bottom = 395.0
 theme_override_constants/h_separation = 17
+theme_override_constants/v_separation = 2
 columns = 3
 
 [node name="Control" type="Control" parent="Scores"]
@@ -82,23 +96,27 @@ theme = ExtResource("1_hdn7m")
 [node name="Vous" type="Label" parent="Scores"]
 layout_mode = 2
 theme = ExtResource("1_hdn7m")
+theme_override_colors/font_color = Color(0.9019608, 0.7607843, 0.16078432, 1)
 theme_override_font_sizes/font_size = 40
 text = "Vous"
 
 [node name="Adversaire" type="Label" parent="Scores"]
 layout_mode = 2
 theme = ExtResource("1_hdn7m")
+theme_override_colors/font_color = Color(0.9019608, 0.7607843, 0.16078432, 1)
 text = "Adversaire"
 
 [node name="Cartes" type="Label" parent="Scores"]
 layout_mode = 2
 theme = ExtResource("1_hdn7m")
+theme_override_colors/font_color = Color(0.9019608, 0.7607843, 0.16078432, 1)
 theme_override_font_sizes/font_size = 40
 text = "cartes"
 
 [node name="CartesJoueur" type="Label" parent="Scores"]
 layout_mode = 2
 theme = ExtResource("1_hdn7m")
+theme_override_colors/font_color = Color(0.9019608, 0.7607843, 0.16078432, 1)
 theme_override_font_sizes/font_size = 40
 text = "0"
 horizontal_alignment = 1
@@ -106,6 +124,7 @@ horizontal_alignment = 1
 [node name="CartesOrdi" type="Label" parent="Scores"]
 layout_mode = 2
 theme = ExtResource("1_hdn7m")
+theme_override_colors/font_color = Color(0.9019608, 0.7607843, 0.16078432, 1)
 theme_override_font_sizes/font_size = 40
 text = "0"
 horizontal_alignment = 1
@@ -113,12 +132,14 @@ horizontal_alignment = 1
 [node name="Annonces" type="Label" parent="Scores"]
 layout_mode = 2
 theme = ExtResource("1_hdn7m")
+theme_override_colors/font_color = Color(0.9019608, 0.7607843, 0.16078432, 1)
 theme_override_font_sizes/font_size = 40
 text = "annonces"
 
 [node name="AnnoncesJoueur" type="Label" parent="Scores"]
 layout_mode = 2
 theme = ExtResource("1_hdn7m")
+theme_override_colors/font_color = Color(0.9019608, 0.7607843, 0.16078432, 1)
 theme_override_font_sizes/font_size = 40
 text = "0"
 horizontal_alignment = 1
@@ -126,6 +147,7 @@ horizontal_alignment = 1
 [node name="AnnoncesOrdi" type="Label" parent="Scores"]
 layout_mode = 2
 theme = ExtResource("1_hdn7m")
+theme_override_colors/font_color = Color(0.9019608, 0.7607843, 0.16078432, 1)
 theme_override_font_sizes/font_size = 40
 text = "0"
 horizontal_alignment = 1
@@ -133,12 +155,14 @@ horizontal_alignment = 1
 [node name="DixDer" type="Label" parent="Scores"]
 layout_mode = 2
 theme = ExtResource("1_hdn7m")
+theme_override_colors/font_color = Color(0.9019608, 0.7607843, 0.16078432, 1)
 theme_override_font_sizes/font_size = 40
 text = "10 de der"
 
 [node name="DixDerJoueur" type="Label" parent="Scores"]
 layout_mode = 2
 theme = ExtResource("1_hdn7m")
+theme_override_colors/font_color = Color(0.9019608, 0.7607843, 0.16078432, 1)
 theme_override_font_sizes/font_size = 40
 text = "0"
 horizontal_alignment = 1
@@ -146,6 +170,7 @@ horizontal_alignment = 1
 [node name="DixDerOrdi" type="Label" parent="Scores"]
 layout_mode = 2
 theme = ExtResource("1_hdn7m")
+theme_override_colors/font_color = Color(0.9019608, 0.7607843, 0.16078432, 1)
 theme_override_font_sizes/font_size = 40
 text = "0"
 horizontal_alignment = 1
@@ -153,6 +178,7 @@ horizontal_alignment = 1
 [node name="Total" type="Label" parent="Scores"]
 layout_mode = 2
 theme = ExtResource("1_hdn7m")
+theme_override_colors/font_color = Color(0.9019608, 0.7607843, 0.16078432, 1)
 theme_override_font_sizes/font_size = 46
 theme_override_styles/focus = SubResource("StyleBoxTexture_hdn7m")
 text = "TOTAL"
@@ -160,6 +186,7 @@ text = "TOTAL"
 [node name="TotalJoueur" type="Label" parent="Scores"]
 layout_mode = 2
 theme = ExtResource("1_hdn7m")
+theme_override_colors/font_color = Color(0.9019608, 0.7607843, 0.16078432, 1)
 theme_override_font_sizes/font_size = 46
 text = "0"
 horizontal_alignment = 1
@@ -167,6 +194,7 @@ horizontal_alignment = 1
 [node name="TotalOrdi" type="Label" parent="Scores"]
 layout_mode = 2
 theme = ExtResource("1_hdn7m")
+theme_override_colors/font_color = Color(0.9019608, 0.7607843, 0.16078432, 1)
 theme_override_font_sizes/font_size = 46
 text = "0"
 horizontal_alignment = 1

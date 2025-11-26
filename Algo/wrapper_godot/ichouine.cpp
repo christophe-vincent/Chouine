@@ -24,7 +24,7 @@ void IChouine::_bind_methods() {
     ClassDB::bind_method(D_METHOD("echanger_carte_atout"), &IChouine::EchangerCarteAtout);
 }
 
-IChouine::IChouine(): m_Chouine(new Chouine(5, 5)) 
+IChouine::IChouine(): m_Chouine(new Chouine(6, 6))
 {
 }
 
