@@ -14,7 +14,7 @@ class_name Partie
 @onready var annonces_ordi: Annonces = $AnnoncesOrdi
 @onready var annonces_joueur: Annonces = $AnnoncesJoueur
 @onready var choix_annonces: Control = $ChoixAnnonces
-@onready var confirmation_annuler: ConfirmationDialog = $Annuler/ConfirmationDialog
+@onready var confirmation_annuler: ConfirmationPanel = $Confirmation
 
 var card_packed_scene: Resource = preload("res://Scenes/carte.tscn")
 var score_scene: Resource = preload("res://Scenes/scores.tscn")
@@ -49,6 +49,8 @@ enum JOUEURS {
 }
 
 func _ready() -> void:
+	confirmation_annuler.ok_button.pressed.connect(_on_confirmation_dialog_confirmed)
+	confirmation_annuler.cancel_button.pressed.connect(_on_confirmation_dialog_canceled)
 	mains = {0: main_ordi, 1: main_joueur}
 	joueur_gagnees_size = joueur_gagnees.size
 	joueur_gagnees_position = Vector4(
@@ -67,15 +69,15 @@ func _ready() -> void:
 	nb_manches_ordi = 0
 	nb_manches_joueur = 0
 	restauration_partie()
-	if Global.nb_manches == 1:
+	if Global.nb_manches == 1 and not Global.help_mode:
 		$ScoreJoueur/ScoreJoueur/ManchesJoueur.visible = false
 		$ScoreOrdi/ScoreOrdi/ManchesJoueur.visible = false
 		$ScoreOrdi.size.y = 100
 		$ScoreJoueur.size.y = 100
-	if Global.nb_points == 1:
+	if Global.nb_points == 1 and not Global.help_mode:
 		$ScoreJoueur/ScoreJoueur/PointsJoueur.visible = false
 		$ScoreOrdi/ScoreOrdi/PointsJoueur.visible = false
-	elif Global.nb_points <= 3:
+	elif Global.nb_points <= 3 and not Global.help_mode:
 		$ScoreJoueur/ScoreJoueur/PointsJoueur/Point5.visible = false
 		$ScoreOrdi/ScoreOrdi/PointsJoueur/Point5.visible = false
 		$ScoreJoueur/ScoreJoueur/PointsJoueur/Point4.visible = false
@@ -100,7 +102,22 @@ func _ready() -> void:
 	$Scores/Continuer.connect("pressed", _partie_suivante.bind())
 	creer_cartes()
 	get_tree().root.size_changed.connect(on_viewport_size_changed)
+	if Global.help_mode:
+		$Help.visible = true
+	init_jeu()
 	demarrer_jeu()
+	
+	if Global.help_mode:
+		# déplacer quelques cartes
+		for i: int in range(6):
+			var c: String = cartes_pioche.pop_back()
+			pioche.supprimer_carte(c)
+			joueur_gagnees.ajouter_carte(cartes[c])
+		for i: int in range(6):
+			var c: String = cartes_pioche.pop_back()
+			pioche.supprimer_carte(c)
+			ordi_gagnees.face_visible = false
+			ordi_gagnees.ajouter_carte(cartes[c])
 	
 
 func on_viewport_size_changed() -> void:
@@ -118,9 +135,10 @@ func creer_cartes() -> void:
 				var card_instance: Node = card_packed_scene.instantiate()
 				card_instance.card_name = nom_carte
 				card_instance.front_image = load("res://Assets/Cartes/" + jeu_cartes[couleur][valeur]['image'])
-				card_instance.back_image = load("res://Assets/Cartes/back_1.svg")
+				card_instance.back_image = load("res://Assets/Cartes/back_4.png")
 				card_instance.show_front = false
 				card_instance.position = tapis.position + tapis.size/2
+				card_instance.sept_atout = false
 				add_child(card_instance)
 				cartes[nom_carte] = card_instance
 
@@ -182,16 +200,15 @@ func init_jeu() -> void:
 	choix_annonces.set_partie(self)
 
 
-func demarrer_jeu() -> void:
-	init_jeu()
-	
+func demarrer_jeu() -> void:	
 	await melanger()
 	
 	chouine.distribution_cartes()
 	print("Cartes pioche: " + str(cartes_pioche))
 	print("")
 	# qui commence ?
-	await get_tree().create_timer(1).timeout
+	if not Global.help_mode:
+		await get_tree().create_timer(1).timeout
 	await distribution_cartes(5)
 	
 	choix_annonces.annonces_autorisees(chouine.annonces_en_main_joueur(1))
@@ -203,11 +220,13 @@ func demarrer_jeu() -> void:
 	cartes_pioche.push_front(c)
 	carte_atout = cartes[c]
 	sept_atout = cartes["7-" + c.split("-")[1]]
+	sept_atout.sept_atout = true
 	var sept_atout_en_main: bool = chouine.sept_atout_en_main(JOUEURS.HUMAIN)
 	if sept_atout_en_main:
 		carte_atout.draggable = true
 	
-	await get_tree().create_timer(1).timeout
+	if not Global.help_mode:
+		await get_tree().create_timer(1).timeout
 	if chouine.gagnant_pli() == JOUEURS.ORDI:
 		coup_ordi()
 	zone_jeu.disabled = false
@@ -217,7 +236,8 @@ func demarrer_jeu() -> void:
 func melanger() -> void:
 	cartes_pioche = []
 	for c: String in Array(chouine.partie().split(" ")):
-		await get_tree().create_timer(0.05).timeout
+		if not Global.help_mode:
+			await get_tree().create_timer(0.05).timeout
 		c = c.replace('*', '')
 		cartes_pioche.append(c)
 		pioche.ajouter_carte(cartes[c])
@@ -256,7 +276,6 @@ func restauration_partie() -> bool:
 		Global.nb_points = int(json.data['points'])
 		nb_points_joueur = int(json.data['points_joueur'])
 		nb_points_ordi = int(json.data['points_ordi'])
-		print(nb_points_joueur)
 		Global.nb_manches = json.data['manches']
 		nb_manches_joueur = json.data['manches_joueur']
 		nb_manches_ordi = json.data['manches_ordi']
@@ -296,25 +315,36 @@ func carte_jouee(nom: String) -> int:
 		fin_pli()
 	return 0
 
+func prise_carte_atout(nom: String) -> int:
+	if carte_atout == null || nom != carte_atout.card_name:
+		return -1
+	echange_atout_joueur()
+	return 0
 
-func carte_main_joueur(nom: String) -> int:
+func pose_sept_atout(nom: String) -> int:
+	if carte_atout == null || nom != sept_atout.card_name:
+		return 1
+	echange_atout_joueur()
+	return 0
+
+func zone_pioche_actif(actif: bool) -> void:
+	$ZonePioche/Actif.visible = actif
+
+func echange_atout_joueur() -> void:
 	"""une carte est déposée dans la main du joueur, ca ne peut être que la carte d'atout"""
-	if carte_atout != null && nom == carte_atout.card_name:
-		# chercher le sept d'atout
-		main_joueur.ajouter_carte(carte_atout)
-		main_joueur.supprimer_carte(sept_atout.card_name)
-		main_joueur.calcul_positions(Settings.DUREE_MOUVEMENT)
-		retourne.ajouter_carte(sept_atout)
-		retourne.init_cartes()
-		chouine.echanger_carte_atout(JOUEURS.HUMAIN)
-		print("Joueur      : Echange carte atout: ", carte_atout.card_name)
-		cartes_pioche.pop_front()
-		cartes_pioche.push_front(sept_atout.card_name)
-		carte_atout = null
-		sept_atout.draggable = false
-		choix_annonces.annonces_autorisees(chouine.annonces_en_main_joueur(1))
-		return 0
-	return -1
+	# chercher le sept d'atout
+	main_joueur.ajouter_carte(carte_atout)
+	main_joueur.supprimer_carte(sept_atout.card_name)
+	main_joueur.calcul_positions(Settings.DUREE_MOUVEMENT)
+	retourne.ajouter_carte(sept_atout)
+	retourne.init_cartes()
+	chouine.echanger_carte_atout(JOUEURS.HUMAIN)
+	print("Joueur      : Echange carte atout: ", carte_atout.card_name)
+	cartes_pioche.pop_front()
+	cartes_pioche.push_front(sept_atout.card_name)
+	carte_atout = null
+	sept_atout.draggable = false
+	choix_annonces.annonces_autorisees(chouine.annonces_en_main_joueur(1))
 
 func annonce_joueur(annonce: String) -> void:
 	"""Le joueur a validé une annonce"""
@@ -394,7 +424,8 @@ func coup_ordi() -> void:
 #
 func distribution_carte(joueur: int) -> void:
 	"""Une carte est donnée à un joueur"""
-	await get_tree().create_timer(Settings.DUREE_DISTRIBUTION).timeout
+	if not Global.help_mode:
+		await get_tree().create_timer(Settings.DUREE_DISTRIBUTION).timeout
 	var c: String = cartes_pioche.pop_back()
 	var ret: bool = pioche.supprimer_carte(c)
 	if ret == false:
@@ -580,26 +611,31 @@ func _display_points() -> void:
 
 func _partie_suivante() -> void:
 	if partie_terminee == true:
+		supprimer_sauvegarde()
 		retour_accueil()
 	else:
 		demarrer_jeu()
 
+
 func _on_button_pressed() -> void:
+	if Global.help_mode:
+		retour_accueil()
 	confirmation_annuler.visible = true
 
 
 func _on_confirmation_dialog_confirmed() -> void:
-	confirmation_annuler.visible = true
+	confirmation_annuler.visible = false
+	supprimer_sauvegarde()
 	retour_accueil()
 
+
 func _on_confirmation_dialog_canceled() -> void:
-	confirmation_annuler.visible = true
+	confirmation_annuler.visible = false
 
 func _on_annonce_pressed() -> void:
 	choix_annonces.visible = true
 
 func retour_accueil() -> void:
-	supprimer_sauvegarde()
 	var error: Error = get_tree().change_scene_to_file("res://Scenes/accueil.tscn")
 	if error != OK:
 		print("Scene change failed with error: ", error)

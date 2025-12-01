@@ -475,6 +475,147 @@ bool Joueur::carteAurotisee(Carte &_card, Carte &_otherCarte)
     }
 }
 
+// serialize le joueur en format json
+std::string Joueur::sauvegarde()
+{
+    std::string ret = "{";
+    ret += "\"id\":" + std::to_string(m_Id) + ",";
+    ret += "\"second_choix\":" + std::to_string(m_SecondChoix ? 1 : 0) + ",";
+    ret += "\"change_7_atout\":\"" + m_Change7Atout + "\",";
+    ret += "\"niveau\":" + std::to_string(m_Niveau) + ",";
+    ret += "\"10der\":" + std::to_string(m_10Der) + ",";
+    ret += "\"points_annonces\":" + std::to_string(m_PointsAnnonces) + ",";
+    ret += "\"is_chouine\":" + std::to_string(m_IsChouine ? 1 : 0) + ",";
+    ret += "\"carte_jouee\":\"";
+    if (m_CarteJouee != nullptr)
+    {
+        ret += m_CarteJouee->carteToStr();
+    }
+    ret += "\",";
+    ret += "\"quinte\":" + std::to_string(m_Quinte ? 1 : 0) + ",";
+    ret += "\"cartes_main\":[";
+    for (size_t i=0; i<m_CartesMain.size(); i++)
+    {
+        ret += "\"" + m_CartesMain[i]->carteToStr() + "\"";
+        if (i < m_CartesMain.size() -1)
+        {
+            ret += ",";
+        }
+    }
+    ret += "],";
+    ret += "\"cartes_gagnees\":[";
+    for (size_t i=0; i<m_CartesGagnees.size(); i++)
+    {
+        ret += "\"" + m_CartesGagnees[i]->carteToStr() + "\"";
+        if (i < m_CartesGagnees.size() -1)
+        {
+            ret += ",";
+        }
+    }
+    ret += "]";
+    ret += ",\"cartes_jouees\":[";
+    for (size_t i=0; i<m_CartesJouees.size(); i++)
+    {
+        ret += "\"" + m_CartesJouees[i]->carteToStr() + "\"";
+        if (i < m_CartesJouees.size() -1)
+        {
+            ret += ",";
+        }
+    }
+    ret += "]";
+    // sauvegarde les annonces
+    ret += ",\"annonces\":[";
+    size_t count = 0;
+    for (const auto& pair : m_Annonces)
+    {
+        Annonce* annonce = pair.first;
+        ret += "\"" + annonce->to_string() + "\"";;
+        if (count < m_Annonces.size() -1)
+        {
+            ret += ",";
+        }
+        count++;
+    }
+    ret += "]";
+    // sauvegarde les couleur d'annonces
+    ret += ",\"couleur_annonces\":[";
+    count = 0;
+    for (const auto& pair : m_CouleurAnnonces)
+    {
+        Carte::Couleur couleur = pair.first;
+        bool faite = pair.second;
+        if (faite)
+        {
+            ret += "\"" + Carte::couleurToStr(couleur) + "\"";;
+            if (count < m_CouleurAnnonces.size() -1)
+            {
+                ret += ",";
+            }
+        }
+        count++;
+    }
+    ret += "]";
+
+    ret += "}";
+    return ret;
+}
+
+
+// restaure le joueur
+void Joueur::restauration(const std::string& _data)
+{
+    // simple parser json
+    m_CartesMain.cartes().clear();
+    m_CartesGagnees.cartes().clear();
+    m_CartesJouees.cartes().clear();
+    m_Annonces.clear();
+    m_CouleurAnnonces.clear();
+
+    size_t pos = 0;
+    size_t next_pos = 0;
+
+    // id
+    pos = _data.find("\"id\":", pos);
+    next_pos = _data.find(",", pos);
+    m_Id = std::stoi(_data.substr(pos + 5, next_pos - pos -5));
+    pos = next_pos +1;
+
+    // second_choix
+    pos = _data.find("\"second_choix\":", pos);
+    next_pos = _data.find(",", pos);
+    m_SecondChoix = (std::stoi(_data.substr(pos + 15, next_pos - pos -15)) != 0);
+    pos = next_pos +1;
+
+    // change_7_atout
+    pos = _data.find("\"change_7_atout\":\"", pos);
+    next_pos = _data.find("\",", pos);
+    m_Change7Atout = _data.substr(pos + 18, next_pos - pos -18);
+    pos = next_pos +2;
+
+    // niveau
+    pos = _data.find("\"niveau\":", pos);
+    next_pos = _data.find(",", pos);
+    m_Niveau = std::stoi(_data.substr(pos + 8, next_pos - pos -8));
+    pos = next_pos +1;
+
+    // 10der
+    pos = _data.find("\"10der\":", pos);
+    next_pos = _data.find(",", pos);
+    m_10Der = std::stoi(_data.substr(pos + 7, next_pos - pos -7));
+    pos = next_pos +1;
+
+    // points_annonces
+    pos = _data.find("\"points_annonces\":", pos);
+    next_pos = _data.find(",", pos);
+    m_PointsAnnonces = std::stoi(_data.substr(pos + 18, next_pos - pos -18));
+    pos = next_pos +1;
+
+    // is_chouine
+    pos = _data.find("\"is_chouine\":", pos);
+    next_pos = _data.find(",", pos);
+    m_IsChouine = (std::stoi(_data.substr(pos
+
+}
 
 // retourne la main du joueur en string
 string Joueur::cartesMainToStr()

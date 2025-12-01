@@ -343,6 +343,21 @@ theme_override_styles/disabled = SubResource("StyleBoxEmpty_tiwth")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_aujfu")
 text = "Cartes adversaire visibles"
 
+[node name="Aide" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.563
+anchor_top = 0.5
+anchor_right = 0.563
+anchor_bottom = 0.5
+offset_left = -92.96008
+offset_top = 422.0
+offset_right = 92.03992
+offset_bottom = 517.0
+theme = ExtResource("3_2kwed")
+theme_override_font_sizes/font_size = 60
+text = "Aide"
+
 [node name="Regles" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = -1
@@ -365,4 +380,5 @@ text = "Règles"
 [connection signal="pressed" from="CinqPoints" to="." method="_on_cinq_points_2_pressed"]
 [connection signal="pressed" from="UneManche" to="." method="_on_une_manche_pressed"]
 [connection signal="pressed" from="DeuxManches" to="." method="_on_deux_manches_pressed"]
+[connection signal="pressed" from="Aide" to="." method="_on_aide_pressed"]
 [connection signal="pressed" from="Regles" to="." method="_on_regles_pressed"]

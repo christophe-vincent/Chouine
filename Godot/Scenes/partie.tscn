@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bftfnuj4mri6h"]
+[gd_scene load_steps=16 format=3 uid="uid://bftfnuj4mri6h"]
 
 [ext_resource type="Script" uid="uid://dftrx4q78fbw7" path="res://Scripts/partie.gd" id="1_m1snf"]
 [ext_resource type="Texture2D" uid="uid://cpr78bpmvuyr7" path="res://Assets/tapis_bleu.png" id="2_8crny"]
@@ -10,9 +10,14 @@
 [ext_resource type="PackedScene" uid="uid://dicibjashalna" path="res://Scenes/choix_annonces.tscn" id="7_acwto"]
 [ext_resource type="PackedScene" uid="uid://cvnc0r14i4max" path="res://Scenes/scores.tscn" id="7_kcvnu"]
 [ext_resource type="Texture2D" uid="uid://4hnyodmak7su" path="res://Assets/home.png" id="9_8crny"]
+[ext_resource type="PackedScene" uid="uid://7nyoesuce12r" path="res://Scenes/confirmation.tscn" id="10_qapei"]
+[ext_resource type="PackedScene" uid="uid://btw00rqumin08" path="res://Scenes/help.tscn" id="12_gtolj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qapei"]
+size = Vector2(280.5, 456.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bjfpd"]
-size = Vector2(1222, 439)
+size = Vector2(959, 405)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ek6vc"]
 size = Vector2(1038, 115)
@@ -87,7 +92,8 @@ z_order = 10
 spreadable = false
 
 [node name="Scores" parent="." instance=ExtResource("7_kcvnu")]
-z_index = 4096
+visible = false
+z_index = 4095
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.56200004
@@ -201,6 +207,40 @@ script = ExtResource("4_1x1o5")
 card_size = Vector2(320, 240)
 spreadable = false
 
+[node name="ZonePioche" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ZonePioche" type="Area2D" parent="ZonePioche"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZonePioche/ZonePioche"]
+position = Vector2(1742.25, 507.25)
+shape = SubResource("RectangleShape2D_qapei")
+
+[node name="Actif_" type="ColorRect" parent="ZonePioche"]
+visible = false
+layout_mode = 0
+offset_left = 1518.0
+offset_top = 268.0
+offset_right = 1889.0
+offset_bottom = 749.0
+color = Color(1, 1, 1, 0.4862745)
+
+[node name="Actif" type="Panel" parent="ZonePioche"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 42.575
+anchor_top = 12.675
+anchor_right = 42.575
+anchor_bottom = 12.675
+offset_left = -249.0
+offset_top = -238.0
+offset_right = 188.0
+offset_bottom = 238.0
+theme = ExtResource("4_8crny")
+theme_type_variation = &"PanelAtoutActif"
+
 [node name="ZoneJeu" type="Control" parent="."]
 layout_mode = 1
 anchor_left = 0.49500003
@@ -216,7 +256,7 @@ mouse_filter = 2
 [node name="ZoneJeu" type="Area2D" parent="ZoneJeu"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneJeu/ZoneJeu"]
-position = Vector2(551, 159.5)
+position = Vector2(449.5, 142.5)
 shape = SubResource("RectangleShape2D_bjfpd")
 
 [node name="MainJoueur" type="Control" parent="."]
@@ -439,35 +479,7 @@ offset_left = -185.20007
 offset_top = 217.0
 offset_right = 184.79993
 offset_bottom = 520.0
-
-[node name="Annuler" type="Button" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.887
-anchor_top = 0.5
-anchor_right = 0.887
-anchor_bottom = 0.5
-offset_left = 85.95996
-offset_top = 440.0
-offset_right = 150.95996
-offset_bottom = 500.0
-theme = ExtResource("4_8crny")
-theme_override_constants/icon_max_width = 42
-theme_override_font_sizes/font_size = 40
-icon = ExtResource("9_8crny")
-icon_alignment = 1
-expand_icon = true
-
-[node name="ConfirmationDialog" type="ConfirmationDialog" parent="Annuler"]
-oversampling_override = 1.0
-title = ""
-initial_position = 2
-size = Vector2i(700, 160)
-keep_title_visible = false
-theme = ExtResource("4_8crny")
-ok_button_text = "Oui"
-dialog_text = "Etes vous sûr de vouloir annuler ?"
-cancel_button_text = "Non"
+mouse_filter = 2
 
 [node name="Annonce" type="Button" parent="."]
 layout_mode = 1
@@ -520,9 +532,137 @@ offset_bottom = 304.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="Help" type="Control" parent="."]
+visible = false
+z_index = 30
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Masque" type="ColorRect" parent="Help"]
+z_index = 3000
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -996.0
+offset_top = -573.0
+offset_right = 1005.0
+offset_bottom = 580.0
+color = Color(0, 0, 0, 0.5529412)
+
+[node name="GainOrdi" parent="Help" instance=ExtResource("12_gtolj")]
+z_index = 3001
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.093
+anchor_top = 0.5
+anchor_right = 0.093
+anchor_bottom = 0.5
+offset_left = -105.56
+offset_top = -480.0
+offset_right = 81.44
+offset_bottom = -262.0
+theme = ExtResource("4_8crny")
+text = "Glissez les cartes pour voir le dernier pli"
+
+[node name="MainOrdi" parent="Help" instance=ExtResource("12_gtolj")]
+z_index = 3001
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.45800003
+anchor_top = 0.5
+anchor_right = 0.45800003
+anchor_bottom = 0.5
+offset_left = -233.36005
+offset_top = -463.0
+offset_right = 234.63995
+offset_bottom = -387.0
+text = "Main de l'adversaire"
+
+[node name="MainJoueur" parent="Help" instance=ExtResource("12_gtolj")]
+z_index = 3001
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.48600003
+anchor_top = 0.5
+anchor_right = 0.48600003
+anchor_bottom = 0.5
+offset_left = -312.12006
+offset_top = 251.0
+offset_right = 313.87994
+offset_bottom = 399.0
+text = "Votre main. Glissez la carte à jouer sur le centre. Glissez le 7 d'atout sur le talon pour procéder à l'échange"
+
+[node name="GainJoueur" parent="Help" instance=ExtResource("12_gtolj")]
+z_index = 3001
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.093
+anchor_top = 0.5
+anchor_right = 0.093
+anchor_bottom = 0.5
+offset_left = -87.56
+offset_top = 238.0
+offset_right = 99.44
+offset_bottom = 456.0
+theme = ExtResource("4_8crny")
+text = "Glissez les cartes pour voir vos cartes"
+
+[node name="Tapis" parent="Help" instance=ExtResource("12_gtolj")]
+z_index = 3001
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.897
+anchor_top = 0.46500003
+anchor_right = 0.897
+anchor_bottom = 0.46500003
+offset_left = -141.23999
+offset_top = -162.20004
+offset_right = 141.76001
+offset_bottom = 161.79996
+text = "Glissez une carte du talon au centre du tapis pour jouer.  Glissez la retourne ou pour l'échanger avec votre 7 d'atout"
+
+[node name="Annuler" type="Button" parent="."]
+z_index = 4000
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.887
+anchor_top = 0.5
+anchor_right = 0.887
+anchor_bottom = 0.5
+offset_left = 85.95996
+offset_top = 440.0
+offset_right = 150.95996
+offset_bottom = 500.0
+theme = ExtResource("4_8crny")
+theme_override_constants/icon_max_width = 42
+theme_override_font_sizes/font_size = 40
+icon = ExtResource("9_8crny")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Confirmation" parent="." instance=ExtResource("10_qapei")]
+visible = false
+z_index = 4090
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -378.0
+offset_top = -97.0
+offset_right = 382.0
+offset_bottom = 113.0
+
 [connection signal="area_shape_entered" from="ZoneJeu/ZoneJeu" to="ZoneJeu/ZoneJeu" method="_on_area_shape_entered"]
 [connection signal="area_shape_exited" from="ZoneJeu/ZoneJeu" to="ZoneJeu/ZoneJeu" method="_on_area_shape_exited"]
-[connection signal="pressed" from="Annuler" to="." method="_on_button_pressed"]
-[connection signal="canceled" from="Annuler/ConfirmationDialog" to="." method="_on_confirmation_dialog_canceled"]
-[connection signal="confirmed" from="Annuler/ConfirmationDialog" to="." method="_on_confirmation_dialog_confirmed"]
 [connection signal="pressed" from="Annonce" to="." method="_on_annonce_pressed"]
+[connection signal="pressed" from="Annuler" to="." method="_on_button_pressed"]

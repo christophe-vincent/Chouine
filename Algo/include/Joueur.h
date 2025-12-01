@@ -94,7 +94,12 @@ public:
 
     // Le joueur a t-il une chouine en main ?
     bool chouine() { return m_IsChouine;};
-    
+
+    // serialize le joueur
+    std::string sauvegarde();
+    // restaure le joueur
+    void restauration(const std::string& _data);
+
     std::string cartesMainToStr();
     std::string cartesGagneesToStr();
     std::string pointsToStr();

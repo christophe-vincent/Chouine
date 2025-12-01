@@ -42,6 +42,7 @@ Godot/html
 *.uid
 *.tmp
 .gitattributes
+Godot/Exports/*
 
 # =========================
 # Operating System Files

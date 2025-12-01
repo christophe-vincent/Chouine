@@ -23,12 +23,14 @@ var dragging: bool = false
 var moving: bool = false
 var drag_offset: Vector2 = Vector2.ZERO
 var zone_jeu: bool = false
+var zone_pioche: bool = false
 var main_joueur: bool = false
 var position_initiale: Vector2 = Vector2(0, 0)
 var orientation_initiale: float = 0
 var card_z_index: int = 0
 var screen_center: Vector2 = Vector2(0, 0)
 var move_tween: Tween
+var sept_atout: bool = false
 
 
 # Called when the node enters the scene tree for the first time.
@@ -39,6 +41,7 @@ func _ready() -> void:
 	back_face_texture.texture = back_image
 	var texture_scale: Vector2 = Settings.DEFAULT_CARD_SIZE / front_image.get_size() 
 	front_face_texture.scale = texture_scale
+	texture_scale = Settings.DEFAULT_CARD_SIZE / back_image.get_size() 
 	back_face_texture.scale = texture_scale
 	if show_front:
 		front_face_texture.visible = true
@@ -121,10 +124,12 @@ func _on_input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) ->
 				dragging = false
 				carte.z_index = card_z_index
 				var ret: int = 1
+				if zone_pioche == true:
+					ret = get_parent().pose_sept_atout(card_name)
 				if zone_jeu == true:
 					ret = get_parent().carte_jouee(card_name)
 				elif main_joueur == true:
-					ret = get_parent().carte_main_joueur(card_name)
+					ret = get_parent().prise_carte_atout(card_name)
 				if ret != 0:
 					# on retourne à la position initiale
 					carte.position = position_initiale
@@ -140,8 +145,16 @@ func _process(_delta: float) -> void:
 
 
 func _on_area_2d_area_shape_entered(_area_rid: RID, area: Area2D, _area_shape_index: int, _local_shape_index: int) -> void:
+	if not dragging:
+		return
 	if area.name == "ZoneJeu":
 		zone_jeu = true
+		zone_pioche = false
+		get_parent().zone_pioche_actif(false)
+	elif area.name == "ZonePioche" and sept_atout:
+		zone_pioche = true
+		zone_jeu = false
+		get_parent().zone_pioche_actif(true)
 	elif area.name == "MainJoueur":
 		main_joueur = true
 
@@ -149,5 +162,8 @@ func _on_area_2d_area_shape_entered(_area_rid: RID, area: Area2D, _area_shape_in
 func _on_area_2d_area_shape_exited(_area_rid: RID, area: Area2D, _area_shape_index: int, _local_shape_index: int) -> void:
 	if area.name == "ZoneJeu":
 		zone_jeu = false
+	elif area.name == "ZonePioche":
+		zone_pioche = false
+		get_parent().zone_pioche_actif(false)
 	elif area.name == "MainJoueur":
 		main_joueur = false

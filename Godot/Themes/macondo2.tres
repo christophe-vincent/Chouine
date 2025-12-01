@@ -1,6 +1,18 @@
-[gd_resource type="Theme" load_steps=9 format=3 uid="uid://c7oakm7pw0gx8"]
+[gd_resource type="Theme" load_steps=12 format=3 uid="uid://c7oakm7pw0gx8"]
 
 [ext_resource type="FontFile" uid="uid://bvopnfj4k30sy" path="res://Themes/Macondo-Regular.ttf" id="1_ay62f"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ay62f"]
+bg_color = Color(0.019607844, 0.019607844, 0.14117648, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.30588236, 0.31764707, 0.33333334, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ppnfq"]
 bg_color = Color(0.078431375, 0.078431375, 0.5882353, 0.5882353)
@@ -69,6 +81,17 @@ shadow_color = Color(0, 0, 0, 0.5882353)
 shadow_size = 4
 shadow_offset = Vector2(3, 3)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ydms5"]
+bg_color = Color(1, 1, 1, 0.8784314)
+border_color = Color(0.71629614, 0.71629626, 0.71629596, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+shadow_color = Color(1, 1, 1, 0.27058825)
+shadow_size = 1
+shadow_offset = Vector2(3, 3)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_orha4"]
 bg_color = Color(0.019607844, 0.019607844, 0.14117648, 1)
 border_width_left = 3
@@ -80,6 +103,13 @@ corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rymdb"]
+bg_color = Color(0.7882353, 0.7882353, 0.972549, 0.30980393)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
 
 [sub_resource type="FontVariation" id="FontVariation_rnjal"]
 base_font = ExtResource("1_ay62f")
@@ -93,6 +123,9 @@ variation_embolden = 0.06
 default_font = ExtResource("1_ay62f")
 default_font_size = 42
 /font_sizes/titre = 60
+AcceptDialog/font_sizes/title_font_size = 33
+AcceptDialog/fonts/title_font = ExtResource("1_ay62f")
+AcceptDialog/styles/panel = SubResource("StyleBoxFlat_ay62f")
 Button/colors/font_color = Color(0.91764706, 0.8, 0.28235295, 1)
 Button/colors/font_disabled_color = Color(0.9019608, 0.7607843, 0.16078432, 0.20784314)
 Button/colors/font_focus_color = Color(0.9019608, 0.7607843, 0.16078432, 1)
@@ -106,6 +139,12 @@ Button/styles/focus = SubResource("StyleBoxFlat_flajs")
 Button/styles/hover = SubResource("StyleBoxFlat_rnjal")
 Button/styles/normal = SubResource("StyleBoxFlat_flajs")
 Button/styles/pressed = SubResource("StyleBoxFlat_qow8s")
+HelpPanel/base_type = &"Panel"
+HelpPanel/styles/panel = SubResource("StyleBoxFlat_ydms5")
+Label/colors/font_color = Color(0.91764706, 0.8, 0.28235295, 1)
 Panel/styles/panel = SubResource("StyleBoxFlat_orha4")
+PanelAtoutActif/base_type = &"Panel"
+PanelAtoutActif/styles/panel = SubResource("StyleBoxFlat_rymdb")
+RichTextLabel/colors/default_color = Color(0.91764706, 0.8, 0.28235295, 1)
 RichTextLabel/fonts/bold_font = SubResource("FontVariation_rnjal")
 RichTextLabel/fonts/normal_font = SubResource("FontVariation_qow8s")
