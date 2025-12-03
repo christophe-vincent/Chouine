@@ -28,8 +28,8 @@
 5 -> 6: 67.5%
 */
 
-int NB_THREADS = static_cast<int>(std::thread::hardware_concurrency());
-//int NB_THREADS = 1;
+//int NB_THREADS = static_cast<int>(std::thread::hardware_concurrency());
+int NB_THREADS = 1;
 
 unsigned int niveau1 = 0;
 unsigned int niveau2 = 6;

@@ -457,22 +457,43 @@ bool Joueur::carteAurotisee(Carte &_card, Carte &_otherCarte)
         return true;
     }
 
-    if (_otherCarte.gagnante(_card))
+    // je joueur a t-il la même couleur que l'adservaire ?
+    bool couleur = false;
+    bool couleur_gagante = false;
+    bool atout = false;
+    for (Carte* carteMain: m_CartesMain.cartes())
     {
-        // played card is better than other Joueur : it is allowed
-        return true;
+        if (carteMain->couleur() == _otherCarte.couleur())
+        {
+            couleur = true;
+            if (carteMain->getPoints() > _otherCarte.getPoints())
+            {
+                couleur_gagante = true;
+            }
+        }
+        if (carteMain->atout())
+        {
+            atout = true;
+        }
     }
-
-    Carte *card = m_CartesMain.getHigherCarte(_otherCarte);
-    if (card == nullptr)
+    if (couleur && _card.couleur() != _otherCarte.couleur())
     {
-        // the Joueur does not have higher card, so he can play any card
-        return true;
-    }
-    else
-    {
+        // on doit jouer la même couleur
         return false;
     }
+    if (couleur_gagante && _card.getPoints() < _otherCarte.getPoints())
+    {
+        // on doit monter
+        return false;
+    }
+
+    if (!couleur && atout && !_card.atout())
+    {
+        // on a pas joué de l'atout face à l'adversaire qui n'a pas joué d'atout, on aurait dû...
+        return false;
+    }
+
+    return true;
 }
 
 // serialize le joueur en format json
@@ -613,8 +634,8 @@ void Joueur::restauration(const std::string& _data)
     // is_chouine
     pos = _data.find("\"is_chouine\":", pos);
     next_pos = _data.find(",", pos);
-    m_IsChouine = (std::stoi(_data.substr(pos
-
+    //m_IsChouine = (std::stoi(_data.substr(pos
+    // a finir...
 }
 
 // retourne la main du joueur en string

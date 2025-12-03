@@ -120,7 +120,53 @@ Carte* Algorithme::choisirCartePiocheVide(Carte *_choixAdversaire)
         return choisirCarte(_choixAdversaire);
     }
 
-    Carte* carte = m_Joueur.cartes().choisirPlusForte(_choixAdversaire);
-    return carte;
+    // choisir une carte de la même couleur si disponible
+    ListeCartes& cartesMain = m_Joueur.cartes();
+    Carte *choix = nullptr;
+    Carte *choix_meme_couleur = nullptr;
+    for (Carte* carteMain: cartesMain.cartes())
+    {
+        if (carteMain->couleur() == _choixAdversaire->couleur())
+        {
+            if (choix_meme_couleur == nullptr)
+            {
+                choix_meme_couleur = carteMain;
+            } else
+            {
+                // on garde la carte de même couleur la plus faible
+                if (carteMain->getPoints() < choix_meme_couleur->getPoints())
+                {
+                    choix_meme_couleur = carteMain;
+                }
+            }
+            if ( carteMain->getPoints() > _choixAdversaire->getPoints())
+            {
+                // nous avons une carte de la même couleur et + forte
+                if (choix == nullptr)
+                {
+                    choix = carteMain;
+                } else
+                {
+                    // on choisi la carte ayant la + petite valeur
+                    if (carteMain->getPoints() < choix->getPoints())
+                    {
+                        choix = carteMain;
+                    }
+                }
+            }
+        }
+    }
+    if (choix != nullptr)
+    {
+        return choix;
+    }
+    if (choix_meme_couleur != nullptr)
+    {
+        return choix_meme_couleur;
+    }
+
+    choix = m_Joueur.cartes().choisirPlusForte(_choixAdversaire);
+
+    return choix;
 }
     
