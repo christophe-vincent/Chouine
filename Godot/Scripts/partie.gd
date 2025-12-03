@@ -16,8 +16,14 @@ class_name Partie
 @onready var choix_annonces: Control = $ChoixAnnonces
 @onready var confirmation_annuler: ConfirmationPanel = $Confirmation
 
+var textures_dos: Array[Resource] = [
+	load("res://Assets/Cartes/back_2.png"),
+	load("res://Assets/Cartes/back_4.png"),
+	load("res://Assets/Cartes/back_3.png"),
+	load("res://Assets/Cartes/back_5.png"),
+	load("res://Assets/Cartes/back_6.png"),
+	load("res://Assets/Cartes/back_1.svg")]
 var card_packed_scene: Resource = preload("res://Scenes/carte.tscn")
-var score_scene: Resource = preload("res://Scenes/scores.tscn")
 var cartes: Dictionary[String, Carte] = {}
 var mains: Dictionary[int, Control] = {}
 var cartes_pioche: Array[String] = []
@@ -69,15 +75,15 @@ func _ready() -> void:
 	nb_manches_ordi = 0
 	nb_manches_joueur = 0
 	restauration_partie()
-	if Global.nb_manches == 1 and not Global.help_mode:
+	if Global.options["nb_manches"] == 1 and not Global.help_mode:
 		$ScoreJoueur/ScoreJoueur/ManchesJoueur.visible = false
 		$ScoreOrdi/ScoreOrdi/ManchesJoueur.visible = false
 		$ScoreOrdi.size.y = 100
 		$ScoreJoueur.size.y = 100
-	if Global.nb_points == 1 and not Global.help_mode:
+	if Global.options["nb_points"] == 1 and not Global.help_mode:
 		$ScoreJoueur/ScoreJoueur/PointsJoueur.visible = false
 		$ScoreOrdi/ScoreOrdi/PointsJoueur.visible = false
-	elif Global.nb_points <= 3 and not Global.help_mode:
+	elif Global.options["nb_points"] <= 3 and not Global.help_mode:
 		$ScoreJoueur/ScoreJoueur/PointsJoueur/Point5.visible = false
 		$ScoreOrdi/ScoreOrdi/PointsJoueur/Point5.visible = false
 		$ScoreJoueur/ScoreJoueur/PointsJoueur/Point4.visible = false
@@ -135,7 +141,10 @@ func creer_cartes() -> void:
 				var card_instance: Node = card_packed_scene.instantiate()
 				card_instance.card_name = nom_carte
 				card_instance.front_image = load("res://Assets/Cartes/" + jeu_cartes[couleur][valeur]['image'])
-				card_instance.back_image = load("res://Assets/Cartes/back_4.png")
+				var dos: Resource = textures_dos[0]
+				if Global.options["dos_carte"] < textures_dos.size():
+					dos = textures_dos[Global.options["dos_carte"]]
+				card_instance.back_image = dos
 				card_instance.show_front = false
 				card_instance.position = tapis.position + tapis.size/2
 				card_instance.sept_atout = false
@@ -159,7 +168,7 @@ func init_jeu() -> void:
 	
 	main_ordi.card_size = Settings.DEFAULT_CARD_SIZE
 	main_ordi.draggable = false
-	main_ordi.face_visible = Global.cartes_visibles
+	main_ordi.face_visible = Global.options["cartes_visibles"]
 	main_ordi.init_cartes()
 	
 	tapis.card_size = Settings.DEFAULT_CARD_SIZE
@@ -183,6 +192,8 @@ func init_jeu() -> void:
 	ordi_gagnees.type_position = Pile.TypePosition.EVENTAIL_BAS
 	ordi_gagnees.draggable = false
 	ordi_gagnees.face_visible = false
+	ordi_gagnees.spreadable = true
+	ordi_gagnees.nb_cartes_drag = 2
 	ordi_gagnees.init_cartes()
 	ordi_gagnees.size = ordi_gagnees_size
 	ordi_gagnees.set_anchor_and_offset(SIDE_LEFT, ordi_gagnees_position.y, -Settings.DEFAULT_CARD_SIZE.x/2, false)
@@ -217,6 +228,7 @@ func demarrer_jeu() -> void:
 	var c: String = cartes_pioche.pop_back()
 	pioche.supprimer_carte(c)
 	retourne.ajouter_carte(cartes[c])
+	cartes[c].retourne = true
 	cartes_pioche.push_front(c)
 	carte_atout = cartes[c]
 	sept_atout = cartes["7-" + c.split("-")[1]]
@@ -250,10 +262,10 @@ func enregistrer_partie() -> void:
 	"""Enregistre une nouvelle partie"""
 	var save_file: FileAccess = FileAccess.open(Settings.SAVE_FILE, FileAccess.WRITE)
 	var points: Dictionary = {
-		'points': Global.nb_points,
+		'points': Global.options["nb_points"],
 		'points_joueur': nb_points_joueur,
 		'points_ordi': nb_points_ordi,
-		'manches': Global.nb_manches,
+		'manches': Global.options["nb_manches"],
 		'manches_joueur': nb_manches_joueur,
 		'manches_ordi': nb_manches_ordi
 	}
@@ -273,10 +285,10 @@ func restauration_partie() -> bool:
 		if not parse_result == OK:
 			print("Error de backup de la partie")
 			return false
-		Global.nb_points = int(json.data['points'])
+		Global.options["nb_points"] = int(json.data['points'])
 		nb_points_joueur = int(json.data['points_joueur'])
 		nb_points_ordi = int(json.data['points_ordi'])
-		Global.nb_manches = json.data['manches']
+		Global.options["nb_manches"] = json.data['manches']
 		nb_manches_joueur = json.data['manches_joueur']
 		nb_manches_ordi = json.data['manches_ordi']
 	return true
@@ -334,10 +346,11 @@ func echange_atout_joueur() -> void:
 	"""une carte est déposée dans la main du joueur, ca ne peut être que la carte d'atout"""
 	# chercher le sept d'atout
 	main_joueur.ajouter_carte(carte_atout)
+	carte_atout.retourne = false
 	main_joueur.supprimer_carte(sept_atout.card_name)
 	main_joueur.calcul_positions(Settings.DUREE_MOUVEMENT)
-	retourne.ajouter_carte(sept_atout)
 	retourne.init_cartes()
+	retourne.ajouter_carte(sept_atout)
 	chouine.echanger_carte_atout(JOUEURS.HUMAIN)
 	print("Joueur      : Echange carte atout: ", carte_atout.card_name)
 	cartes_pioche.pop_front()
@@ -387,11 +400,7 @@ func coup_ordi() -> void:
 	var choix_ordi: Array = chouine.choix_joueur().split("|")
 	var choix_carte: String = choix_ordi[0]
 	print("Choix Ordi  : " + choix_carte)
-	var annonce: String = choix_ordi[1]
-	if annonce != "":
-		print("Annonce Ordi: " + annonce)
-		await annonce_ordi(annonce)
-
+	
 	var echange_sept_atout: String = choix_ordi[2]
 	if echange_sept_atout != "" && carte_atout != null:
 		if retourne.cartes().size() == 0:
@@ -399,15 +408,21 @@ func coup_ordi() -> void:
 		else:
 			# la carte de joueur rejoint la retourne
 			main_ordi.supprimer_carte(sept_atout.card_name)
-			main_ordi.ajouter_carte(carte_atout)
+			main_ordi.ajouter_carte(carte_atout, 2 * Settings.DUREE_MOUVEMENT)
 			main_ordi.calcul_positions(Settings.DUREE_MOUVEMENT)
 			retourne.init_cartes()
-			retourne.ajouter_carte(sept_atout)
+			retourne.ajouter_carte(sept_atout, 2 * Settings.DUREE_MOUVEMENT)
 			print("Ordi        : Echange sept atout - ", carte_atout.card_name)
 			cartes_pioche.pop_front()
 			cartes_pioche.push_front(sept_atout.card_name)
 			carte_atout = null
 			sept_atout.draggable = true
+			await get_tree().create_timer(2 * Settings.DUREE_MOUVEMENT).timeout
+
+	var annonce: String = choix_ordi[1]
+	if annonce != "":
+		print("Annonce Ordi: " + annonce)
+		await annonce_ordi(annonce)
 
 	main_ordi.supprimer_carte(choix_carte)
 	tapis.ajouter_carte(cartes[choix_carte])
@@ -514,12 +529,12 @@ func fin_partie() -> void:
 	if chouine.points_joueur(JOUEURS.ORDI) > chouine.points_joueur(JOUEURS.HUMAIN):
 		nb_points_ordi += 1
 		$Scores/Info.add_theme_color_override("font_color", Color.RED)
-		if nb_points_ordi >= Global.nb_points:
+		if nb_points_ordi >= Global.options["nb_manches"]:
 			# manche gagnée par l'ordi
 			nb_manches_ordi += 1
 			nb_points_joueur = 0
 			nb_points_ordi = 0
-			if nb_manches_ordi >= Global.nb_manches:
+			if nb_manches_ordi >= Global.options["nb_manches"]:
 				# partie gagnée par l'ordi
 				partie_terminee = true
 				$Scores/Info.visible = false
@@ -534,12 +549,12 @@ func fin_partie() -> void:
 	else:
 		$Scores/Info.add_theme_color_override("font_color", Color.GREEN)
 		nb_points_joueur += 1
-		if nb_points_joueur >= Global.nb_points:
+		if nb_points_joueur >= Global.options["nb_points"]:
 			# manche gagnée par le joueur
 			nb_manches_joueur += 1
 			nb_points_joueur = 0
 			nb_points_ordi = 0
-			if nb_manches_joueur >= Global.nb_manches:
+			if nb_manches_joueur >= Global.options["nb_manches"]:
 				# partie gagnée par le joueur
 				partie_terminee = true
 				$Scores/Info.visible = false
@@ -591,18 +606,18 @@ func fin_partie() -> void:
 
 
 func _display_points() -> void:
-	if Global.nb_points > 1:
+	if Global.options["nb_points"] > 1:
 		if nb_points_joueur == 0:
-			for i: int in range(Global.nb_points):
+			for i: int in range(Global.options["nb_points"]):
 				jetons_joueur[i].texture = jeton_point_inactif
 		if nb_points_ordi == 0:
-			for i: int in range(Global.nb_points):
+			for i: int in range(Global.options["nb_points"]):
 				jetons_ordi[i].texture = jeton_point_inactif
 		for i: int in range(nb_points_joueur):
 			jetons_joueur[i].texture = jeton_point_actif
 		for i: int in range(nb_points_ordi):
 			jetons_ordi[i].texture = jeton_point_actif
-	if Global.nb_manches > 1:
+	if Global.options["nb_manches"] > 1:
 		for i: int in range(nb_manches_joueur):
 			manches_joueur[i].texture = manche_actif
 		for i: int in range(nb_manches_ordi):
@@ -614,6 +629,7 @@ func _partie_suivante() -> void:
 		supprimer_sauvegarde()
 		retour_accueil()
 	else:
+		init_jeu()
 		demarrer_jeu()
 
 

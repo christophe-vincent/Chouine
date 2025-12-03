@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://cbig4nyg5d5k8"]
+[gd_scene load_steps=14 format=3 uid="uid://cbig4nyg5d5k8"]
 
 [ext_resource type="Script" uid="uid://b3ddph3lqd14u" path="res://Scripts/accueil.gd" id="1_mwf61"]
 [ext_resource type="Texture2D" uid="uid://d0u2ux7jb7rnj" path="res://Assets/un_point.png" id="2_68w6v"]
@@ -13,18 +13,6 @@
 [ext_resource type="Texture2D" uid="uid://cpjtlantk26qq" path="res://Assets/un_blason_select.png" id="10_p3653"]
 [ext_resource type="Texture2D" uid="uid://sj7cb71b3amk" path="res://Assets/deux_blasons.png" id="11_2kwed"]
 [ext_resource type="Texture2D" uid="uid://cawbq8qkfqyc4" path="res://Assets/deux_blasons_select.png" id="12_tiwth"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_muto7"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1dle6"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p3653"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2kwed"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tiwth"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_aujfu"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -317,61 +305,36 @@ theme = ExtResource("3_2kwed")
 theme_override_font_sizes/font_size = 30
 text = "2 manches"
 
-[node name="CartesVisibles" type="CheckButton" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.86600006
+anchor_left = 0.84800005
 anchor_top = 0.5
-anchor_right = 0.86600006
+anchor_right = 0.84800005
 anchor_bottom = 0.5
-offset_left = -219.7201
-offset_top = 464.0
-offset_right = 218.2799
-offset_bottom = 519.0
-theme = ExtResource("3_2kwed")
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
-theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
-theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 36
-theme_override_styles/normal = SubResource("StyleBoxEmpty_muto7")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_1dle6")
-theme_override_styles/hover = SubResource("StyleBoxEmpty_p3653")
-theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_2kwed")
-theme_override_styles/disabled = SubResource("StyleBoxEmpty_tiwth")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_aujfu")
-text = "Cartes adversaire visibles"
-
-[node name="Aide" type="Button" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.563
-anchor_top = 0.5
-anchor_right = 0.563
-anchor_bottom = 0.5
-offset_left = -92.96008
+offset_left = -279.16016
 offset_top = 422.0
-offset_right = 92.03992
-offset_bottom = 517.0
+offset_right = 310.83984
+offset_bottom = 516.0
+theme_override_constants/separation = 30
+
+[node name="Options" type="Button" parent="HBoxContainer"]
+layout_mode = 2
 theme = ExtResource("3_2kwed")
 theme_override_font_sizes/font_size = 60
-text = "Aide"
+text = "Options"
 
-[node name="Regles" type="Button" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.67300004
-anchor_top = 0.5
-anchor_right = 0.67300004
-anchor_bottom = 0.5
-offset_left = -93.160034
-offset_top = 418.0
-offset_right = 91.839966
-offset_bottom = 513.0
+[node name="Regles" type="Button" parent="HBoxContainer"]
+layout_mode = 2
 theme = ExtResource("3_2kwed")
 theme_override_font_sizes/font_size = 60
 text = "Règles"
+
+[node name="Aide" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("3_2kwed")
+theme_override_font_sizes/font_size = 60
+text = "Aide"
 
 [connection signal="pressed" from="Jouer" to="." method="_on_jouer_pressed"]
 [connection signal="pressed" from="PartieEnCours" to="." method="_on_partie_en_cours_pressed"]
@@ -380,5 +343,6 @@ text = "Règles"
 [connection signal="pressed" from="CinqPoints" to="." method="_on_cinq_points_2_pressed"]
 [connection signal="pressed" from="UneManche" to="." method="_on_une_manche_pressed"]
 [connection signal="pressed" from="DeuxManches" to="." method="_on_deux_manches_pressed"]
-[connection signal="pressed" from="Aide" to="." method="_on_aide_pressed"]
-[connection signal="pressed" from="Regles" to="." method="_on_regles_pressed"]
+[connection signal="pressed" from="HBoxContainer/Options" to="." method="_on_options_pressed"]
+[connection signal="pressed" from="HBoxContainer/Regles" to="." method="_on_regles_pressed"]
+[connection signal="pressed" from="HBoxContainer/Aide" to="." method="_on_aide_pressed"]

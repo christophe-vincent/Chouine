@@ -21,6 +21,7 @@ enum TypePosition {
 
 
 var draggable: bool = true
+var nb_cartes_drag: int = -1  # toutes les cartes par défaut
 var moving: bool = false
 var dragging: bool = false
 # si non adaptatif, alors les cartes ont une position fixe, quelque soit leurs nombre
@@ -186,6 +187,9 @@ func _gui_input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed:
 				# Start dragging
+				var nb_cartes: int = len(_cartes) if nb_cartes_drag == -1 else nb_cartes_drag
+				for i: int in range(len(_cartes) - nb_cartes, len(_cartes)):
+					_cartes[i].face_visible(true)
 				dragging = true
 				spread_offset = get_global_mouse_position() - position
 			else:
@@ -198,9 +202,10 @@ func _gui_input(event: InputEvent) -> void:
 func _process(_delta: float) -> void:
 	if dragging and _cartes.size() > 1:
 		var index: int = 0
-		for carte: Carte in _cartes:
-			var offset: Vector2 = index * (get_global_mouse_position() - position - spread_offset) / (_cartes.size() - 1)
-			carte.move(position + size/2 + offset)
+		var nb_cartes: int = len(_cartes) if nb_cartes_drag == -1 else nb_cartes_drag
+		for i: int in range(len(_cartes) - nb_cartes, len(_cartes)):
+			var offset: Vector2 = index * (get_global_mouse_position() - position - spread_offset) / (nb_cartes - 1)
+			_cartes[i].move(position + size/2 + offset)
 			index += 1
 
 func _empiler() -> void:
@@ -208,6 +213,7 @@ func _empiler() -> void:
 	for carte: Carte in _cartes:
 		var rnd_x: float = rng.randf_range(-1.0, 1.0) * size.x / 15
 		var rnd_y: float = rng.randf_range(-1.0, 1.0) * size.y / 15
+		carte.face_visible(face_visible)
 		carte.move(position + size/2 + Vector2(rnd_x, rnd_y),
 			rng.randf_range(-1.0, 1.0) / 10,
 			0, 

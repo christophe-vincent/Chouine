@@ -1,0 +1,303 @@
+[gd_scene load_steps=21 format=3 uid="uid://cdxpa7h5t45wo"]
+
+[ext_resource type="Script" uid="uid://ctpdvvduj1qbl" path="res://Scripts/options.gd" id="1_kftxf"]
+[ext_resource type="Texture2D" uid="uid://87vm1dfxprrv" path="res://Assets/Cartes/back_4.png" id="1_prnvy"]
+[ext_resource type="Texture2D" uid="uid://ckxjxgvs4p1me" path="res://Assets/Cartes/back_2.png" id="1_ww8vx"]
+[ext_resource type="Texture2D" uid="uid://bspvxo6wejiyf" path="res://Assets/piece.png" id="3_kftxf"]
+[ext_resource type="Texture2D" uid="uid://cl4lkxnjxh6tf" path="res://Assets/point_partie_inactif.png" id="4_663nc"]
+[ext_resource type="Texture2D" uid="uid://d2u2b0anqx6dl" path="res://Assets/Cartes/back_3.png" id="6_663nc"]
+[ext_resource type="Texture2D" uid="uid://cxok333uh8qn" path="res://Assets/Cartes/back_5.png" id="7_5a0sy"]
+[ext_resource type="Texture2D" uid="uid://bmjm3tc0kipdn" path="res://Assets/Cartes/back_1.svg" id="8_g5vgl"]
+[ext_resource type="Texture2D" uid="uid://b8p3w0hy7tk1m" path="res://Assets/Cartes/back_6.png" id="9_qcivb"]
+[ext_resource type="Theme" uid="uid://c7oakm7pw0gx8" path="res://Themes/macondo2.tres" id="9_srb65"]
+[ext_resource type="Texture2D" uid="uid://4hnyodmak7su" path="res://Assets/home.png" id="10_g5vgl"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_663nc"]
+bg_color = Color(0.63529414, 0.63529414, 0.63529414, 0.19607843)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_g5vgl"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_srb65"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qcivb"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_aag3x"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_033dp"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fpdr8"]
+
+[sub_resource type="DPITexture" id="DPITexture_g5vgl"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"16\"><rect width=\"30\" height=\"14\" x=\"1\" y=\"1\" fill=\"#fff\" fill-opacity=\".75\" rx=\"7\"/><circle cx=\"24\" cy=\"8\" r=\"5\" fill=\"#1a1a1a\"/></svg>
+"
+base_scale = 2.0
+
+[sub_resource type="DPITexture" id="DPITexture_srb65"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"16\"><g fill-opacity=\".5\"><rect width=\"30\" height=\"14\" x=\"1\" y=\"1\" fill=\"#1a1a1a\" rx=\"7\"/><circle cx=\"8\" cy=\"8\" r=\"5\" fill=\"#fff\"/></g></svg>
+"
+base_scale = 2.0
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_kftxf")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 797.0
+offset_top = 8.0
+offset_right = 1154.0
+offset_bottom = 80.0
+theme = ExtResource("9_srb65")
+theme_override_font_sizes/font_size = 60
+text = "Dos des cartes"
+
+[node name="DosCartes" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -653.5
+offset_top = -442.0
+offset_right = 653.5
+offset_bottom = -78.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dos1" type="PanelContainer" parent="DosCartes"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_663nc")
+
+[node name="MarginContainer" type="MarginContainer" parent="DosCartes/Dos1"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DosCartes/Dos1/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="Dos" type="TextureButton" parent="DosCartes/Dos1/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(170, 250)
+layout_mode = 2
+texture_normal = ExtResource("1_ww8vx")
+ignore_texture_size = true
+stretch_mode = 4
+
+[node name="ChoixDos" type="TextureRect" parent="DosCartes/Dos1/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+texture = ExtResource("3_kftxf")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Dos2" type="PanelContainer" parent="DosCartes"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_663nc")
+
+[node name="MarginContainer" type="MarginContainer" parent="DosCartes/Dos2"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DosCartes/Dos2/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="Dos" type="TextureButton" parent="DosCartes/Dos2/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(170, 250)
+layout_mode = 2
+texture_normal = ExtResource("1_prnvy")
+ignore_texture_size = true
+stretch_mode = 4
+
+[node name="ChoixDos" type="TextureRect" parent="DosCartes/Dos2/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+texture = ExtResource("4_663nc")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Dos3" type="PanelContainer" parent="DosCartes"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_663nc")
+
+[node name="MarginContainer" type="MarginContainer" parent="DosCartes/Dos3"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DosCartes/Dos3/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="Dos" type="TextureButton" parent="DosCartes/Dos3/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(170, 250)
+layout_mode = 2
+texture_normal = ExtResource("6_663nc")
+ignore_texture_size = true
+stretch_mode = 4
+
+[node name="ChoixDos" type="TextureRect" parent="DosCartes/Dos3/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+texture = ExtResource("4_663nc")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Dos4" type="PanelContainer" parent="DosCartes"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_663nc")
+
+[node name="MarginContainer" type="MarginContainer" parent="DosCartes/Dos4"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DosCartes/Dos4/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="Dos" type="TextureButton" parent="DosCartes/Dos4/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(170, 250)
+layout_mode = 2
+texture_normal = ExtResource("7_5a0sy")
+ignore_texture_size = true
+stretch_mode = 4
+
+[node name="ChoixDos" type="TextureRect" parent="DosCartes/Dos4/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+texture = ExtResource("4_663nc")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Dos5" type="PanelContainer" parent="DosCartes"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_663nc")
+
+[node name="MarginContainer" type="MarginContainer" parent="DosCartes/Dos5"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DosCartes/Dos5/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="Dos" type="TextureButton" parent="DosCartes/Dos5/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(170, 250)
+layout_mode = 2
+texture_normal = ExtResource("9_qcivb")
+ignore_texture_size = true
+stretch_mode = 4
+
+[node name="ChoixDos" type="TextureRect" parent="DosCartes/Dos5/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+texture = ExtResource("4_663nc")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Dos6" type="PanelContainer" parent="DosCartes"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_663nc")
+
+[node name="MarginContainer" type="MarginContainer" parent="DosCartes/Dos6"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DosCartes/Dos6/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="Dos" type="TextureButton" parent="DosCartes/Dos6/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(170, 250)
+layout_mode = 2
+texture_normal = ExtResource("8_g5vgl")
+ignore_texture_size = true
+stretch_mode = 4
+
+[node name="ChoixDos" type="TextureRect" parent="DosCartes/Dos6/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+texture = ExtResource("4_663nc")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Acceuil" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1763.0
+offset_top = 964.0
+offset_right = 1890.0
+offset_bottom = 1054.0
+theme = ExtResource("9_srb65")
+theme_override_constants/icon_max_width = 80
+icon = ExtResource("10_g5vgl")
+icon_alignment = 1
+expand_icon = true
+
+[node name="CartesVisibles" type="CheckButton" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.86600006
+anchor_top = 0.5
+anchor_right = 0.86600006
+anchor_bottom = 0.5
+offset_left = -980.7201
+offset_top = 415.0
+offset_right = -386.7201
+offset_bottom = 490.0
+theme = ExtResource("9_srb65")
+theme_override_colors/font_color = Color(1, 0.92156863, 0.3137255, 1)
+theme_override_colors/font_focus_color = Color(1, 0.92156863, 0.3137255, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.92156863, 0.3137255, 1)
+theme_override_colors/font_hover_color = Color(1, 0.92156863, 0.3137255, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.92156863, 0.3137255, 1)
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = SubResource("StyleBoxEmpty_g5vgl")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_srb65")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_qcivb")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_aag3x")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_033dp")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_fpdr8")
+theme_override_icons/checked = SubResource("DPITexture_g5vgl")
+theme_override_icons/unchecked = SubResource("DPITexture_srb65")
+text = "Cartes adversaire visibles"
+
+[connection signal="pressed" from="DosCartes/Dos1/MarginContainer/VBoxContainer/Dos" to="." method="_on_dos1_pressed"]
+[connection signal="pressed" from="DosCartes/Dos2/MarginContainer/VBoxContainer/Dos" to="." method="_on_dos2_pressed"]
+[connection signal="pressed" from="DosCartes/Dos3/MarginContainer/VBoxContainer/Dos" to="." method="_on_dos3_pressed"]
+[connection signal="pressed" from="DosCartes/Dos4/MarginContainer/VBoxContainer/Dos" to="." method="_on_dos4_pressed"]
+[connection signal="pressed" from="DosCartes/Dos5/MarginContainer/VBoxContainer/Dos" to="." method="_on_dos5_pressed"]
+[connection signal="pressed" from="DosCartes/Dos6/MarginContainer/VBoxContainer/Dos" to="." method="_on_dos6_pressed"]
+[connection signal="pressed" from="Acceuil" to="." method="_on_acceuil_pressed"]
+[connection signal="pressed" from="CartesVisibles" to="." method="_on_cartes_visibles_pressed"]

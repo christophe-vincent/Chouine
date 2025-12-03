@@ -31,6 +31,7 @@ var card_z_index: int = 0
 var screen_center: Vector2 = Vector2(0, 0)
 var move_tween: Tween
 var sept_atout: bool = false
+var retourne: bool = false
 
 
 # Called when the node enters the scene tree for the first time.
@@ -139,7 +140,7 @@ func _on_input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) ->
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	if dragging:
-		if get_global_mouse_position().y > screen_center.y:
+		if get_global_mouse_position().y > screen_center.y and not retourne:
 			carte.rotation = orientation_initiale*(get_global_mouse_position().y - screen_center.y)/(position_initiale.y-screen_center.y)
 		carte.global_position = get_global_mouse_position() + drag_offset
 

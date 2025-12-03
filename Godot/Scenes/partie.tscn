@@ -208,36 +208,36 @@ card_size = Vector2(320, 240)
 spreadable = false
 
 [node name="ZonePioche" type="Control" parent="."]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+layout_mode = 1
+anchor_left = 0.86
+anchor_top = 0.47300002
+anchor_right = 0.86
+anchor_bottom = 0.47300002
+offset_left = -230.20007
+offset_top = -234.84003
+offset_right = 228.79993
+offset_bottom = 235.15997
+mouse_filter = 2
 
 [node name="ZonePioche" type="Area2D" parent="ZonePioche"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ZonePioche/ZonePioche"]
-position = Vector2(1742.25, 507.25)
+position = Vector2(281, 228)
 shape = SubResource("RectangleShape2D_qapei")
 
-[node name="Actif_" type="ColorRect" parent="ZonePioche"]
-visible = false
-layout_mode = 0
-offset_left = 1518.0
-offset_top = 268.0
-offset_right = 1889.0
-offset_bottom = 749.0
-color = Color(1, 1, 1, 0.4862745)
-
 [node name="Actif" type="Panel" parent="ZonePioche"]
+visible = false
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 42.575
-anchor_top = 12.675
-anchor_right = 42.575
-anchor_bottom = 12.675
-offset_left = -249.0
-offset_top = -238.0
-offset_right = 188.0
-offset_bottom = 238.0
+anchor_left = 0.44300002
+anchor_top = 0.49300003
+anchor_right = 0.588
+anchor_bottom = 0.5
+offset_left = -210.337
+offset_top = -239.71002
+offset_right = 194.108
+offset_bottom = 236.0
+mouse_filter = 2
 theme = ExtResource("4_8crny")
 theme_type_variation = &"PanelAtoutActif"
 
@@ -547,14 +547,14 @@ mouse_filter = 2
 z_index = 3000
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -996.0
-offset_top = -573.0
-offset_right = 1005.0
-offset_bottom = 580.0
+anchor_left = -0.019000001
+anchor_top = -0.031000001
+anchor_right = 1.023
+anchor_bottom = 1.0370001
+offset_left = 0.48000336
+offset_top = 0.48000336
+offset_right = 0.8399658
+offset_bottom = 0.039916992
 color = Color(0, 0, 0, 0.5529412)
 
 [node name="GainOrdi" parent="Help" instance=ExtResource("12_gtolj")]
