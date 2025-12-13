@@ -1,11 +1,22 @@
 extends Node
 
-@onready var UnPoint: TextureButton = $UnPoint
-@onready var TroisPoints: TextureButton = $TroisPoints
-@onready var CinqPoints: TextureButton = $CinqPoints
-@onready var UneManche: TextureButton = $UneManche
-@onready var DeuxManches: TextureButton = $DeuxManches
+@onready var PointUn: PanelContainer = $Parties/Une
+@onready var JetonUn: TextureRect = $Parties/Une/MarginContainer/VBoxContainer/ChoixPartie
+@onready var PointTrois: PanelContainer = $Parties/Trois
+@onready var JetonTrois: TextureRect = $Parties/Trois/MarginContainer/VBoxContainer/ChoixPartie
+@onready var PointCinq: PanelContainer = $Parties/Cinq
+@onready var JetonCinq: TextureRect = $Parties/Cinq/MarginContainer/VBoxContainer/ChoixPartie
 
+@onready var MancheUne: PanelContainer = $Manches/Une
+@onready var JetonMancheUn: TextureRect = $Manches/Une/MarginContainer/VBoxContainer/ChoixManche
+@onready var MancheDeux: PanelContainer = $Manches/Deux
+@onready var JetonMancheDeux: TextureRect = $Manches/Deux/MarginContainer/VBoxContainer/ChoixManche
+
+var lut_points: Array[int] = [0, 0, 1, 1, 2, 2]
+var points: Array[PanelContainer] = []
+var jeton_points: Array[TextureRect] = []
+var manches: Array[PanelContainer] = []
+var jeton_manches: Array[TextureRect] = []
 var scene_partie: Resource = preload("res://Scenes/partie.tscn")
 var scene_regles: Resource = preload("res://Scenes/regles.tscn")
 var scene_options: Resource = preload("res://Scenes/options.tscn")
@@ -13,62 +24,42 @@ var scene_options: Resource = preload("res://Scenes/options.tscn")
 func _ready() -> void:
 	# lecture du fichier d'options, s'il existe
 	Global.lecture_options()
+	Global.lecture_stats()
+	$Stats/Statistiques.update()
+	points = [PointUn, PointTrois, PointCinq]
+	jeton_points = [JetonUn, JetonTrois, JetonCinq]
+	manches = [MancheUne, MancheDeux]
+	jeton_manches = [JetonMancheUn, JetonMancheDeux]
+	select_nb_points(Global.options["nb_points"])
+	select_nb_manches(Global.options["nb_manches"])
 
-	if Global.options["nb_points"] == 1:
-		_on_un_point_pressed()
-	if Global.options["nb_points"] == 5:
-		_on_cinq_points_2_pressed()
-	if Global.options["nb_manches"] == 2:
-		_on_deux_manches_pressed()
 	$Intro.text = Settings.TEXT_INTRO
 	if FileAccess.file_exists(Settings.SAVE_FILE):
 		$PartieEnCours.visible = true
 
-
-func _on_un_point_pressed() -> void:
-	Global.options["nb_points"] = 1
-	UnPoint.disabled = true
-	TroisPoints.disabled = false
-	TroisPoints.set_pressed(false)
-	CinqPoints.disabled = false
-	CinqPoints.set_pressed(false)
+func select_nb_points(nb_points: int) -> void:
+	Global.options["nb_points"] = nb_points
 	Global.enregistrer_options()
+	for i: int in range(points.size()):
+		# modifier le background
+		if i == lut_points[nb_points]:
+			points[i].add_theme_stylebox_override("panel", Global.selected_panel)
+			jeton_points[i].texture = Global.jeton_actif
+		else:
+			points[i].add_theme_stylebox_override("panel", Global.non_selected_panel)
+			jeton_points[i].texture = Global.jeton_inactif
 
-
-func _on_trois_points_pressed() -> void:
-	Global.options["nb_points"] = 3
-	TroisPoints.disabled = true
-	UnPoint.disabled = false
-	UnPoint.set_pressed(false)
-	CinqPoints.disabled = false
-	CinqPoints.set_pressed(false)
+func select_nb_manches(nb_manches: int) -> void:
+	Global.options["nb_manches"] = nb_manches
 	Global.enregistrer_options()
-
-
-func _on_cinq_points_2_pressed() -> void:
-	Global.options["nb_points"] = 5
-	CinqPoints.disabled = true
-	TroisPoints.disabled = false
-	TroisPoints.set_pressed(false)
-	UnPoint.disabled = false
-	UnPoint.set_pressed(false)
-	Global.enregistrer_options()
-
-
-func _on_une_manche_pressed() -> void:
-	Global.options["nb_manches"] = 1
-	UneManche.disabled = true
-	DeuxManches.disabled = false
-	DeuxManches.set_pressed(false)
-	Global.enregistrer_options()
-
-
-func _on_deux_manches_pressed() -> void:
-	Global.options["nb_manches"] = 2
-	DeuxManches.disabled = true
-	UneManche.disabled = false
-	UneManche.set_pressed(false)
-	Global.enregistrer_options()
+	for i: int in range(manches.size()):
+		# modifier le background
+		if i == nb_manches - 1:
+			manches[i].add_theme_stylebox_override("panel", Global.selected_panel)
+			jeton_manches[i].texture = Global.jeton_actif
+		else:
+			manches[i].add_theme_stylebox_override("panel", Global.non_selected_panel)
+			jeton_manches[i].texture = Global.jeton_inactif
 
 
 func _on_partie_en_cours_pressed() -> void:
@@ -99,3 +90,24 @@ func _on_cartes_visibles_pressed() -> void:
 
 func _on_options_pressed() -> void:
 	get_tree().change_scene_to_packed(scene_options)
+
+
+func _on_un_point_pressed() -> void:
+	select_nb_points(1)
+
+func _on_trois_points_pressed() -> void:
+	select_nb_points(3)
+
+func _on_cinq_points_pressed() -> void:
+	select_nb_points(5)
+
+func _on_une_manche_pressed() -> void:
+	select_nb_manches(1)
+
+func _on_deux_manches_pressed() -> void:
+	select_nb_manches(2)
+
+
+func _on_stats_folding_changed(is_folded: bool) -> void:
+	if not is_folded:
+		$Stats/Statistiques.update()

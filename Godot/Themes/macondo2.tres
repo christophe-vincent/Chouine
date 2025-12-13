@@ -1,6 +1,9 @@
-[gd_resource type="Theme" load_steps=12 format=3 uid="uid://c7oakm7pw0gx8"]
+[gd_resource type="Theme" load_steps=15 format=3 uid="uid://c7oakm7pw0gx8"]
 
 [ext_resource type="FontFile" uid="uid://bvopnfj4k30sy" path="res://Themes/Macondo-Regular.ttf" id="1_ay62f"]
+[ext_resource type="StyleBox" uid="uid://ca23xwadm067e" path="res://Materials/button.tres" id="2_rymdb"]
+[ext_resource type="StyleBox" uid="uid://cxqy1oluykjvg" path="res://Materials/panel.tres" id="3_m5k4q"]
+[ext_resource type="StyleBox" uid="uid://blmc3udx4ceoj" path="res://Materials/foldable_container.tres" id="4_m5k4q"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ay62f"]
 bg_color = Color(0.019607844, 0.019607844, 0.14117648, 1)
@@ -81,6 +84,8 @@ shadow_color = Color(0, 0, 0, 0.5882353)
 shadow_size = 4
 shadow_offset = Vector2(3, 3)
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m5k4q"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ydms5"]
 bg_color = Color(1, 1, 1, 0.8784314)
 border_color = Color(0.71629614, 0.71629626, 0.71629596, 1)
@@ -91,18 +96,6 @@ corner_radius_bottom_left = 5
 shadow_color = Color(1, 1, 1, 0.27058825)
 shadow_size = 1
 shadow_offset = Vector2(3, 3)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_orha4"]
-bg_color = Color(0.019607844, 0.019607844, 0.14117648, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.30588236, 0.31764707, 0.33333334, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rymdb"]
 bg_color = Color(0.7882353, 0.7882353, 0.972549, 0.30980393)
@@ -137,12 +130,21 @@ Button/font_sizes/font_size = 40
 Button/styles/disabled = SubResource("StyleBoxFlat_ppnfq")
 Button/styles/focus = SubResource("StyleBoxFlat_flajs")
 Button/styles/hover = SubResource("StyleBoxFlat_rnjal")
-Button/styles/normal = SubResource("StyleBoxFlat_flajs")
+Button/styles/normal = ExtResource("2_rymdb")
 Button/styles/pressed = SubResource("StyleBoxFlat_qow8s")
+FoldableContainer/colors/collapsed_font_color = Color(0.91764706, 0.8, 0.28235295, 1)
+FoldableContainer/constants/h_separation = 10
+FoldableContainer/font_sizes/font_size = 60
+FoldableContainer/styles/focus = SubResource("StyleBoxEmpty_m5k4q")
+FoldableContainer/styles/panel = ExtResource("3_m5k4q")
+FoldableContainer/styles/title_collapsed_hover_panel = ExtResource("4_m5k4q")
+FoldableContainer/styles/title_collapsed_panel = ExtResource("4_m5k4q")
+FoldableContainer/styles/title_hover_panel = ExtResource("4_m5k4q")
+FoldableContainer/styles/title_panel = ExtResource("4_m5k4q")
 HelpPanel/base_type = &"Panel"
 HelpPanel/styles/panel = SubResource("StyleBoxFlat_ydms5")
 Label/colors/font_color = Color(0.91764706, 0.8, 0.28235295, 1)
-Panel/styles/panel = SubResource("StyleBoxFlat_orha4")
+Panel/styles/panel = ExtResource("3_m5k4q")
 PanelAtoutActif/base_type = &"Panel"
 PanelAtoutActif/styles/panel = SubResource("StyleBoxFlat_rymdb")
 RichTextLabel/colors/default_color = Color(0.91764706, 0.8, 0.28235295, 1)

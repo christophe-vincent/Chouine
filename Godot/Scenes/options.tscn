@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cdxpa7h5t45wo"]
+[gd_scene load_steps=25 format=3 uid="uid://cdxpa7h5t45wo"]
 
 [ext_resource type="Script" uid="uid://ctpdvvduj1qbl" path="res://Scripts/options.gd" id="1_kftxf"]
 [ext_resource type="Texture2D" uid="uid://87vm1dfxprrv" path="res://Assets/Cartes/back_4.png" id="1_prnvy"]
@@ -11,6 +11,9 @@
 [ext_resource type="Texture2D" uid="uid://b8p3w0hy7tk1m" path="res://Assets/Cartes/back_6.png" id="9_qcivb"]
 [ext_resource type="Theme" uid="uid://c7oakm7pw0gx8" path="res://Themes/macondo2.tres" id="9_srb65"]
 [ext_resource type="Texture2D" uid="uid://4hnyodmak7su" path="res://Assets/home.png" id="10_g5vgl"]
+[ext_resource type="Texture2D" uid="uid://cpr78bpmvuyr7" path="res://Assets/tapis_bleu.png" id="11_033dp"]
+[ext_resource type="Texture2D" uid="uid://dfygaiu6gj12k" path="res://Assets/tapis.png" id="12_fpdr8"]
+[ext_resource type="Texture2D" uid="uid://km27tu8ik6rr" path="res://Assets/tapis_gris.png" id="13_r103k"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_663nc"]
 bg_color = Color(0.63529414, 0.63529414, 0.63529414, 0.19607843)
@@ -23,6 +26,23 @@ corner_radius_top_left = 30
 corner_radius_top_right = 30
 corner_radius_bottom_right = 30
 corner_radius_bottom_left = 30
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_033dp"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 0.75)
+draw_center = false
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_g5vgl"]
 
@@ -56,11 +76,16 @@ grow_vertical = 2
 script = ExtResource("1_kftxf")
 
 [node name="Label" type="Label" parent="."]
-layout_mode = 0
-offset_left = 797.0
-offset_top = 8.0
-offset_right = 1154.0
-offset_bottom = 80.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.508
+anchor_top = 0.5
+anchor_right = 0.508
+anchor_bottom = 0.5
+offset_left = -178.36005
+offset_top = -532.0
+offset_right = 178.63995
+offset_bottom = -460.0
 theme = ExtResource("9_srb65")
 theme_override_font_sizes/font_size = 60
 text = "Dos des cartes"
@@ -72,10 +97,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -653.5
-offset_top = -442.0
-offset_right = 653.5
-offset_bottom = -78.0
+offset_left = -653.0
+offset_top = -458.0
+offset_right = 654.0
+offset_bottom = -113.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -83,8 +108,14 @@ grow_vertical = 2
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_663nc")
 
+[node name="BoutonDos1" type="Button" parent="DosCartes/Dos1"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_033dp")
+flat = true
+
 [node name="MarginContainer" type="MarginContainer" parent="DosCartes/Dos1"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
@@ -92,18 +123,21 @@ theme_override_constants/margin_bottom = 20
 
 [node name="VBoxContainer" type="VBoxContainer" parent="DosCartes/Dos1/MarginContainer"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 22
 
 [node name="Dos" type="TextureButton" parent="DosCartes/Dos1/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(170, 250)
 layout_mode = 2
+mouse_filter = 2
 texture_normal = ExtResource("1_ww8vx")
 ignore_texture_size = true
 stretch_mode = 4
 
 [node name="ChoixDos" type="TextureRect" parent="DosCartes/Dos1/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
+mouse_filter = 2
 texture = ExtResource("3_kftxf")
 expand_mode = 1
 stretch_mode = 5
@@ -112,8 +146,14 @@ stretch_mode = 5
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_663nc")
 
+[node name="BoutonDos2" type="Button" parent="DosCartes/Dos2"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_033dp")
+flat = true
+
 [node name="MarginContainer" type="MarginContainer" parent="DosCartes/Dos2"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
@@ -121,18 +161,21 @@ theme_override_constants/margin_bottom = 20
 
 [node name="VBoxContainer" type="VBoxContainer" parent="DosCartes/Dos2/MarginContainer"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 22
 
 [node name="Dos" type="TextureButton" parent="DosCartes/Dos2/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(170, 250)
 layout_mode = 2
+mouse_filter = 2
 texture_normal = ExtResource("1_prnvy")
 ignore_texture_size = true
 stretch_mode = 4
 
 [node name="ChoixDos" type="TextureRect" parent="DosCartes/Dos2/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
+mouse_filter = 2
 texture = ExtResource("4_663nc")
 expand_mode = 1
 stretch_mode = 5
@@ -141,8 +184,14 @@ stretch_mode = 5
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_663nc")
 
+[node name="BoutonDos3" type="Button" parent="DosCartes/Dos3"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_033dp")
+flat = true
+
 [node name="MarginContainer" type="MarginContainer" parent="DosCartes/Dos3"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
@@ -150,18 +199,21 @@ theme_override_constants/margin_bottom = 20
 
 [node name="VBoxContainer" type="VBoxContainer" parent="DosCartes/Dos3/MarginContainer"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 22
 
 [node name="Dos" type="TextureButton" parent="DosCartes/Dos3/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(170, 250)
 layout_mode = 2
+mouse_filter = 2
 texture_normal = ExtResource("6_663nc")
 ignore_texture_size = true
 stretch_mode = 4
 
 [node name="ChoixDos" type="TextureRect" parent="DosCartes/Dos3/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
+mouse_filter = 2
 texture = ExtResource("4_663nc")
 expand_mode = 1
 stretch_mode = 5
@@ -170,8 +222,14 @@ stretch_mode = 5
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_663nc")
 
+[node name="BoutonDos4" type="Button" parent="DosCartes/Dos4"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_033dp")
+flat = true
+
 [node name="MarginContainer" type="MarginContainer" parent="DosCartes/Dos4"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
@@ -179,18 +237,21 @@ theme_override_constants/margin_bottom = 20
 
 [node name="VBoxContainer" type="VBoxContainer" parent="DosCartes/Dos4/MarginContainer"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 22
 
 [node name="Dos" type="TextureButton" parent="DosCartes/Dos4/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(170, 250)
 layout_mode = 2
+mouse_filter = 2
 texture_normal = ExtResource("7_5a0sy")
 ignore_texture_size = true
 stretch_mode = 4
 
 [node name="ChoixDos" type="TextureRect" parent="DosCartes/Dos4/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
+mouse_filter = 2
 texture = ExtResource("4_663nc")
 expand_mode = 1
 stretch_mode = 5
@@ -199,8 +260,14 @@ stretch_mode = 5
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_663nc")
 
+[node name="BoutonDos5" type="Button" parent="DosCartes/Dos5"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_033dp")
+flat = true
+
 [node name="MarginContainer" type="MarginContainer" parent="DosCartes/Dos5"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
@@ -208,18 +275,21 @@ theme_override_constants/margin_bottom = 20
 
 [node name="VBoxContainer" type="VBoxContainer" parent="DosCartes/Dos5/MarginContainer"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 22
 
 [node name="Dos" type="TextureButton" parent="DosCartes/Dos5/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(170, 250)
 layout_mode = 2
+mouse_filter = 2
 texture_normal = ExtResource("9_qcivb")
 ignore_texture_size = true
 stretch_mode = 4
 
 [node name="ChoixDos" type="TextureRect" parent="DosCartes/Dos5/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
+mouse_filter = 2
 texture = ExtResource("4_663nc")
 expand_mode = 1
 stretch_mode = 5
@@ -228,8 +298,14 @@ stretch_mode = 5
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_663nc")
 
+[node name="BoutonDos6" type="Button" parent="DosCartes/Dos6"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_033dp")
+flat = true
+
 [node name="MarginContainer" type="MarginContainer" parent="DosCartes/Dos6"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
@@ -237,28 +313,179 @@ theme_override_constants/margin_bottom = 20
 
 [node name="VBoxContainer" type="VBoxContainer" parent="DosCartes/Dos6/MarginContainer"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 22
 
 [node name="Dos" type="TextureButton" parent="DosCartes/Dos6/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(170, 250)
 layout_mode = 2
+mouse_filter = 2
 texture_normal = ExtResource("8_g5vgl")
 ignore_texture_size = true
 stretch_mode = 4
 
 [node name="ChoixDos" type="TextureRect" parent="DosCartes/Dos6/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("4_663nc")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label2" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.509
+anchor_top = 0.5
+anchor_right = 0.509
+anchor_bottom = 0.5
+offset_left = -203.28003
+offset_top = -54.0
+offset_right = 153.71997
+offset_bottom = 18.0
+theme = ExtResource("9_srb65")
+theme_override_font_sizes/font_size = 60
+text = "Couleur du tapis"
+
+[node name="Tapis" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -663.25
+offset_top = 41.0
+offset_right = 670.75
+offset_bottom = 371.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Tapis1" type="PanelContainer" parent="Tapis"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_663nc")
+
+[node name="BoutonTapis1" type="Button" parent="Tapis/Tapis1"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_033dp")
+flat = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Tapis/Tapis1"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Tapis/Tapis1/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 22
+
+[node name="Tapis" type="TextureButton" parent="Tapis/Tapis1/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 220)
+layout_mode = 2
+mouse_filter = 2
+texture_normal = ExtResource("11_033dp")
+ignore_texture_size = true
+stretch_mode = 4
+
+[node name="ChoixDos" type="TextureRect" parent="Tapis/Tapis1/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("3_kftxf")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Tapis2" type="PanelContainer" parent="Tapis"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_663nc")
+
+[node name="BoutonTapis2" type="Button" parent="Tapis/Tapis2"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_033dp")
+flat = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Tapis/Tapis2"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Tapis/Tapis2/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 22
+
+[node name="Tapis" type="TextureButton" parent="Tapis/Tapis2/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 220)
+layout_mode = 2
+mouse_filter = 2
+texture_normal = ExtResource("12_fpdr8")
+ignore_texture_size = true
+stretch_mode = 4
+
+[node name="ChoixDos" type="TextureRect" parent="Tapis/Tapis2/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("4_663nc")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Tapis3" type="PanelContainer" parent="Tapis"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_663nc")
+
+[node name="BoutonTapis3" type="Button" parent="Tapis/Tapis3"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_033dp")
+flat = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Tapis/Tapis3"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Tapis/Tapis3/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 22
+
+[node name="Tapis" type="TextureButton" parent="Tapis/Tapis3/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 220)
+layout_mode = 2
+mouse_filter = 2
+texture_normal = ExtResource("13_r103k")
+ignore_texture_size = true
+stretch_mode = 4
+
+[node name="ChoixDos" type="TextureRect" parent="Tapis/Tapis3/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+mouse_filter = 2
 texture = ExtResource("4_663nc")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Acceuil" type="Button" parent="."]
-layout_mode = 0
-offset_left = 1763.0
-offset_top = 964.0
-offset_right = 1890.0
-offset_bottom = 1054.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.95100003
+anchor_top = 0.5
+anchor_right = 0.95100003
+anchor_bottom = 0.5
+offset_left = -62.920044
+offset_top = 424.0
+offset_right = 64.079956
+offset_bottom = 514.0
 theme = ExtResource("9_srb65")
 theme_override_constants/icon_max_width = 80
 icon = ExtResource("10_g5vgl")
@@ -268,14 +495,14 @@ expand_icon = true
 [node name="CartesVisibles" type="CheckButton" parent="."]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.86600006
+anchor_left = 0.50600004
 anchor_top = 0.5
-anchor_right = 0.86600006
+anchor_right = 0.50600004
 anchor_bottom = 0.5
-offset_left = -980.7201
-offset_top = 415.0
-offset_right = -386.7201
-offset_bottom = 490.0
+offset_left = -297.52008
+offset_top = 443.0
+offset_right = 296.47992
+offset_bottom = 518.0
 theme = ExtResource("9_srb65")
 theme_override_colors/font_color = Color(1, 0.92156863, 0.3137255, 1)
 theme_override_colors/font_focus_color = Color(1, 0.92156863, 0.3137255, 1)
@@ -293,11 +520,14 @@ theme_override_icons/checked = SubResource("DPITexture_g5vgl")
 theme_override_icons/unchecked = SubResource("DPITexture_srb65")
 text = "Cartes adversaire visibles"
 
-[connection signal="pressed" from="DosCartes/Dos1/MarginContainer/VBoxContainer/Dos" to="." method="_on_dos1_pressed"]
-[connection signal="pressed" from="DosCartes/Dos2/MarginContainer/VBoxContainer/Dos" to="." method="_on_dos2_pressed"]
-[connection signal="pressed" from="DosCartes/Dos3/MarginContainer/VBoxContainer/Dos" to="." method="_on_dos3_pressed"]
-[connection signal="pressed" from="DosCartes/Dos4/MarginContainer/VBoxContainer/Dos" to="." method="_on_dos4_pressed"]
-[connection signal="pressed" from="DosCartes/Dos5/MarginContainer/VBoxContainer/Dos" to="." method="_on_dos5_pressed"]
-[connection signal="pressed" from="DosCartes/Dos6/MarginContainer/VBoxContainer/Dos" to="." method="_on_dos6_pressed"]
+[connection signal="pressed" from="DosCartes/Dos1/BoutonDos1" to="." method="_on_bouton_dos_1_pressed"]
+[connection signal="pressed" from="DosCartes/Dos2/BoutonDos2" to="." method="_on_bouton_dos_2_pressed"]
+[connection signal="pressed" from="DosCartes/Dos3/BoutonDos3" to="." method="_on_bouton_dos_3_pressed"]
+[connection signal="pressed" from="DosCartes/Dos4/BoutonDos4" to="." method="_on_bouton_dos_4_pressed"]
+[connection signal="pressed" from="DosCartes/Dos5/BoutonDos5" to="." method="_on_bouton_dos_5_pressed"]
+[connection signal="pressed" from="DosCartes/Dos6/BoutonDos6" to="." method="_on_bouton_dos_6_pressed"]
+[connection signal="pressed" from="Tapis/Tapis1/BoutonTapis1" to="." method="_on_bouton_tapis_1_pressed"]
+[connection signal="pressed" from="Tapis/Tapis2/BoutonTapis2" to="." method="_on_bouton_tapis_2_pressed"]
+[connection signal="pressed" from="Tapis/Tapis3/BoutonTapis3" to="." method="_on_bouton_tapis_3_pressed"]
 [connection signal="pressed" from="Acceuil" to="." method="_on_acceuil_pressed"]
 [connection signal="pressed" from="CartesVisibles" to="." method="_on_cartes_visibles_pressed"]

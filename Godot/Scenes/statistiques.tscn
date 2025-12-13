@@ -1,0 +1,283 @@
+[gd_scene load_steps=4 format=3 uid="uid://dbha5f46hublh"]
+
+[ext_resource type="Script" uid="uid://c4mtfdg1agidw" path="res://Scripts/statistiques.gd" id="1_y60bm"]
+[ext_resource type="Theme" uid="uid://c7oakm7pw0gx8" path="res://Themes/macondo2.tres" id="2_0o6hs"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fbyxq"]
+bg_color = Color(0.91764706, 0.8, 0.28235295, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+corner_detail = 6
+
+[node name="Statistiques" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_y60bm")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Total" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_0o6hs")
+theme_override_font_sizes/font_size = 60
+text = "Total"
+horizontal_alignment = 1
+
+[node name="ProgressTotalChouine" type="ProgressBar" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.07551002, 0.07551012, 0.075510375, 1)
+theme_override_styles/background = SubResource("StyleBoxFlat_fbyxq")
+value = 65.0
+show_percentage = false
+
+[node name="Chouines" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ProgressTotalChouine"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 48.0
+grow_horizontal = 2
+
+[node name="Victoires" type="Label" parent="MarginContainer/VBoxContainer/ProgressTotalChouine/Chouines"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_0o6hs")
+theme_override_colors/font_color = Color(0, 0.45535296, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0.45490196, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 40
+text = "65 victoires"
+horizontal_alignment = 1
+
+[node name="Total" type="Label" parent="MarginContainer/VBoxContainer/ProgressTotalChouine/Chouines"]
+layout_mode = 2
+theme = ExtResource("2_0o6hs")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "120 chouines "
+horizontal_alignment = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ProgressTotalPartie" type="ProgressBar" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.07551002, 0.07551012, 0.075510375, 1)
+theme_override_styles/background = SubResource("StyleBoxFlat_fbyxq")
+value = 65.0
+show_percentage = false
+
+[node name="Parties" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ProgressTotalPartie"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 48.0
+grow_horizontal = 2
+
+[node name="Victoires" type="Label" parent="MarginContainer/VBoxContainer/ProgressTotalPartie/Parties"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_0o6hs")
+theme_override_colors/font_color = Color(0, 0.45535296, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0.45490196, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 40
+text = "35 victoires"
+horizontal_alignment = 1
+
+[node name="Total" type="Label" parent="MarginContainer/VBoxContainer/ProgressTotalPartie/Parties"]
+layout_mode = 2
+theme = ExtResource("2_0o6hs")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "60 parties"
+horizontal_alignment = 2
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 19
+
+[node name="Annee" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_0o6hs")
+theme_override_font_sizes/font_size = 60
+text = "2025"
+horizontal_alignment = 1
+
+[node name="ProgressAnneeChouine" type="ProgressBar" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.07551002, 0.07551012, 0.075510375, 1)
+theme_override_styles/background = SubResource("StyleBoxFlat_fbyxq")
+value = 65.0
+show_percentage = false
+
+[node name="Chouines" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ProgressAnneeChouine"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 48.0
+grow_horizontal = 2
+
+[node name="Victoires" type="Label" parent="MarginContainer/VBoxContainer/ProgressAnneeChouine/Chouines"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_0o6hs")
+theme_override_colors/font_color = Color(0, 0.45535296, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0.45490196, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 40
+text = "65 victoires"
+horizontal_alignment = 1
+
+[node name="Total" type="Label" parent="MarginContainer/VBoxContainer/ProgressAnneeChouine/Chouines"]
+layout_mode = 2
+theme = ExtResource("2_0o6hs")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "120 chouines"
+horizontal_alignment = 2
+
+[node name="MarginContainer3" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ProgressAnneePartie" type="ProgressBar" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.07551002, 0.07551012, 0.075510375, 1)
+theme_override_styles/background = SubResource("StyleBoxFlat_fbyxq")
+value = 65.0
+show_percentage = false
+
+[node name="Parties" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ProgressAnneePartie"]
+layout_mode = 0
+offset_right = 860.0
+offset_bottom = 51.0
+
+[node name="Victoires" type="Label" parent="MarginContainer/VBoxContainer/ProgressAnneePartie/Parties"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_0o6hs")
+theme_override_colors/font_color = Color(0, 0.45535296, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0.45490196, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 40
+text = "35 victoires"
+horizontal_alignment = 1
+
+[node name="Total" type="Label" parent="MarginContainer/VBoxContainer/ProgressAnneePartie/Parties"]
+layout_mode = 2
+theme = ExtResource("2_0o6hs")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "60 parties"
+horizontal_alignment = 2
+
+[node name="MarginContainer5" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 20
+
+[node name="Mois" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_0o6hs")
+theme_override_font_sizes/font_size = 60
+text = "Décembre"
+horizontal_alignment = 1
+
+[node name="ProgressMoisChouine" type="ProgressBar" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.07551002, 0.07551012, 0.075510375, 1)
+theme_override_styles/background = SubResource("StyleBoxFlat_fbyxq")
+value = 65.0
+show_percentage = false
+
+[node name="Chouines" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ProgressMoisChouine"]
+layout_mode = 0
+offset_right = 860.0
+offset_bottom = 51.0
+
+[node name="Victoires" type="Label" parent="MarginContainer/VBoxContainer/ProgressMoisChouine/Chouines"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_0o6hs")
+theme_override_colors/font_color = Color(0, 0.45535296, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0.45490196, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 40
+text = "65 victoires"
+horizontal_alignment = 1
+
+[node name="Total" type="Label" parent="MarginContainer/VBoxContainer/ProgressMoisChouine/Chouines"]
+layout_mode = 2
+theme = ExtResource("2_0o6hs")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "120 chouines"
+horizontal_alignment = 2
+
+[node name="MarginContainer4" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ProgressMoisPartie" type="ProgressBar" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.07551002, 0.07551012, 0.075510375, 1)
+theme_override_styles/background = SubResource("StyleBoxFlat_fbyxq")
+value = 65.0
+show_percentage = false
+
+[node name="Parties" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ProgressMoisPartie"]
+layout_mode = 0
+offset_right = 860.0
+offset_bottom = 51.0
+
+[node name="Victoires" type="Label" parent="MarginContainer/VBoxContainer/ProgressMoisPartie/Parties"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_0o6hs")
+theme_override_colors/font_color = Color(0, 0.45535296, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0.45490196, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 40
+text = "35 victoires"
+horizontal_alignment = 1
+
+[node name="Total" type="Label" parent="MarginContainer/VBoxContainer/ProgressMoisPartie/Parties"]
+layout_mode = 2
+theme = ExtResource("2_0o6hs")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "60 parties"
+horizontal_alignment = 2

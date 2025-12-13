@@ -7,8 +7,8 @@
 layout_mode = 3
 anchor_right = 0.39600003
 anchor_bottom = 0.192
-offset_right = 0.67993164
-offset_bottom = -0.3600006
+offset_right = 398.67993
+offset_bottom = 146.64
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_xybe5")
@@ -23,11 +23,24 @@ grow_vertical = 2
 theme = ExtResource("1_qppiw")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Panel"]
-layout_mode = 0
-offset_right = 749.0
-offset_bottom = 110.0
+layout_mode = 1
+offset_right = 1159.0
+offset_bottom = 155.0
 theme = ExtResource("1_qppiw")
+theme_override_font_sizes/normal_font_size = 60
 text = "Etes vous sûr de vouloir annuler ?"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="Panel"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 65.0
+offset_right = 1162.0
+offset_bottom = 220.0
+theme = ExtResource("1_qppiw")
+theme_override_font_sizes/normal_font_size = 50
+text = "La partie en cours sera terminée"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -38,20 +51,22 @@ anchor_left = 0.5
 anchor_top = 0.024
 anchor_right = 0.5
 anchor_bottom = 0.024
-offset_left = -134.79599
-offset_top = 114.032
-offset_right = 127.20401
-offset_bottom = 172.032
+offset_left = -180.5
+offset_top = 192.504
+offset_right = 195.5
+offset_bottom = 296.504
 theme_override_constants/separation = 13
 
 [node name="OK" type="Button" parent="Panel/HBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 60
 text = "Oui"
 
 [node name="Control" type="Control" parent="Panel/HBoxContainer"]
-custom_minimum_size = Vector2(100, 0)
+custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 
 [node name="Cancel" type="Button" parent="Panel/HBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 60
 text = "Non"

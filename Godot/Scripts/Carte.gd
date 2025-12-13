@@ -18,9 +18,10 @@ class_name Carte
 ## If true, the front face is visible; otherwise, the back face is visible.
 @export var show_front: bool = true
 
+enum State {IDLE, DRAGGING, MOVING, SELECTED}
+
 var draggable: bool = true
-var dragging: bool = false
-var moving: bool = false
+var state: State = State.IDLE
 var drag_offset: Vector2 = Vector2.ZERO
 var zone_jeu: bool = false
 var zone_pioche: bool = false
@@ -50,28 +51,33 @@ func _ready() -> void:
 	else:
 		front_face_texture.visible = false
 		back_face_texture.visible = true
-	carte.input_event.connect(_on_input_event)
-	carte.position = position
-	screen_center = get_viewport_rect().size / 2.0
+	if not carte.input_event.is_connected(_on_input_event):
+		carte.input_event.connect(_on_input_event)
+	carte.position = screen_center
 
 func move(pos: Vector2, orientation: float=0, duree_effet: float=0, _z_index: int=0) -> void:
-	moving = true
-	card_z_index = _z_index
-	if card_z_index != 0: 
-		carte.z_index = card_z_index
-	position_initiale = pos
-	orientation_initiale = orientation
 	if move_tween:
-		move_tween.kill()
-	move_tween = get_tree().create_tween()
-	move_tween.tween_property(carte, "position", pos, duree_effet)
-	move_tween.connect("finished", stop_moving)
-	if orientation != -100:
-		move_tween.tween_property(carte, "rotation", orientation, duree_effet)
+			move_tween.kill()
+	if duree_effet == 0.0:
+		carte.position = pos
+		carte.rotation = orientation
+	else:
+		card_z_index = _z_index
+		if card_z_index != 0: 
+			carte.z_index = card_z_index
+		position_initiale = pos
+		orientation_initiale = orientation
+		state = State.MOVING
+		move_tween = get_tree().create_tween()
+		move_tween.tween_property(carte, "position", pos, duree_effet).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+		if orientation != -100:
+			move_tween.set_parallel()
+			move_tween.tween_property(carte, "rotation", orientation, duree_effet/8).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+		move_tween.connect("finished", stop_moving)
 
 func stop_moving() -> void:
 	move_tween = null
-	moving = false
+	state = State.IDLE
 	if card_z_index != 0: 
 		carte.z_index = card_z_index
 
@@ -111,42 +117,70 @@ func is_topmost_card_at_position(pos: Vector2) -> bool:
 	return is_topmost
 
 
+func unselect() -> void:
+	var tween: Tween
+	tween = get_tree().create_tween()
+	tween.tween_property(carte, "scale", Vector2(1.0, 1.0), 0.2)
+	carte.z_index = card_z_index
+	state = State.IDLE
+
 func _on_input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
-	if draggable and (not moving) and event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and is_topmost_card_at_position(get_global_mouse_position()):
-			if event.pressed:
+	if draggable and (state != State.MOVING) and event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.pressed and is_topmost_card_at_position(get_global_mouse_position()) and state == State.IDLE:
 				# Start dragging
-				dragging = true
+				state = State.DRAGGING
 				carte.z_index = 1000
 				position_initiale = carte.position
 				drag_offset = carte.global_position - get_global_mouse_position()
 			else:
 				# Stop dragging
-				dragging = false
-				carte.z_index = card_z_index
 				var ret: int = 1
 				if zone_pioche == true:
 					ret = get_parent().pose_sept_atout(card_name)
+					carte.z_index = card_z_index
 				if zone_jeu == true:
-					ret = get_parent().carte_jouee(card_name)
+					ret = await get_parent().carte_jouee(card_name, 0.1)
+					carte.z_index = card_z_index
 				elif main_joueur == true:
 					ret = get_parent().prise_carte_atout(card_name)
+					carte.z_index = card_z_index
 				if ret != 0:
-					# on retourne à la position initiale
+					if carte.position.distance_to(position_initiale) < 20 and is_topmost_card_at_position(get_global_mouse_position()):
+						if state == State.SELECTED:
+							var tween: Tween
+							tween = get_tree().create_tween()
+							tween.tween_property(carte, "scale", Vector2(1.0, 1.0), 0.2)
+							state = State.IDLE
+							carte.z_index = card_z_index
+							get_parent().carte_jouee(card_name)
+							return
+						if state == State.DRAGGING:
+							var tween: Tween
+							tween = get_tree().create_tween()
+							tween.tween_property(carte, "scale", Vector2(1.2, 1.2), 0.2)
+							state = State.SELECTED
+							get_tree().create_timer(2.0).timeout.connect(unselect)
+							get_parent().selection_carte(card_name)
+					else:
+						carte.z_index = card_z_index
+					# retourne à la position initiale
 					carte.position = position_initiale
 					carte.rotation = orientation_initiale
+				if state != State.SELECTED:
+					state = State.IDLE
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
-	if dragging:
-		if get_global_mouse_position().y > screen_center.y and not retourne:
+	if state == State.DRAGGING:
+		if get_global_mouse_position().y > screen_center.y and not retourne and position_initiale.y != screen_center.y:
 			carte.rotation = orientation_initiale*(get_global_mouse_position().y - screen_center.y)/(position_initiale.y-screen_center.y)
 		carte.global_position = get_global_mouse_position() + drag_offset
 
 
 func _on_area_2d_area_shape_entered(_area_rid: RID, area: Area2D, _area_shape_index: int, _local_shape_index: int) -> void:
-	if not dragging:
+	if state != State.DRAGGING:
 		return
 	if area.name == "ZoneJeu":
 		zone_jeu = true

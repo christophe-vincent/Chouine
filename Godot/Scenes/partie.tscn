@@ -70,7 +70,7 @@ offset_top = -238.0
 offset_right = 454.43994
 offset_bottom = 106.0
 mouse_filter = 2
-color = Color(0.42754805, 0.66668326, 0.012920001, 0.017)
+color = Color(1, 1, 1, 0)
 script = ExtResource("4_1x1o5")
 type = 1
 
@@ -93,15 +93,17 @@ spreadable = false
 
 [node name="Scores" parent="." instance=ExtResource("7_kcvnu")]
 visible = false
-z_index = 4095
+z_index = 4090
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.56200004
-anchor_right = 0.56200004
-offset_left = -637.04004
-offset_top = -192.99988
-offset_right = 636.95996
-offset_bottom = 207.00012
+anchor_left = 0.49500003
+anchor_top = 0.49522218
+anchor_right = 0.49500003
+anchor_bottom = 0.49522218
+offset_left = -931.4001
+offset_top = -199.84003
+offset_right = 932.5999
+offset_bottom = 200.15997
 grow_horizontal = 1
 grow_vertical = 1
 mouse_filter = 2
@@ -222,7 +224,7 @@ mouse_filter = 2
 [node name="ZonePioche" type="Area2D" parent="ZonePioche"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ZonePioche/ZonePioche"]
-position = Vector2(281, 228)
+position = Vector2(285, 227)
 shape = SubResource("RectangleShape2D_qapei")
 
 [node name="Actif" type="Panel" parent="ZonePioche"]
@@ -496,7 +498,6 @@ theme = ExtResource("4_8crny")
 text = "ANNONCE"
 
 [node name="ChoixAnnonces" parent="." instance=ExtResource("7_acwto")]
-visible = false
 z_index = 100
 layout_mode = 1
 anchors_preset = 8
@@ -504,9 +505,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -628.0
+offset_left = -818.0
 offset_top = -192.0
-offset_right = -628.0
+offset_right = -818.0
 offset_bottom = -192.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -594,11 +595,11 @@ anchor_left = 0.48600003
 anchor_top = 0.5
 anchor_right = 0.48600003
 anchor_bottom = 0.5
-offset_left = -312.12006
-offset_top = 251.0
-offset_right = 313.87994
-offset_bottom = 399.0
-text = "Votre main. Glissez la carte à jouer sur le centre. Glissez le 7 d'atout sur le talon pour procéder à l'échange"
+offset_left = -393.12006
+offset_top = 275.0
+offset_right = 414.87994
+offset_bottom = 421.0
+text = "Votre main. Pour jouer, faites glissez la carte sur le centre du tapis ou cliquez deux fois sur celle-çi. Glissez le 7 d'atout sur le talon pour procéder à l'échange"
 
 [node name="GainJoueur" parent="Help" instance=ExtResource("12_gtolj")]
 z_index = 3001
@@ -627,7 +628,7 @@ offset_left = -141.23999
 offset_top = -162.20004
 offset_right = 141.76001
 offset_bottom = 161.79996
-text = "Glissez une carte du talon au centre du tapis pour jouer.  Glissez la retourne ou pour l'échanger avec votre 7 d'atout"
+text = "Glissez la retourne ou pour l'échanger avec votre 7 d'atout"
 
 [node name="Annuler" type="Button" parent="."]
 z_index = 4000
@@ -650,17 +651,17 @@ expand_icon = true
 
 [node name="Confirmation" parent="." instance=ExtResource("10_qapei")]
 visible = false
-z_index = 4090
+z_index = 4091
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -378.0
-offset_top = -97.0
-offset_right = 382.0
-offset_bottom = 113.0
+offset_left = -582.0
+offset_top = -196.0
+offset_right = 583.0
+offset_bottom = 167.0
 
 [connection signal="area_shape_entered" from="ZoneJeu/ZoneJeu" to="ZoneJeu/ZoneJeu" method="_on_area_shape_entered"]
 [connection signal="area_shape_exited" from="ZoneJeu/ZoneJeu" to="ZoneJeu/ZoneJeu" method="_on_area_shape_exited"]

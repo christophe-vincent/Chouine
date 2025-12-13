@@ -13,26 +13,25 @@ class_name Options
 @onready var Jeton4: TextureRect = $DosCartes/Dos4/MarginContainer/VBoxContainer/ChoixDos
 @onready var Jeton5: TextureRect = $DosCartes/Dos5/MarginContainer/VBoxContainer/ChoixDos
 @onready var Jeton6: TextureRect = $DosCartes/Dos6/MarginContainer/VBoxContainer/ChoixDos
+@onready var Tapis1: PanelContainer = $Tapis/Tapis1
+@onready var Tapis2: PanelContainer = $Tapis/Tapis2
+@onready var Tapis3: PanelContainer = $Tapis/Tapis3
+@onready var JetonTapis1: TextureRect = $Tapis/Tapis1/MarginContainer/VBoxContainer/ChoixDos
+@onready var JetonTapis2: TextureRect = $Tapis/Tapis2/MarginContainer/VBoxContainer/ChoixDos
+@onready var JetonTapis3: TextureRect = $Tapis/Tapis3/MarginContainer/VBoxContainer/ChoixDos
 
-var selected_style: StyleBoxFlat = StyleBoxFlat.new()
-var non_selected_style: StyleBoxFlat = StyleBoxFlat.new()
-var jeton_actif: Resource = load("res://Assets/point_partie_actif.png")
-var jeton_inactif: Resource = load("res://Assets/point_partie_inactif.png")
 var dos: Array[PanelContainer] = []
 var jetons_dos: Array[TextureRect] = []
+var tapis: Array[PanelContainer] = []
+var jetons_tapis: Array[TextureRect] = []
 
 func _ready() -> void:
 	dos = [Dos1, Dos2, Dos3, Dos4, Dos5, Dos6]
 	jetons_dos = [Jeton1, Jeton2, Jeton3, Jeton4, Jeton5, Jeton6]
-	selected_style.bg_color = Color(0.635, 0.635, 0.635, 0.196)
-	selected_style.border_width_left = 1
-	selected_style.border_width_top = 1
-	selected_style.border_width_right = 1
-	selected_style.border_width_bottom = 1
-	selected_style.border_color = Color.WHITE_SMOKE
-	selected_style.set_corner_radius_all(30)
-	non_selected_style.bg_color = Color(0, 0, 0, 0)
+	tapis = [Tapis1, Tapis2, Tapis3]
+	jetons_tapis = [JetonTapis1, JetonTapis2, JetonTapis3]
 	select_dos(Global.options["dos_carte"])
+	select_tapis(Global.options["couleur_tapis"])
 	$CartesVisibles.button_pressed = Global.options["cartes_visibles"]
 
 
@@ -42,29 +41,23 @@ func select_dos(index: int) -> void:
 	for i: int in range(dos.size()):
 		# modifier le background
 		if i == index:
-			dos[i].add_theme_stylebox_override("panel", selected_style)
-			jetons_dos[i].texture = jeton_actif
+			dos[i].add_theme_stylebox_override("panel", Global.selected_panel)
+			jetons_dos[i].texture = Global.jeton_actif
 		else:
-			dos[i].add_theme_stylebox_override("panel", non_selected_style)
-			jetons_dos[i].texture = jeton_inactif
+			dos[i].add_theme_stylebox_override("panel", Global.non_selected_panel)
+			jetons_dos[i].texture = Global.jeton_inactif
 
-func _on_dos1_pressed() -> void:
-	select_dos(0)
-
-func _on_dos2_pressed() -> void:
-	select_dos(1)
-
-func _on_dos3_pressed() -> void:
-	select_dos(2)
-
-func _on_dos4_pressed() -> void:
-	select_dos(3)
-
-func _on_dos5_pressed() -> void:
-	select_dos(4)
-
-func _on_dos6_pressed() -> void:
-	select_dos(5)
+func select_tapis(index: int) -> void:
+	Global.options["couleur_tapis"] = index
+	Global.enregistrer_options()
+	for i: int in range(tapis.size()):
+		# modifier le background
+		if i == index:
+			tapis[i].add_theme_stylebox_override("panel", Global.selected_panel)
+			jetons_tapis[i].texture = Global.jeton_actif
+		else:
+			tapis[i].add_theme_stylebox_override("panel", Global.non_selected_panel)
+			jetons_tapis[i].texture = Global.jeton_inactif
 
 
 func _on_acceuil_pressed() -> void:
@@ -76,3 +69,31 @@ func _on_acceuil_pressed() -> void:
 func _on_cartes_visibles_pressed() -> void:
 	Global.options["cartes_visibles"] = $CartesVisibles.button_pressed
 	Global.enregistrer_options()
+
+
+func _on_bouton_dos_1_pressed() -> void:
+	select_dos(0)
+
+func _on_bouton_dos_2_pressed() -> void:
+	select_dos(1)
+
+func _on_bouton_dos_3_pressed() -> void:
+	select_dos(2)
+
+func _on_bouton_dos_4_pressed() -> void:
+	select_dos(3)
+
+func _on_bouton_dos_5_pressed() -> void:
+	select_dos(4)
+
+func _on_bouton_dos_6_pressed() -> void:
+	select_dos(5)
+
+func _on_bouton_tapis_1_pressed() -> void:
+	select_tapis(0)
+
+func _on_bouton_tapis_2_pressed() -> void:
+	select_tapis(1)
+
+func _on_bouton_tapis_3_pressed() -> void:
+	select_tapis(2)

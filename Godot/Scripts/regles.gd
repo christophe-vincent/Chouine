@@ -14,7 +14,9 @@ Après la distribution des cartes, la carte se trouvant au-dessus de la pioche e
 Cette carte détermine la couleur de l'[b]atout[/b]. Une carte de la couleur de l'atout est plus forte qu'une carte d'une autre couleur.
 
 Tant qu'il reste des cartes dans la pioche, il n'est pas nécessaire de monter, c'est-à-dire prendre la carte de l'adversaire si cela est possible.
-Quand la pioche est vide, monter est obligatoire si une carte plus forte le permet.
+Il est aussi possible de ne pas jouer la couleur du joueur adverse.
+Quand la pioche est vide, alors il faut jouer la même couleur que l'adversaire, monter si cela est possible. 
+Si vous n'avez de carte de la couleur d l'adversaire, alors vous devrez jouer un atout si vous en possédez.
 
 [b] Points des cartes[/b]
 

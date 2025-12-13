@@ -1,18 +1,92 @@
-[gd_scene load_steps=14 format=3 uid="uid://cbig4nyg5d5k8"]
+[gd_scene load_steps=18 format=3 uid="uid://cbig4nyg5d5k8"]
 
 [ext_resource type="Script" uid="uid://b3ddph3lqd14u" path="res://Scripts/accueil.gd" id="1_mwf61"]
 [ext_resource type="Texture2D" uid="uid://d0u2ux7jb7rnj" path="res://Assets/un_point.png" id="2_68w6v"]
 [ext_resource type="Texture2D" uid="uid://cpr78bpmvuyr7" path="res://Assets/tapis_bleu.png" id="2_p3653"]
 [ext_resource type="Theme" uid="uid://c7oakm7pw0gx8" path="res://Themes/macondo2.tres" id="3_2kwed"]
-[ext_resource type="Texture2D" uid="uid://cl7fuofhtvc5a" path="res://Assets/un_point_select.png" id="3_cggy0"]
 [ext_resource type="Texture2D" uid="uid://vm6llepask2m" path="res://Assets/trois_points.png" id="4_n6lxe"]
-[ext_resource type="Texture2D" uid="uid://bel8hhaslw42h" path="res://Assets/trois_points_select.png" id="5_kbk3v"]
 [ext_resource type="Texture2D" uid="uid://cqv1towavsbd3" path="res://Assets/cinq_points.png" id="6_muto7"]
-[ext_resource type="Texture2D" uid="uid://bg38w7oqpbur8" path="res://Assets/cinq_points_select.png" id="7_p3653"]
 [ext_resource type="Texture2D" uid="uid://bm063xd506t3" path="res://Assets/un_blason.png" id="9_muto7"]
-[ext_resource type="Texture2D" uid="uid://cpjtlantk26qq" path="res://Assets/un_blason_select.png" id="10_p3653"]
 [ext_resource type="Texture2D" uid="uid://sj7cb71b3amk" path="res://Assets/deux_blasons.png" id="11_2kwed"]
-[ext_resource type="Texture2D" uid="uid://cawbq8qkfqyc4" path="res://Assets/deux_blasons_select.png" id="12_tiwth"]
+[ext_resource type="Material" uid="uid://bpvqcg2vey6tx" path="res://Materials/blur_material.tres" id="12_muto7"]
+[ext_resource type="PackedScene" uid="uid://dbha5f46hublh" path="res://Scenes/statistiques.tscn" id="13_p3653"]
+[ext_resource type="Texture2D" uid="uid://bspvxo6wejiyf" path="res://Assets/piece.png" id="14_tiwth"]
+[ext_resource type="Texture2D" uid="uid://cl4lkxnjxh6tf" path="res://Assets/point_partie_inactif.png" id="15_aujfu"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1dle6"]
+bg_color = Color(0.63529414, 0.63529414, 0.63529414, 0.19607843)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_muto7"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 0.75)
+draw_center = false
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p3653"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 0.75)
+draw_center = false
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2kwed"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 0.75)
+draw_center = false
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tiwth"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(1, 1, 1, 0)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -33,23 +107,6 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_p3653")
 
-[node name="Intro" type="RichTextLabel" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.76500005
-anchor_top = 0.5
-anchor_right = 0.76500005
-anchor_bottom = 0.5
-offset_left = -442.80005
-offset_top = -277.0
-offset_right = 367.19995
-offset_bottom = 330.0
-theme = ExtResource("3_2kwed")
-theme_override_font_sizes/normal_font_size = 50
-text = "blabla
-bla
-"
-
 [node name="Chouine" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = -1
@@ -68,6 +125,272 @@ theme_override_colors/font_outline_color = Color(0.9411765, 0.85882354, 0.498039
 theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 120
 text = "LA CHOUINE"
+
+[node name="Parties" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.26700002
+anchor_top = 0.49600002
+anchor_right = 0.26700002
+anchor_bottom = 0.49600002
+offset_left = -352.64
+offset_top = -307.68005
+offset_right = 343.36
+offset_bottom = -8.680054
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Une" type="PanelContainer" parent="Parties"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1dle6")
+
+[node name="UnPoint" type="Button" parent="Parties/Une"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_muto7")
+flat = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Parties/Une"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Parties/Une/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 1
+
+[node name="1Point" type="Label" parent="Parties/Une/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("3_2kwed")
+theme_override_font_sizes/font_size = 40
+text = "1 point"
+horizontal_alignment = 1
+
+[node name="Jetons" type="TextureRect" parent="Parties/Une/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("2_68w6v")
+expand_mode = 3
+
+[node name="ChoixPartie" type="TextureRect" parent="Parties/Une/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("14_tiwth")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Trois" type="PanelContainer" parent="Parties"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1dle6")
+
+[node name="TroisPoints" type="Button" parent="Parties/Trois"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_p3653")
+flat = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Parties/Trois"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Parties/Trois/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 1
+
+[node name="3Points" type="Label" parent="Parties/Trois/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("3_2kwed")
+theme_override_font_sizes/font_size = 40
+text = "3 points"
+horizontal_alignment = 1
+
+[node name="Jetons" type="TextureRect" parent="Parties/Trois/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("4_n6lxe")
+expand_mode = 3
+
+[node name="ChoixPartie" type="TextureRect" parent="Parties/Trois/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("15_aujfu")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Cinq" type="PanelContainer" parent="Parties"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1dle6")
+
+[node name="CinqPoints" type="Button" parent="Parties/Cinq"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_2kwed")
+flat = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Parties/Cinq"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Parties/Cinq/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 1
+
+[node name="5Points" type="Label" parent="Parties/Cinq/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("3_2kwed")
+theme_override_font_sizes/font_size = 40
+text = "5 points"
+horizontal_alignment = 1
+
+[node name="Jetons" type="TextureRect" parent="Parties/Cinq/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("6_muto7")
+expand_mode = 3
+
+[node name="ChoixPartie" type="TextureRect" parent="Parties/Cinq/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("15_aujfu")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Manches" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.26700002
+anchor_top = 0.49600002
+anchor_right = 0.26700002
+anchor_bottom = 0.49600002
+offset_left = -311.64
+offset_top = 57.319946
+offset_right = 290.36
+offset_bottom = 351.31995
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 150
+
+[node name="Une" type="PanelContainer" parent="Manches"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1dle6")
+
+[node name="UneManche" type="Button" parent="Manches/Une"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_muto7")
+flat = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Manches/Une"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Manches/Une/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 1
+
+[node name="1Manche" type="Label" parent="Manches/Une/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("3_2kwed")
+theme_override_font_sizes/font_size = 40
+text = "1 manche"
+horizontal_alignment = 1
+
+[node name="Blasons" type="TextureRect" parent="Manches/Une/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("9_muto7")
+expand_mode = 3
+
+[node name="ChoixManche" type="TextureRect" parent="Manches/Une/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("14_tiwth")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Deux" type="PanelContainer" parent="Manches"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1dle6")
+
+[node name="DeuxManches" type="Button" parent="Manches/Deux"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_p3653")
+flat = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Manches/Deux"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Manches/Deux/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 1
+
+[node name="3Points" type="Label" parent="Manches/Deux/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("3_2kwed")
+theme_override_font_sizes/font_size = 40
+text = "2 manches"
+horizontal_alignment = 1
+
+[node name="Blasons" type="TextureRect" parent="Manches/Deux/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("11_2kwed")
+expand_mode = 3
+
+[node name="ChoixManche" type="TextureRect" parent="Manches/Deux/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("15_aujfu")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Intro" type="RichTextLabel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.725
+anchor_top = 0.5
+anchor_right = 0.725
+anchor_bottom = 0.5
+offset_left = -493.0
+offset_top = -333.0
+offset_right = 494.0
+offset_bottom = 61.0
+theme = ExtResource("3_2kwed")
+theme_override_font_sizes/normal_font_size = 50
+text = "blabla
+bla
+"
 
 [node name="Jouer" type="Button" parent="."]
 layout_mode = 1
@@ -102,219 +425,16 @@ theme_override_font_sizes/font_size = 55
 text = "Partie 
 en cours"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="Partie" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.268
-anchor_top = 0.5
-anchor_right = 0.268
-anchor_bottom = 0.5
-offset_left = -72.56
-offset_top = -354.0
-offset_right = 71.44
-offset_bottom = -285.0
-theme = ExtResource("3_2kwed")
-theme_override_font_sizes/font_size = 50
-text = "Partie"
-
-[node name="1Point" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.10700001
-anchor_top = 0.5
-anchor_right = 0.10700001
-anchor_bottom = 0.5
-offset_left = -68.44002
-offset_top = -282.0
-offset_right = 69.55998
-offset_bottom = -240.0
-theme = ExtResource("3_2kwed")
-theme_override_font_sizes/font_size = 30
-text = "1 point"
-
-[node name="3Points" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.266
-anchor_top = 0.5
-anchor_right = 0.266
-anchor_bottom = 0.5
-offset_left = -69.72
-offset_top = -283.0
-offset_right = 68.28
-offset_bottom = -241.0
-theme = ExtResource("3_2kwed")
-theme_override_font_sizes/font_size = 30
-text = "3 points"
-
-[node name="5Points" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.42600003
-anchor_top = 0.5
-anchor_right = 0.42600003
-anchor_bottom = 0.5
-offset_left = -69.920044
-offset_top = -288.0
-offset_right = 68.079956
-offset_bottom = -246.0
-theme = ExtResource("3_2kwed")
-theme_override_font_sizes/font_size = 30
-text = "5 points"
-
-[node name="Manches" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.266
-anchor_top = 0.504
-anchor_right = 0.266
-anchor_bottom = 0.504
-offset_left = -202.72
-offset_top = -0.32000732
-offset_right = 203.28
-offset_bottom = 68.67999
-theme = ExtResource("3_2kwed")
-theme_override_font_sizes/font_size = 50
-text = "Manches gagnantes"
-
-[node name="UnPoint" type="TextureButton" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.09900001
-anchor_top = 0.5
-anchor_right = 0.09900001
-anchor_bottom = 0.5
-offset_left = -99.08002
-offset_top = -238.0
-offset_right = 100.91998
-offset_bottom = -38.0
-toggle_mode = true
-texture_normal = ExtResource("2_68w6v")
-texture_pressed = ExtResource("3_cggy0")
-texture_disabled = ExtResource("3_cggy0")
-ignore_texture_size = true
-stretch_mode = 0
-
-[node name="TroisPoints" type="TextureButton" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.25300002
-anchor_top = 0.5
-anchor_right = 0.25300002
-anchor_bottom = 0.5
-offset_left = -100.76004
-offset_top = -238.0
-offset_right = 99.23996
-offset_bottom = -38.0
-toggle_mode = true
-button_pressed = true
-texture_normal = ExtResource("4_n6lxe")
-texture_pressed = ExtResource("5_kbk3v")
-texture_disabled = ExtResource("5_kbk3v")
-ignore_texture_size = true
-stretch_mode = 0
-
-[node name="CinqPoints" type="TextureButton" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.41900003
-anchor_top = 0.5
-anchor_right = 0.41900003
-anchor_bottom = 0.5
-offset_left = -99.48004
-offset_top = -253.0
-offset_right = 100.51996
-offset_bottom = -53.0
-toggle_mode = true
-texture_normal = ExtResource("6_muto7")
-texture_pressed = ExtResource("7_p3653")
-texture_disabled = ExtResource("7_p3653")
-ignore_texture_size = true
-stretch_mode = 0
-
-[node name="UneManche" type="TextureButton" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.17
-anchor_top = 0.5
-anchor_right = 0.17
-anchor_bottom = 0.5
-offset_left = -93.399994
-offset_top = 158.0
-offset_right = 94.600006
-offset_bottom = 337.0
-disabled = true
-toggle_mode = true
-keep_pressed_outside = true
-texture_normal = ExtResource("9_muto7")
-texture_pressed = ExtResource("10_p3653")
-texture_disabled = ExtResource("10_p3653")
-ignore_texture_size = true
-stretch_mode = 0
-
-[node name="DeuxManches" type="TextureButton" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.34300002
-anchor_top = 0.5
-anchor_right = 0.34300002
-anchor_bottom = 0.5
-offset_left = -93.56006
-offset_top = 157.0
-offset_right = 94.43994
-offset_bottom = 336.0
-toggle_mode = true
-texture_normal = ExtResource("11_2kwed")
-texture_pressed = ExtResource("12_tiwth")
-texture_disabled = ExtResource("12_tiwth")
-ignore_texture_size = true
-stretch_mode = 0
-
-[node name="1MancheGagante" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.177
-anchor_top = 0.5
-anchor_right = 0.177
-anchor_bottom = 0.606
-offset_left = -68.84
-offset_top = 93.0
-offset_right = 69.16
-offset_bottom = 20.52002
-theme = ExtResource("3_2kwed")
-theme_override_font_sizes/font_size = 30
-text = "1 manche"
-
-[node name="2ManchesGagantes" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.34100002
-anchor_top = 0.5
-anchor_right = 0.34100002
-anchor_bottom = 0.5
-offset_left = -69.72003
-offset_top = 90.0
-offset_right = 68.27997
-offset_bottom = 132.0
-theme = ExtResource("3_2kwed")
-theme_override_font_sizes/font_size = 30
-text = "2 manches"
-
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.84800005
+anchor_left = 0.75000006
 anchor_top = 0.5
-anchor_right = 0.84800005
+anchor_right = 0.75000006
 anchor_bottom = 0.5
-offset_left = -279.16016
+offset_left = -445.00012
 offset_top = 422.0
-offset_right = 310.83984
+offset_right = 444.99988
 offset_bottom = 516.0
 theme_override_constants/separation = 30
 
@@ -325,24 +445,134 @@ theme_override_font_sizes/font_size = 60
 text = "Options"
 
 [node name="Regles" type="Button" parent="HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme = ExtResource("3_2kwed")
 theme_override_font_sizes/font_size = 60
 text = "Règles"
 
 [node name="Aide" type="Button" parent="HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme = ExtResource("3_2kwed")
 theme_override_font_sizes/font_size = 60
 text = "Aide"
 
+[node name="Crédits" type="Button" parent="HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme = ExtResource("3_2kwed")
+theme_override_font_sizes/font_size = 60
+text = "Crédits"
+
+[node name="PanelContainer3" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.60400003
+anchor_top = 0.53400004
+anchor_right = 0.60400003
+anchor_bottom = 0.53400004
+offset_left = 34.319946
+offset_top = 62.27997
+offset_right = 88.31995
+offset_bottom = 313.27997
+theme_override_styles/panel = SubResource("StyleBoxFlat_tiwth")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 1189.0
+offset_top = 635.0
+offset_right = 1253.0
+offset_bottom = 884.0
+theme = ExtResource("3_2kwed")
+theme_override_constants/paragraph_separation = -15
+theme_override_font_sizes/normal_font_size = 35
+text = "0
+1
+2
+3
+4%
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+20
+30
+40
+50
+60
+70
+80
+90
+100"
+scroll_active = false
+horizontal_alignment = 1
+
+[node name="PanelContainer2" type="PanelContainer" parent="."]
+visible = false
+self_modulate = Color(0.76862746, 0.76862746, 0.76862746, 0.98039216)
+material = ExtResource("12_muto7")
+layout_mode = 0
+offset_left = 1198.0
+offset_top = 642.0
+offset_right = 1244.0
+offset_bottom = 752.0
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+visible = false
+self_modulate = Color(0.76862746, 0.76862746, 0.76862746, 0.98039216)
+material = ExtResource("12_muto7")
+layout_mode = 0
+offset_left = 1198.0
+offset_top = 784.0
+offset_right = 1245.0
+offset_bottom = 885.0
+
+[node name="Stats" type="FoldableContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.75100005
+anchor_top = 0.5
+anchor_right = 0.75100005
+anchor_bottom = 0.5
+offset_left = -442.92004
+offset_top = -325.0
+offset_right = 443.07996
+offset_bottom = 405.0
+theme = ExtResource("3_2kwed")
+theme_override_colors/font_color = Color(0.91764706, 0.8, 0.28235295, 1)
+theme_override_colors/hover_font_color = Color(0.91764706, 0.8, 0.28235295, 1)
+theme_override_constants/outline_size = 0
+theme_override_constants/h_separation = 10
+theme_override_font_sizes/font_size = 45
+folded = true
+title = "Stats"
+title_position = 1
+
+[node name="Statistiques" parent="Stats" instance=ExtResource("13_p3653")]
+visible = false
+layout_mode = 2
+
+[connection signal="pressed" from="Parties/Une/UnPoint" to="." method="_on_un_point_pressed"]
+[connection signal="pressed" from="Parties/Trois/TroisPoints" to="." method="_on_trois_points_pressed"]
+[connection signal="pressed" from="Parties/Cinq/CinqPoints" to="." method="_on_cinq_points_pressed"]
+[connection signal="pressed" from="Manches/Une/UneManche" to="." method="_on_une_manche_pressed"]
+[connection signal="pressed" from="Manches/Deux/DeuxManches" to="." method="_on_deux_manches_pressed"]
 [connection signal="pressed" from="Jouer" to="." method="_on_jouer_pressed"]
 [connection signal="pressed" from="PartieEnCours" to="." method="_on_partie_en_cours_pressed"]
-[connection signal="pressed" from="UnPoint" to="." method="_on_un_point_pressed"]
-[connection signal="pressed" from="TroisPoints" to="." method="_on_trois_points_pressed"]
-[connection signal="pressed" from="CinqPoints" to="." method="_on_cinq_points_2_pressed"]
-[connection signal="pressed" from="UneManche" to="." method="_on_une_manche_pressed"]
-[connection signal="pressed" from="DeuxManches" to="." method="_on_deux_manches_pressed"]
 [connection signal="pressed" from="HBoxContainer/Options" to="." method="_on_options_pressed"]
 [connection signal="pressed" from="HBoxContainer/Regles" to="." method="_on_regles_pressed"]
 [connection signal="pressed" from="HBoxContainer/Aide" to="." method="_on_aide_pressed"]
+[connection signal="folding_changed" from="Stats" to="." method="_on_stats_folding_changed"]

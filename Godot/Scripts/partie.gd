@@ -23,6 +23,11 @@ var textures_dos: Array[Resource] = [
 	load("res://Assets/Cartes/back_5.png"),
 	load("res://Assets/Cartes/back_6.png"),
 	load("res://Assets/Cartes/back_1.svg")]
+var textures_tapis: Array[Resource] = [
+	load("res://Assets/tapis_bleu.png"),
+	load("res://Assets/tapis.png"),
+	load("res://Assets/tapis_gris.png")
+]
 var card_packed_scene: Resource = preload("res://Scenes/carte.tscn")
 var cartes: Dictionary[String, Carte] = {}
 var mains: Dictionary[int, Control] = {}
@@ -47,6 +52,8 @@ var joueur_gagnees_size: Vector2 = Vector2(0, 0)
 var ordi_gagnees_size: Vector2 = Vector2(0, 0)
 var joueur_gagnees_position: Vector4 = Vector4(0, 0, 0, 0)
 var ordi_gagnees_position: Vector4 = Vector4(0, 0, 0, 0)
+var jeu_cartes: Variant = ""
+var rng:RandomNumberGenerator = RandomNumberGenerator.new()
 
 
 enum JOUEURS {
@@ -55,6 +62,9 @@ enum JOUEURS {
 }
 
 func _ready() -> void:
+	var json_as_text: String = FileAccess.get_file_as_string("res://Assets/Data/jeu-carte.json")
+	jeu_cartes = JSON.parse_string(json_as_text)
+	$Tapis.texture = textures_tapis[Global.options["couleur_tapis"]]
 	confirmation_annuler.ok_button.pressed.connect(_on_confirmation_dialog_confirmed)
 	confirmation_annuler.cancel_button.pressed.connect(_on_confirmation_dialog_canceled)
 	mains = {0: main_ordi, 1: main_joueur}
@@ -105,7 +115,7 @@ func _ready() -> void:
 	annonces_ordi.set_milieu_tapis(tapis.position + tapis.size/2)
 	annonces_joueur.set_milieu_tapis(tapis.position + tapis.size/2)
 	_display_points()
-	$Scores/Continuer.connect("pressed", _partie_suivante.bind())
+	$Scores/Panel/Continuer.connect("pressed", _partie_suivante.bind())
 	creer_cartes()
 	get_tree().root.size_changed.connect(on_viewport_size_changed)
 	if Global.help_mode:
@@ -132,8 +142,6 @@ func on_viewport_size_changed() -> void:
 
 func creer_cartes() -> void:
 	# lecture du fichier de la description des cartes
-	var json_as_text: String = FileAccess.get_file_as_string("res://Assets/Data/jeu-carte.json")
-	var jeu_cartes: Variant = JSON.parse_string(json_as_text)
 	for couleur: String in jeu_cartes:
 		for valeur: String in jeu_cartes[couleur]:
 			var nom_carte: String = valeur + "-" + couleur
@@ -146,9 +154,9 @@ func creer_cartes() -> void:
 					dos = textures_dos[Global.options["dos_carte"]]
 				card_instance.back_image = dos
 				card_instance.show_front = false
-				card_instance.position = tapis.position + tapis.size/2
-				card_instance.sept_atout = false
 				add_child(card_instance)
+				card_instance.move(tapis.position + tapis.size/2)
+				card_instance.sept_atout = false
 				cartes[nom_carte] = card_instance
 
 func init_jeu() -> void:
@@ -211,7 +219,8 @@ func init_jeu() -> void:
 	choix_annonces.set_partie(self)
 
 
-func demarrer_jeu() -> void:	
+func demarrer_jeu() -> void:
+	print(Global.options)
 	await melanger()
 	
 	chouine.distribution_cartes()
@@ -253,6 +262,19 @@ func melanger() -> void:
 		c = c.replace('*', '')
 		cartes_pioche.append(c)
 		pioche.ajouter_carte(cartes[c])
+
+
+func center_cartes() -> void:
+	# placer les cartes au centre de l'écran
+	for couleur: String in jeu_cartes:
+		for valeur: String in jeu_cartes[couleur]:
+			var nom_carte: String = valeur + "-" + couleur
+			var rnd_x: float = rng.randf_range(-1.0, 1.0) * 15
+			var rnd_y: float = rng.randf_range(-1.0, 1.0) * 15
+			cartes[nom_carte].face_visible(false)
+			cartes[nom_carte].move(tapis.position + tapis.size/2 + Vector2(rnd_x, rnd_y), 0, 0.1)
+			if not Global.help_mode:
+				await get_tree().create_timer(0.05).timeout
 
 
 #
@@ -303,7 +325,7 @@ func supprimer_sauvegarde() -> void:
 #
 # Actions utilisateur
 #
-func carte_jouee(nom: String) -> int:
+func carte_jouee(nom: String, duree: float=0.5*Settings.DUREE_MOUVEMENT) -> int:
 	"""Une carte est jouée par le joueur"""
 	if coup_joueur == false:
 		return -1
@@ -316,7 +338,9 @@ func carte_jouee(nom: String) -> int:
 		print("ERREUR: Erreur dans le choix du joueur")
 		return -1
 	coup_joueur = false
-	tapis.ajouter_carte(cartes[nom], 0.1)
+	
+	tapis.ajouter_carte(cartes[nom], duree)
+	await get_tree().create_timer(0.5).timeout
 	main_joueur.supprimer_carte(nom)
 	# est-ce la fin du pli ?
 	ret = chouine.fin_pli()
@@ -369,6 +393,9 @@ func annonce_joueur(annonce: String) -> void:
 		if chouine.fin_partie():
 			fin_pli()
 
+func selection_carte(nom: String) -> void:
+	main_joueur.selection_carte(nom)
+
 #
 # Actions de l'ordinateur
 #
@@ -393,7 +420,7 @@ func annonce_ordi(_annonce: String) -> void:
 			main_ordi.afficher_cartes(c)
 	await get_tree().create_timer(4.0).timeout
 	main_ordi.calcul_positions(0.5)
-	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(0.1).timeout
 
 
 func coup_ordi() -> void:
@@ -409,7 +436,7 @@ func coup_ordi() -> void:
 			# la carte de joueur rejoint la retourne
 			main_ordi.supprimer_carte(sept_atout.card_name)
 			main_ordi.ajouter_carte(carte_atout, 2 * Settings.DUREE_MOUVEMENT)
-			main_ordi.calcul_positions(Settings.DUREE_MOUVEMENT)
+			main_ordi.calcul_positions()
 			retourne.init_cartes()
 			retourne.ajouter_carte(sept_atout, 2 * Settings.DUREE_MOUVEMENT)
 			print("Ordi        : Echange sept atout - ", carte_atout.card_name)
@@ -425,10 +452,12 @@ func coup_ordi() -> void:
 		await annonce_ordi(annonce)
 
 	main_ordi.supprimer_carte(choix_carte)
-	tapis.ajouter_carte(cartes[choix_carte])
+	tapis.ajouter_carte(cartes[choix_carte], 1 * Settings.DUREE_MOUVEMENT)
+	
 	# est-ce la fin du pli ?
 	var ret: int = chouine.fin_pli()
 	if ret >= 0:
+		await get_tree().create_timer(1).timeout
 		fin_pli()
 	else:
 		coup_joueur = true
@@ -437,36 +466,40 @@ func coup_ordi() -> void:
 #
 # Gestion du pli
 #
-func distribution_carte(joueur: int) -> void:
+func distribution_carte(joueur: int, duration: float = 0.5 * Settings.DUREE_MOUVEMENT) -> void:
 	"""Une carte est donnée à un joueur"""
-	if not Global.help_mode:
-		await get_tree().create_timer(Settings.DUREE_DISTRIBUTION).timeout
 	var c: String = cartes_pioche.pop_back()
 	var ret: bool = pioche.supprimer_carte(c)
 	if ret == false:
 		retourne.init_cartes()
-	mains[joueur].ajouter_carte(cartes[c])
+	mains[joueur].ajouter_carte(cartes[c],  duration)
 	# Si la carte d'atout se retrouve dans une main alors elle devient une carte normale
 	if carte_atout != null && carte_atout.card_name == c:
 		carte_atout = null
+	if not Global.help_mode:
+		await get_tree().create_timer(duration).timeout
 
 func distribution_cartes(nb_cartes: int) -> bool:
 	"""Des cartes sont distribuées aux joueurs"""
 	var joueur: int = chouine.gagnant_pli()
-	if cartes_pioche.size() == 0:
-		main_joueur.calcul_positions(Settings.DUREE_MOUVEMENT)
-		main_ordi.calcul_positions(Settings.DUREE_MOUVEMENT)
-		return false
-	for i: int in range(nb_cartes):
-		await distribution_carte(joueur)
-		joueur = (joueur + 1) % 2
-		await distribution_carte(joueur)
-		joueur = (joueur + 1) % 2
 	
 	# on affiche les carte de la main du joueur dans l'ordre donné par l'algo
 	chouine.trier_cartes(JOUEURS.HUMAIN)
 	var cartes_joueur_str: PackedStringArray = chouine.cartes_joueur(JOUEURS.HUMAIN).split(" ")
-	main_joueur.ordre_cartes(cartes_joueur_str)
+	
+	if cartes_pioche.size() == 0:
+		main_joueur.calcul_positions(0.2)
+		main_ordi.calcul_positions(0.2)
+		return false
+	for i: int in range(nb_cartes):
+		distribution_carte(joueur, Settings.DUREE_MOUVEMENT/nb_cartes)
+		if joueur == JOUEURS.HUMAIN:
+			main_joueur.ordre_cartes(cartes_joueur_str)
+		joueur = (joueur + 1) % 2
+		await distribution_carte(joueur, Settings.DUREE_MOUVEMENT/nb_cartes)
+		if joueur == JOUEURS.HUMAIN:
+			main_joueur.ordre_cartes(cartes_joueur_str)
+		joueur = (joueur + 1) % 2
 	
 	# le sept d'atout est-il dans la main du joueur ?
 	var sept_atout_en_main: bool = chouine.sept_atout_en_main(JOUEURS.HUMAIN)
@@ -485,11 +518,11 @@ func fin_pli() -> void:
 	if gagnant == JOUEURS.ORDI:
 		print("Gagnant     : Ordi")
 		for c: String in cartes_tapis:
-			ordi_gagnees.ajouter_carte(cartes_tapis[c])
+			ordi_gagnees.ajouter_carte(cartes_tapis[c], Settings.DUREE_MOUVEMENT/2)
 	else:
 		print("Gagnant     : Joueur")
 		for c: String in cartes_tapis:
-			joueur_gagnees.ajouter_carte(cartes_tapis[c])
+			joueur_gagnees.ajouter_carte(cartes_tapis[c], Settings.DUREE_MOUVEMENT/2)
 
 	if chouine.fin_partie() == 1:
 		# fin de la partie
@@ -500,9 +533,8 @@ func fin_pli() -> void:
 	print(" ")
 	await distribution_cartes(1)
 	choix_annonces.annonces_autorisees(chouine.annonces_en_main_joueur(1))
+	await get_tree().create_timer(0.5).timeout
 
-	await get_tree().create_timer(1.0).timeout
-	
 	# debug: affiche les cartes
 	print("Ordi        : " + chouine.cartes_joueur(0))
 	print("Joueur      : " + chouine.cartes_joueur(1))
@@ -516,8 +548,8 @@ func fin_pli() -> void:
 #
 func fin_partie() -> void:
 	zone_jeu.disabled = true
-	$Scores/Defaite.visible = false
-	$Scores/Victoire.visible = false
+	$Scores/Panel/Defaite.visible = false
+	$Scores/Panel/Victoire.visible = false
 	$Scores.visible = true
 	for c: String in main_ordi.cartes():
 		ordi_gagnees.ajouter_carte(main_ordi.cartes()[c])
@@ -527,9 +559,10 @@ func fin_partie() -> void:
 	main_joueur.init_cartes()
 	
 	if chouine.points_joueur(JOUEURS.ORDI) > chouine.points_joueur(JOUEURS.HUMAIN):
+		Global.fin_partie(false)
 		nb_points_ordi += 1
-		$Scores/Info.add_theme_color_override("font_color", Color.RED)
-		if nb_points_ordi >= Global.options["nb_manches"]:
+		$Scores/Panel/Info.add_theme_color_override("font_color", Color.RED)
+		if nb_points_ordi >= Global.options["nb_points"]:
 			# manche gagnée par l'ordi
 			nb_manches_ordi += 1
 			nb_points_joueur = 0
@@ -537,17 +570,19 @@ func fin_partie() -> void:
 			if nb_manches_ordi >= Global.options["nb_manches"]:
 				# partie gagnée par l'ordi
 				partie_terminee = true
-				$Scores/Info.visible = false
-				$Scores/Victoire.visible = false
-				$Scores/Defaite.visible = true
+				Global.fin_chouine(false)
+				$Scores/Panel/Info.visible = false
+				$Scores/Panel/Victoire.visible = false
+				$Scores/Panel/Defaite.visible = true
 			else:
-				$Scores/Info.visible = true
-				$Scores/Info.text = "Vous avez perdu cette partie et cette manche"
+				$Scores/Panel/Info.visible = true
+				$Scores/Panel/Info.text = "Vous avez perdu cette partie et cette manche"
 		else:
-			$Scores/Info.visible = true
-			$Scores/Info.text = "Vous avez perdu cette partie"
+			$Scores/Panel/Info.visible = true
+			$Scores/Panel/Info.text = "Vous avez perdu cette partie"
 	else:
-		$Scores/Info.add_theme_color_override("font_color", Color.GREEN)
+		$Scores/Panel/Info.add_theme_color_override("font_color", Color.GREEN)
+		Global.fin_partie(true)
 		nb_points_joueur += 1
 		if nb_points_joueur >= Global.options["nb_points"]:
 			# manche gagnée par le joueur
@@ -557,26 +592,27 @@ func fin_partie() -> void:
 			if nb_manches_joueur >= Global.options["nb_manches"]:
 				# partie gagnée par le joueur
 				partie_terminee = true
-				$Scores/Info.visible = false
-				$Scores/Defaite.visible = false
-				$Scores/Victoire.visible = true
+				Global.fin_chouine(true)
+				$Scores/Panel/Info.visible = false
+				$Scores/Panel/Defaite.visible = false
+				$Scores/Panel/Victoire.visible = true
 			else:
-				$Scores/Info.visible = true
-				$Scores/Info.text = "Vous avez gagné cette partie et cette manche"
+				$Scores/Panel/Info.visible = true
+				$Scores/Panel/Info.text = "Vous avez gagné cette partie et cette manche"
 		else:
-			$Scores/Info.visible = true
-			$Scores/Info.text = "Vous avez gagné cette partie"
+			$Scores/Panel/Info.visible = true
+			$Scores/Panel/Info.text = "Vous avez gagné cette partie"
 	
 	var pt_joueur: Array = chouine.points_joueur_str(JOUEURS.HUMAIN).split("|")
-	$Scores/Scores/CartesJoueur.text = pt_joueur[1]
-	$Scores/Scores/AnnoncesJoueur.text = pt_joueur[2]
-	$Scores/Scores/DixDerJoueur.text = pt_joueur[3]
-	$Scores/Scores/TotalJoueur.text = pt_joueur[0]
+	$Scores/Panel/Scores/CartesJoueur.text = pt_joueur[1]
+	$Scores/Panel/Scores/AnnoncesJoueur.text = pt_joueur[2]
+	$Scores/Panel/Scores/DixDerJoueur.text = pt_joueur[3]
+	$Scores/Panel/Scores/TotalJoueur.text = pt_joueur[0]
 	var pt_ordi: Array = chouine.points_joueur_str(JOUEURS.ORDI).split("|")
-	$Scores/Scores/CartesOrdi.text = pt_ordi[1]
-	$Scores/Scores/AnnoncesOrdi.text = pt_ordi[2]
-	$Scores/Scores/DixDerOrdi.text = pt_ordi[3]
-	$Scores/Scores/TotalOrdi.text = pt_ordi[0]
+	$Scores/Panel/Scores/CartesOrdi.text = pt_ordi[1]
+	$Scores/Panel/Scores/AnnoncesOrdi.text = pt_ordi[2]
+	$Scores/Panel/Scores/DixDerOrdi.text = pt_ordi[3]
+	$Scores/Panel/Scores/TotalOrdi.text = pt_ordi[0]
 	
 	var size_main: float = get_viewport_rect().size.x - 2*Settings.DEFAULT_CARD_SIZE.x
 	joueur_gagnees.type = Pile.TypePile.MAIN
@@ -584,7 +620,7 @@ func fin_partie() -> void:
 	joueur_gagnees.set_anchor_and_offset(SIDE_LEFT, 0.5, -size_main/2, true)
 	joueur_gagnees.set_anchor_and_offset(SIDE_RIGHT, 0.5, size_main/2, true)
 	
-	joueur_gagnees.calcul_positions(0)
+	joueur_gagnees.calcul_positions()
 	joueur_gagnees.spreadable = false
 	#ordi_gagnees.inversser()
 	ordi_gagnees.type = Pile.TypePile.MAIN
@@ -593,7 +629,7 @@ func fin_partie() -> void:
 	ordi_gagnees.size = Vector2(size_main, Settings.DEFAULT_CARD_SIZE.y)
 	ordi_gagnees.set_anchor_and_offset(SIDE_LEFT, 0.5, -size_main/2, true)
 	ordi_gagnees.set_anchor_and_offset(SIDE_RIGHT, 0.5, size_main/2, true)
-	ordi_gagnees.calcul_positions(0)
+	ordi_gagnees.calcul_positions()
 	annonces_ordi.reset()
 	annonces_ordi.visible = false
 	annonces_joueur.reset()
@@ -630,6 +666,7 @@ func _partie_suivante() -> void:
 		retour_accueil()
 	else:
 		init_jeu()
+		await center_cartes()
 		demarrer_jeu()
 
 

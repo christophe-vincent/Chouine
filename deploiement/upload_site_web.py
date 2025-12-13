@@ -9,7 +9,7 @@ from botocore.exceptions import NoCredentialsError, ClientError
 project_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 local_folder = os.path.join(project_dir, "Godot", "Exports")
 bucket_name = 'jeu-chouine'
-s3_prefix = 'rc'
+s3_prefix = ''
 
 distribution_id = 'E2WL504EAYVGS3'
 paths_to_invalidate = ['/*']

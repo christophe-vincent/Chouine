@@ -27,7 +27,6 @@ var dragging: bool = false
 # si non adaptatif, alors les cartes ont une position fixe, quelque soit leurs nombre
 var adaptatif: bool = true
 var nb_cartes_max: int = 2
-var duree_effet: float = Settings.DUREE_MOUVEMENT
 var original_size: Vector2 = Vector2(0, 0)
 var original_position: Vector2 = Vector2(0, 0)
 var rng:RandomNumberGenerator = RandomNumberGenerator.new()
@@ -84,7 +83,7 @@ func supprimer_carte(nom: String) -> bool:
 func ordre_cartes(ordre: PackedStringArray) -> void:
 	var index: int = 0
 	for nom_carte: String in ordre:
-		if _cartes[index].card_name != nom_carte:
+		if index < _cartes.size() and _cartes[index].card_name != nom_carte:
 			# recherche ou est la carte que l'on recherche
 			for i: int in range(index, _cartes.size()):
 				if _cartes[i].card_name == nom_carte:
@@ -94,28 +93,33 @@ func ordre_cartes(ordre: PackedStringArray) -> void:
 					_cartes[i] = carte
 					break
 		index += 1
-	calcul_positions(duree_effet)
+	calcul_positions(0.5)
 
-func ajouter_carte(carte: Carte, duration: float=-1.0) -> void:
+
+func selection_carte(nom: String) -> void:
+	# de-sélectionne les cartes sauf celle en parametre
+	for c: Carte in _cartes:
+		if c.card_name != nom:
+			c.unselect()
+
+
+func ajouter_carte(carte: Carte, duration: float=Settings.DUREE_MOUVEMENT) -> void:
 	_cartes.push_back(carte)
-	carte.face_visible(face_visible)
-	var duree: float = duration
-	if duration == -1.0:
-		duree = duree_effet
 	#carte.carte.z_index = z_order + _cartes.size() + 1
 	if type == TypePile.PILE:
 		var rnd_x: float = rng.randf_range(-1.0, 1.0) * size.x / 15
 		var rnd_y: float = rng.randf_range(-1.0, 1.0) * size.y / 15
 		carte.move(position + size/2 + Vector2(rnd_x, rnd_y),
 			rng.randf_range(-1.0, 1.0) / 10,
-			duree, 
+			duration, 
 			z_order + _cartes.size() + 1)
 	else:
-		calcul_positions(duree)
+		calcul_positions(duration)
 
+	carte.face_visible(face_visible)
 	carte.draggable = draggable
 
-func calcul_positions(effet_duree: float) -> void:
+func calcul_positions(effet_duree: float=0) -> void:
 	if type == TypePile.PILE:
 		position_pile(effet_duree)
 	elif type_position == TypePosition.NORMAL:
