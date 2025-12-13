@@ -85,19 +85,23 @@ func _ready() -> void:
 	nb_manches_ordi = 0
 	nb_manches_joueur = 0
 	restauration_partie()
-	if Global.options["nb_manches"] == 1 and not Global.help_mode:
-		$ScoreJoueur/ScoreJoueur/ManchesJoueur.visible = false
-		$ScoreOrdi/ScoreOrdi/ManchesJoueur.visible = false
-		$ScoreOrdi.size.y = 100
-		$ScoreJoueur.size.y = 100
-	if Global.options["nb_points"] == 1 and not Global.help_mode:
-		$ScoreJoueur/ScoreJoueur/PointsJoueur.visible = false
-		$ScoreOrdi/ScoreOrdi/PointsJoueur.visible = false
-	elif Global.options["nb_points"] <= 3 and not Global.help_mode:
-		$ScoreJoueur/ScoreJoueur/PointsJoueur/Point5.visible = false
-		$ScoreOrdi/ScoreOrdi/PointsJoueur/Point5.visible = false
-		$ScoreJoueur/ScoreJoueur/PointsJoueur/Point4.visible = false
-		$ScoreOrdi/ScoreOrdi/PointsJoueur/Point4.visible = false
+	if not Global.help_mode:
+		if Global.options["nb_manches"] == 1 and Global.options["nb_points"] == 1:
+			$ScoreJoueur.visible = false
+			$ScoreOrdi.visible = false
+		if Global.options["nb_manches"] == 1:
+			$ScoreJoueur/ScoreJoueur/ManchesJoueur.visible = false
+			$ScoreOrdi/ScoreOrdi/ManchesJoueur.visible = false
+			$ScoreOrdi.size.y = 100
+			$ScoreJoueur.size.y = 100
+		if Global.options["nb_points"] == 1:
+			$ScoreJoueur/ScoreJoueur/PointsJoueur.visible = false
+			$ScoreOrdi/ScoreOrdi/PointsJoueur.visible = false
+		elif Global.options["nb_points"] <= 3:
+			$ScoreJoueur/ScoreJoueur/PointsJoueur/Point5.visible = false
+			$ScoreOrdi/ScoreOrdi/PointsJoueur/Point5.visible = false
+			$ScoreJoueur/ScoreJoueur/PointsJoueur/Point4.visible = false
+			$ScoreOrdi/ScoreOrdi/PointsJoueur/Point4.visible = false
 	jetons_ordi.push_back($ScoreOrdi/ScoreOrdi/PointsJoueur/Point1)
 	jetons_ordi.push_back($ScoreOrdi/ScoreOrdi/PointsJoueur/Point2)
 	jetons_ordi.push_back($ScoreOrdi/ScoreOrdi/PointsJoueur/Point3)
@@ -526,7 +530,6 @@ func fin_pli() -> void:
 
 	if chouine.fin_partie() == 1:
 		# fin de la partie
-		await get_tree().create_timer(2.0).timeout
 		fin_partie()
 		return
 
@@ -558,6 +561,12 @@ func fin_partie() -> void:
 		joueur_gagnees.ajouter_carte(main_joueur.cartes()[c])
 	main_joueur.init_cartes()
 	
+	if chouine.chouine(JOUEURS.ORDI) or chouine.chouine(JOUEURS.HUMAIN):
+		$Scores/Panel/Chouine.visible = true
+		$Scores/Panel/Scores.visible = false
+	else:
+		$Scores/Panel/Chouine.visible = false
+		$Scores/Panel/Scores.visible = true
 	if chouine.points_joueur(JOUEURS.ORDI) > chouine.points_joueur(JOUEURS.HUMAIN):
 		Global.fin_partie(false)
 		nb_points_ordi += 1
@@ -580,7 +589,7 @@ func fin_partie() -> void:
 		else:
 			$Scores/Panel/Info.visible = true
 			$Scores/Panel/Info.text = "Vous avez perdu cette partie"
-	else:
+	elif chouine.points_joueur(JOUEURS.ORDI) < chouine.points_joueur(JOUEURS.HUMAIN):
 		$Scores/Panel/Info.add_theme_color_override("font_color", Color.GREEN)
 		Global.fin_partie(true)
 		nb_points_joueur += 1
@@ -602,6 +611,11 @@ func fin_partie() -> void:
 		else:
 			$Scores/Panel/Info.visible = true
 			$Scores/Panel/Info.text = "Vous avez gagné cette partie"
+	else:
+		# egalité !
+		$Scores/Panel/Info.add_theme_color_override("font_color", Color.GREEN)
+		$Scores/Panel/Info.visible = true
+		$Scores/Panel/Info.text = "Egalité parfaite !!!"
 	
 	var pt_joueur: Array = chouine.points_joueur_str(JOUEURS.HUMAIN).split("|")
 	$Scores/Panel/Scores/CartesJoueur.text = pt_joueur[1]

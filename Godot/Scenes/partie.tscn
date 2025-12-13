@@ -92,7 +92,6 @@ z_order = 10
 spreadable = false
 
 [node name="Scores" parent="." instance=ExtResource("7_kcvnu")]
-visible = false
 z_index = 4090
 layout_mode = 1
 anchors_preset = -1
@@ -498,6 +497,7 @@ theme = ExtResource("4_8crny")
 text = "ANNONCE"
 
 [node name="ChoixAnnonces" parent="." instance=ExtResource("7_acwto")]
+visible = false
 z_index = 100
 layout_mode = 1
 anchors_preset = 8

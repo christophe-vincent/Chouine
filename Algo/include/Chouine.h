@@ -100,7 +100,13 @@ public:
     // retourne toutes les annonces existantes
     std::set<Annonce*> getAnnonces() { return m_Annonces; }
 
-    /*
+    // le joueur a t'il gagné grace à une chouine ?
+    bool chouine(JOUEUR _joueur)
+    {
+        return m_Joueurs[_joueur]->chouine();
+    }
+
+   /*
    void testBruteForce();
    */
     Carte::Couleur couleurAtout() { return m_Atout; };

@@ -22,6 +22,7 @@ void IChouine::_bind_methods() {
     ClassDB::bind_method(D_METHOD("annonce_joueur"), &IChouine::AnnonceJoueur);
     ClassDB::bind_method(D_METHOD("sept_atout_en_main"), &IChouine::SeptAtoutEnMain);
     ClassDB::bind_method(D_METHOD("echanger_carte_atout"), &IChouine::EchangerCarteAtout);
+    ClassDB::bind_method(D_METHOD("chouine"), &IChouine::ChouineJoueur);
 }
 
 IChouine::IChouine(): m_Chouine(new Chouine(6, 6))
@@ -143,4 +144,9 @@ int IChouine::PointsJoueur(int _joueur)
 String IChouine::PointsJoueurStr(int _joueur)
 {
     return String(m_Chouine->pointsJoueurStr((Chouine::JOUEUR)_joueur).c_str());
+}
+
+bool IChouine::ChouineJoueur(int _joueur)
+{
+    return m_Chouine->chouine((Chouine::JOUEUR)_joueur);
 }
