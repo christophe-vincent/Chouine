@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://cbig4nyg5d5k8"]
+[gd_scene load_steps=16 format=3 uid="uid://cbig4nyg5d5k8"]
 
 [ext_resource type="Script" uid="uid://b3ddph3lqd14u" path="res://Scripts/accueil.gd" id="1_mwf61"]
 [ext_resource type="Texture2D" uid="uid://d0u2ux7jb7rnj" path="res://Assets/un_point.png" id="2_68w6v"]
@@ -8,7 +8,6 @@
 [ext_resource type="Texture2D" uid="uid://cqv1towavsbd3" path="res://Assets/cinq_points.png" id="6_muto7"]
 [ext_resource type="Texture2D" uid="uid://bm063xd506t3" path="res://Assets/un_blason.png" id="9_muto7"]
 [ext_resource type="Texture2D" uid="uid://sj7cb71b3amk" path="res://Assets/deux_blasons.png" id="11_2kwed"]
-[ext_resource type="Material" path="res://Materials/blur_material.tres" id="12_muto7"]
 [ext_resource type="PackedScene" uid="uid://dbha5f46hublh" path="res://Scenes/statistiques.tscn" id="13_p3653"]
 [ext_resource type="Texture2D" uid="uid://bspvxo6wejiyf" path="res://Assets/piece.png" id="14_tiwth"]
 [ext_resource type="Texture2D" uid="uid://cl4lkxnjxh6tf" path="res://Assets/point_partie_inactif.png" id="15_aujfu"]
@@ -75,18 +74,6 @@ expand_margin_left = 2.0
 expand_margin_top = 2.0
 expand_margin_right = 2.0
 expand_margin_bottom = 2.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tiwth"]
-content_margin_left = 0.0
-content_margin_top = 0.0
-content_margin_right = 0.0
-content_margin_bottom = 0.0
-bg_color = Color(1, 1, 1, 0)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-corner_detail = 5
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -465,20 +452,6 @@ theme = ExtResource("3_2kwed")
 theme_override_font_sizes/font_size = 60
 text = "Crédits"
 
-[node name="PanelContainer3" type="PanelContainer" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.60400003
-anchor_top = 0.53400004
-anchor_right = 0.60400003
-anchor_bottom = 0.53400004
-offset_left = 34.319946
-offset_top = 62.27997
-offset_right = 88.31995
-offset_bottom = 313.27997
-theme_override_styles/panel = SubResource("StyleBoxFlat_tiwth")
-
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
 visible = false
 layout_mode = 0
@@ -519,26 +492,6 @@ text = "0
 100"
 scroll_active = false
 horizontal_alignment = 1
-
-[node name="PanelContainer2" type="PanelContainer" parent="."]
-visible = false
-self_modulate = Color(0.76862746, 0.76862746, 0.76862746, 0.98039216)
-material = ExtResource("12_muto7")
-layout_mode = 0
-offset_left = 1198.0
-offset_top = 642.0
-offset_right = 1244.0
-offset_bottom = 752.0
-
-[node name="PanelContainer" type="PanelContainer" parent="."]
-visible = false
-self_modulate = Color(0.76862746, 0.76862746, 0.76862746, 0.98039216)
-material = ExtResource("12_muto7")
-layout_mode = 0
-offset_left = 1198.0
-offset_top = 784.0
-offset_right = 1245.0
-offset_bottom = 885.0
 
 [node name="Stats" type="FoldableContainer" parent="."]
 layout_mode = 1

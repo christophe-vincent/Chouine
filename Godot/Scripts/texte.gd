@@ -7,8 +7,6 @@ You should have received a copy of the GNU General Public License along with Foo
 """
 extends Control
 
-@onready var parchemin: TextureRect = $Parchemin
-
 var regles: String = """[center][font_size={60}][b]Règles[/b][/font_size][/center]
 [p][/p]
 Le but de la Chouine est de gagner le plus de points possible qui serviront à gagner des parties.
@@ -97,9 +95,6 @@ Merci à :
 This Font Software is licensed under the SIL Open Font License, Version 1.1
 [url]https://openfontlicense.org/open-font-license-official-text[/url]
 [/indent]
-
-
-
 """
 
 

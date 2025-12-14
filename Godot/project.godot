@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Chouine"
-config/version="0.9.1rc"
+config/version="1.0.0"
 run/main_scene="uid://cbig4nyg5d5k8"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 boot_splash/image="uid://dxwofdjavkqv6"
