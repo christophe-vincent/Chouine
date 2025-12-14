@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://cqv1towavsbd3" path="res://Assets/cinq_points.png" id="6_muto7"]
 [ext_resource type="Texture2D" uid="uid://bm063xd506t3" path="res://Assets/un_blason.png" id="9_muto7"]
 [ext_resource type="Texture2D" uid="uid://sj7cb71b3amk" path="res://Assets/deux_blasons.png" id="11_2kwed"]
-[ext_resource type="Material" uid="uid://bpvqcg2vey6tx" path="res://Materials/blur_material.tres" id="12_muto7"]
+[ext_resource type="Material" path="res://Materials/blur_material.tres" id="12_muto7"]
 [ext_resource type="PackedScene" uid="uid://dbha5f46hublh" path="res://Scenes/statistiques.tscn" id="13_p3653"]
 [ext_resource type="Texture2D" uid="uid://bspvxo6wejiyf" path="res://Assets/piece.png" id="14_tiwth"]
 [ext_resource type="Texture2D" uid="uid://cl4lkxnjxh6tf" path="res://Assets/point_partie_inactif.png" id="15_aujfu"]
@@ -444,19 +444,19 @@ theme = ExtResource("3_2kwed")
 theme_override_font_sizes/font_size = 60
 text = "Options"
 
-[node name="Regles" type="Button" parent="HBoxContainer"]
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-theme = ExtResource("3_2kwed")
-theme_override_font_sizes/font_size = 60
-text = "Règles"
-
 [node name="Aide" type="Button" parent="HBoxContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme = ExtResource("3_2kwed")
 theme_override_font_sizes/font_size = 60
 text = "Aide"
+
+[node name="Regles" type="Button" parent="HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme = ExtResource("3_2kwed")
+theme_override_font_sizes/font_size = 60
+text = "Règles"
 
 [node name="Crédits" type="Button" parent="HBoxContainer"]
 custom_minimum_size = Vector2(200, 0)
@@ -573,6 +573,7 @@ layout_mode = 2
 [connection signal="pressed" from="Jouer" to="." method="_on_jouer_pressed"]
 [connection signal="pressed" from="PartieEnCours" to="." method="_on_partie_en_cours_pressed"]
 [connection signal="pressed" from="HBoxContainer/Options" to="." method="_on_options_pressed"]
-[connection signal="pressed" from="HBoxContainer/Regles" to="." method="_on_regles_pressed"]
 [connection signal="pressed" from="HBoxContainer/Aide" to="." method="_on_aide_pressed"]
+[connection signal="pressed" from="HBoxContainer/Regles" to="." method="_on_regles_pressed"]
+[connection signal="pressed" from="HBoxContainer/Crédits" to="." method="_on_credits_pressed"]
 [connection signal="folding_changed" from="Stats" to="." method="_on_stats_folding_changed"]

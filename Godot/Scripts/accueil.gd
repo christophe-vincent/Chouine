@@ -1,3 +1,11 @@
+"""
+Copyright 2025,2026 Christophe Vincent
+This file is part of La Chouine.
+La Chouine is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
+La Chouine is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Foobar. If not, see <https://www.gnu.org/licenses/>
+"""
+
 extends Node
 
 @onready var PointUn: PanelContainer = $Parties/Une
@@ -18,7 +26,7 @@ var jeton_points: Array[TextureRect] = []
 var manches: Array[PanelContainer] = []
 var jeton_manches: Array[TextureRect] = []
 var scene_partie: Resource = preload("res://Scenes/partie.tscn")
-var scene_regles: Resource = preload("res://Scenes/regles.tscn")
+var scene_regles: Resource = preload("res://Scenes/texte.tscn")
 var scene_options: Resource = preload("res://Scenes/options.tscn")
 
 func _ready() -> void:
@@ -76,6 +84,7 @@ func _on_jouer_pressed() -> void:
 
 
 func _on_regles_pressed() -> void:
+	Global.texte = Global.TypeTexte.REGLES
 	get_tree().change_scene_to_packed(scene_regles)
 
 
@@ -111,3 +120,8 @@ func _on_deux_manches_pressed() -> void:
 func _on_stats_folding_changed(is_folded: bool) -> void:
 	if not is_folded:
 		$Stats/Statistiques.update()
+
+
+func _on_credits_pressed() -> void:
+	Global.texte = Global.TypeTexte.CREDITS
+	get_tree().change_scene_to_packed(scene_regles)

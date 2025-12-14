@@ -11,7 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://cvnc0r14i4max" path="res://Scenes/scores.tscn" id="7_kcvnu"]
 [ext_resource type="Texture2D" uid="uid://4hnyodmak7su" path="res://Assets/home.png" id="9_8crny"]
 [ext_resource type="PackedScene" uid="uid://7nyoesuce12r" path="res://Scenes/confirmation.tscn" id="10_qapei"]
-[ext_resource type="PackedScene" uid="uid://btw00rqumin08" path="res://Scenes/help.tscn" id="12_gtolj"]
+[ext_resource type="PackedScene" path="res://Scenes/help.tscn" id="12_gtolj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qapei"]
 size = Vector2(280.5, 456.5)
@@ -92,6 +92,7 @@ z_order = 10
 spreadable = false
 
 [node name="Scores" parent="." instance=ExtResource("7_kcvnu")]
+visible = false
 z_index = 4090
 layout_mode = 1
 anchors_preset = -1

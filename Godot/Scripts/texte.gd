@@ -1,3 +1,10 @@
+"""
+Copyright 2025,2026 Christophe Vincent
+This file is part of La Chouine.
+La Chouine is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
+La Chouine is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with Foobar. If not, see <https://www.gnu.org/licenses/>
+"""
 extends Control
 
 @onready var parchemin: TextureRect = $Parchemin
@@ -62,63 +69,56 @@ Si la couleur de l'annonce est celle de l'atout, les points sont doublés (40 po
 
 Le joueur qui remporte le dernier pli gagne 10 points, appelés "10 de der".
 """
+
+var credits: String = """
+[center][font_size={60}][b]La Chouine[/b][/font_size][/center]
+
+Ce jeu est entièrement Open Source sous licence [b]GPL v3[/b] [img=100]res://Assets/gplv3-127x51.png[/img] et disponible sur github:
+[indent][url]https://github.com/christophe-vincent/Chouine[/url][/indent]
+Vous pouvez contacter l'auteur à cette adresse: christophevinc@gmail.com
+Merci à :
+[ul] Léandre d'apporter sa connaissance du moteur de jeu[/ul]
+[ul] Héloïse pour le choix des couleurs[/ul]
+[ul] Alain et Ludovic les testeurs en avant-première[/ul]
+
+[center][font_size={60}][b]Open Source[/b][/font_size][/center]
+[font_size={40}][b]Godot[/b][/font_size]
+[indent]Ce logiciel a été réalisé avec le moteur de jeu Open Source [b]Godot[/b] sous licence MIT.
+[url=https://godotengine.org/license]https://godotengine.org/license[/url]
+[/indent]
+
+[font_size={40}][b]Cartes[/b][/font_size]
+[indent]Auteur: David Bellot <david.bellot@free.fr>
+[url]https://svg-cards.sourceforge.net/[/url] (LGPL license)
+[/indent]
+
+[font_size={40}][b]Police d'écriture[/b][/font_size]
+[indent]Macondo font - Copyright 1997 - 2011, John Vargas Beltran (www.johnvargasbeltran.com|john.vargasbeltran@gmail.com), with Reserved Font Name Macondo.
+This Font Software is licensed under the SIL Open Font License, Version 1.1
+[url]https://openfontlicense.org/open-font-license-official-text[/url]
+[/indent]
+
+
+
+"""
+
+
 var coef: float = 1
 var offset: float = -0.42
 
 
 func _ready() -> void:
-	$Regles.text = regles
-	setup_scrolling_shader()
-	var scrollbar: VScrollBar = $Regles.get_v_scroll_bar()
-	scrollbar.value_changed.connect(_on_rich_text_scrolled)
-	coef = $Parchemin.size.y/$Parchemin.size.x
-	if coef >= 1:
-		offset = 0
-	$Parchemin.material.set_shader_parameter("scroll_offset", offset)
-
-
-func _on_rich_text_scrolled(value: float) -> void:
-	var scrollbar: VScrollBar = $Regles.get_v_scroll_bar()
-	# Calculate scroll percentage (0.0 to 1.0)
-	var scroll_range: float = scrollbar.max_value - scrollbar.min_value
-	var scroll_percent: float = 0.0
-	
-	if scroll_range > 0:
-		scroll_percent = value / scroll_range
-	
-	# Apply to texture shader
-	$Parchemin.material.set_shader_parameter("scroll_offset", offset + scroll_percent*coef)
-
-func setup_scrolling_shader() -> void:
-	# Create shader material
-	
-	#uniform vec4 tint_color : source_color = vec4(1, 1, 1, 0.9);
-	#uniform vec4 tint_color : source_color = vec4(0.47, 0.41, 0.34, 0.9);
-
-	var shader_code: String = """
-shader_type canvas_item;
-
-uniform float scroll_offset = 0.0;
-uniform vec4 tint_color : source_color = vec4(1, 1, 1, 0.9) ;
-
-
-void fragment() {
-    vec2 uv = UV;
-    uv.y += scroll_offset;
-    COLOR = texture(TEXTURE, uv)* tint_color;
-}
-"""
-	
-	var shader: Shader = Shader.new()
-	shader.code = shader_code
-	
-	var mat: ShaderMaterial = ShaderMaterial.new()
-	mat.shader = shader
-	
-	parchemin.material = mat
+	if Global.texte == Global.TypeTexte.REGLES:
+		$Regles.text = regles
+	else:
+		$Regles.text = credits
 
 
 func _on_retour_pressed() -> void:
 	var error: Error = get_tree().change_scene_to_file("res://Scenes/accueil.tscn")
 	if error != OK:
 		print("Scene change failed with error: ", error)
+
+
+func _on_regles_meta_clicked(meta: Variant) -> void:
+	OS.shell_open(str(meta))
