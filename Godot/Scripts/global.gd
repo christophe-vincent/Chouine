@@ -11,6 +11,7 @@ extends Node
 var options: Dictionary = {
 	"nb_points": 3,
 	"nb_manches": 1,
+	"championnat": false,
 	"cartes_visibles": false,
 	"dos_carte": 0,
 	"couleur_tapis": 0

@@ -22,6 +22,8 @@ class_name Partie
 @onready var annonces_joueur: Annonces = $AnnoncesJoueur
 @onready var choix_annonces: Control = $ChoixAnnonces
 @onready var confirmation_annuler: ConfirmationPanel = $Confirmation
+@onready var parties_joueur: Label = $ScoreJoueur/ScoreJoueur/ManchesJoueur/points
+@onready var parties_ordi: Label = $ScoreOrdi/ScoreOrdi/ManchesJoueur/points
 
 var textures_dos: Array[Resource] = [
 	load("res://Assets/Cartes/back_2.png"),
@@ -93,22 +95,37 @@ func _ready() -> void:
 	nb_manches_joueur = 0
 	restauration_partie()
 	if not Global.help_mode:
-		if Global.options["nb_manches"] == 1 and Global.options["nb_points"] == 1:
-			$ScoreJoueur.visible = false
-			$ScoreOrdi.visible = false
-		if Global.options["nb_manches"] == 1:
-			$ScoreJoueur/ScoreJoueur/ManchesJoueur.visible = false
-			$ScoreOrdi/ScoreOrdi/ManchesJoueur.visible = false
-			$ScoreOrdi.size.y = 100
-			$ScoreJoueur.size.y = 100
-		if Global.options["nb_points"] == 1:
-			$ScoreJoueur/ScoreJoueur/PointsJoueur.visible = false
-			$ScoreOrdi/ScoreOrdi/PointsJoueur.visible = false
-		elif Global.options["nb_points"] <= 3:
-			$ScoreJoueur/ScoreJoueur/PointsJoueur/Point5.visible = false
-			$ScoreOrdi/ScoreOrdi/PointsJoueur/Point5.visible = false
-			$ScoreJoueur/ScoreJoueur/PointsJoueur/Point4.visible = false
-			$ScoreOrdi/ScoreOrdi/PointsJoueur/Point4.visible = false
+		if Global.options["championnat"]:
+			# mode championnat
+			$ScoreJoueur/ScoreJoueur/ManchesJoueur/JoueurManche1.visible = false
+			$ScoreJoueur/ScoreJoueur/ManchesJoueur/JoueurManche2.visible = false
+			$ScoreOrdi/ScoreOrdi/ManchesJoueur/JoueurManche1.visible = false
+			$ScoreOrdi/ScoreOrdi/ManchesJoueur/JoueurManche2.visible = false
+			$ScoreJoueur/ScoreJoueur/ManchesJoueur/points.visible = true
+			$ScoreOrdi/ScoreOrdi/ManchesJoueur/points.visible = true
+		else:
+			$ScoreJoueur/ScoreJoueur/ManchesJoueur/JoueurManche1.visible = true
+			$ScoreJoueur/ScoreJoueur/ManchesJoueur/JoueurManche2.visible = true
+			$ScoreOrdi/ScoreOrdi/ManchesJoueur/JoueurManche1.visible = true
+			$ScoreOrdi/ScoreOrdi/ManchesJoueur/JoueurManche2.visible = true
+			$ScoreJoueur/ScoreJoueur/ManchesJoueur/points.visible = false
+			$ScoreOrdi/ScoreOrdi/ManchesJoueur/points.visible = false
+			if Global.options["nb_manches"] == 1 and Global.options["nb_points"] == 1:
+				$ScoreJoueur.visible = false
+				$ScoreOrdi.visible = false
+			if Global.options["nb_manches"] == 1:
+				$ScoreJoueur/ScoreJoueur/ManchesJoueur.visible = false
+				$ScoreOrdi/ScoreOrdi/ManchesJoueur.visible = false
+				$ScoreOrdi.size.y = 100
+				$ScoreJoueur.size.y = 100
+			if Global.options["nb_points"] == 1:
+				$ScoreJoueur/ScoreJoueur/PointsJoueur.visible = false
+				$ScoreOrdi/ScoreOrdi/PointsJoueur.visible = false
+			elif Global.options["nb_points"] <= 3:
+				$ScoreJoueur/ScoreJoueur/PointsJoueur/Point5.visible = false
+				$ScoreOrdi/ScoreOrdi/PointsJoueur/Point5.visible = false
+				$ScoreJoueur/ScoreJoueur/PointsJoueur/Point4.visible = false
+				$ScoreOrdi/ScoreOrdi/PointsJoueur/Point4.visible = false
 	jetons_ordi.push_back($ScoreOrdi/ScoreOrdi/PointsJoueur/Point1)
 	jetons_ordi.push_back($ScoreOrdi/ScoreOrdi/PointsJoueur/Point2)
 	jetons_ordi.push_back($ScoreOrdi/ScoreOrdi/PointsJoueur/Point3)
@@ -578,51 +595,70 @@ func fin_partie() -> void:
 		Global.fin_partie(false)
 		nb_points_ordi += 1
 		$Scores/Panel/Info.add_theme_color_override("font_color", Color.RED)
-		if nb_points_ordi >= Global.options["nb_points"]:
-			# manche gagnée par l'ordi
-			nb_manches_ordi += 1
-			nb_points_joueur = 0
-			nb_points_ordi = 0
-			if nb_manches_ordi >= Global.options["nb_manches"]:
-				# partie gagnée par l'ordi
-				partie_terminee = true
-				Global.fin_chouine(false)
-				$Scores/Panel/Info.visible = false
-				$Scores/Panel/Victoire.visible = false
-				$Scores/Panel/Defaite.visible = true
-			else:
-				$Scores/Panel/Info.visible = true
-				$Scores/Panel/Info.text = "Vous avez perdu cette partie et cette manche"
-		else:
+		if Global.options["championnat"]:
 			$Scores/Panel/Info.visible = true
 			$Scores/Panel/Info.text = "Vous avez perdu cette partie"
+		else:
+			if nb_points_ordi >= Global.options["nb_points"]:
+				# manche gagnée par l'ordi
+				nb_manches_ordi += 1
+				nb_points_joueur = 0
+				nb_points_ordi = 0
+				if nb_manches_ordi >= Global.options["nb_manches"]:
+					# partie gagnée par l'ordi
+					partie_terminee = true
+					Global.fin_chouine(false)
+					$Scores/Panel/Info.visible = false
+					$Scores/Panel/Victoire.visible = false
+					$Scores/Panel/Defaite.visible = true
+				else:
+					$Scores/Panel/Info.visible = true
+					$Scores/Panel/Info.text = "Vous avez perdu cette partie et cette manche"
+			else:
+				$Scores/Panel/Info.visible = true
+				$Scores/Panel/Info.text = "Vous avez perdu cette partie"
 	elif chouine.points_joueur(JOUEURS.ORDI) < chouine.points_joueur(JOUEURS.HUMAIN):
 		$Scores/Panel/Info.add_theme_color_override("font_color", Color.GREEN)
 		Global.fin_partie(true)
 		nb_points_joueur += 1
-		if nb_points_joueur >= Global.options["nb_points"]:
-			# manche gagnée par le joueur
-			nb_manches_joueur += 1
-			nb_points_joueur = 0
-			nb_points_ordi = 0
-			if nb_manches_joueur >= Global.options["nb_manches"]:
-				# partie gagnée par le joueur
-				partie_terminee = true
-				Global.fin_chouine(true)
-				$Scores/Panel/Info.visible = false
-				$Scores/Panel/Defaite.visible = false
-				$Scores/Panel/Victoire.visible = true
-			else:
-				$Scores/Panel/Info.visible = true
-				$Scores/Panel/Info.text = "Vous avez gagné cette partie et cette manche"
-		else:
+		if Global.options["championnat"]:
 			$Scores/Panel/Info.visible = true
 			$Scores/Panel/Info.text = "Vous avez gagné cette partie"
+		else:
+			if nb_points_joueur >= Global.options["nb_points"]:
+				# manche gagnée par le joueur
+				nb_manches_joueur += 1
+				nb_points_joueur = 0
+				nb_points_ordi = 0
+				if nb_manches_joueur >= Global.options["nb_manches"]:
+					# partie gagnée par le joueur
+					partie_terminee = true
+					Global.fin_chouine(true)
+					$Scores/Panel/Info.visible = false
+					$Scores/Panel/Defaite.visible = false
+					$Scores/Panel/Victoire.visible = true
+				else:
+					$Scores/Panel/Info.visible = true
+					$Scores/Panel/Info.text = "Vous avez gagné cette partie et cette manche"
+			else:
+				$Scores/Panel/Info.visible = true
+				$Scores/Panel/Info.text = "Vous avez gagné cette partie"
 	else:
 		# egalité !
 		$Scores/Panel/Info.add_theme_color_override("font_color", Color.GREEN)
 		$Scores/Panel/Info.visible = true
 		$Scores/Panel/Info.text = "Egalité parfaite !!!"
+	
+	var msg: String = str(nb_points_joueur) + " victoire"
+	if nb_points_joueur > 1:
+		msg += "s"
+	msg += " / " + str(nb_points_joueur + nb_points_ordi)
+	parties_joueur.text = msg
+	msg = str(nb_points_ordi) + " victoire"
+	if nb_points_ordi > 1:
+		msg += "s"
+	msg += " / " + str(nb_points_joueur + nb_points_ordi)
+	parties_ordi.text = msg
 	
 	var pt_joueur: Array = chouine.points_joueur_str(JOUEURS.HUMAIN).split("|")
 	$Scores/Panel/Scores/CartesJoueur.text = pt_joueur[1]

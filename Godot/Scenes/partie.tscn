@@ -11,7 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://cvnc0r14i4max" path="res://Scenes/scores.tscn" id="7_kcvnu"]
 [ext_resource type="Texture2D" uid="uid://4hnyodmak7su" path="res://Assets/home.png" id="9_8crny"]
 [ext_resource type="PackedScene" uid="uid://7nyoesuce12r" path="res://Scenes/confirmation.tscn" id="10_qapei"]
-[ext_resource type="PackedScene" path="res://Scenes/help.tscn" id="12_gtolj"]
+[ext_resource type="PackedScene" uid="uid://btw00rqumin08" path="res://Scenes/help.tscn" id="12_gtolj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qapei"]
 size = Vector2(280.5, 456.5)
@@ -369,6 +369,13 @@ texture = ExtResource("6_kcvnu")
 expand_mode = 1
 stretch_mode = 4
 
+[node name="points" type="Label" parent="ScoreJoueur/ScoreJoueur/ManchesJoueur"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9019608, 0.7607843, 0.16078432, 1)
+theme_override_font_sizes/font_size = 35
+text = "Parties : -"
+horizontal_alignment = 1
+
 [node name="ScoreOrdi" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = -1
@@ -459,6 +466,13 @@ layout_mode = 2
 texture = ExtResource("6_kcvnu")
 expand_mode = 1
 stretch_mode = 4
+
+[node name="points" type="Label" parent="ScoreOrdi/ScoreOrdi/ManchesJoueur"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9019608, 0.7607843, 0.16078432, 1)
+theme_override_font_sizes/font_size = 35
+text = "Parties: -"
+horizontal_alignment = 1
 
 [node name="AnnoncesOrdi" parent="." instance=ExtResource("5_ek6vc")]
 layout_mode = 1
