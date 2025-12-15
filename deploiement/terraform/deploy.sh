@@ -42,24 +42,6 @@ if ! command -v aws &> /dev/null; then
     exit 1
 fi
 
-# Vérifier les credentials AWS
-log_info "Vérification des credentials AWS..."
-if ! aws sts get-caller-identity &> /dev/null; then
-    log_error "Credentials AWS non configurés. Exécutez 'aws configure' d'abord."
-    exit 1
-fi
-
-log_info "Credentials AWS OK"
-
-# Créer le bucket S3 pour l'état Terraform s'il n'existe pas
-log_info "Vérification de l'existence du bucket S3: $BUCKET_NAME"
-if ! aws s3 ls "s3://$BUCKET_NAME" 2>&1 | grep -q 'NoSuchBucket'; then
-    log_info "Le bucket $BUCKET_NAME existe déjà"
-else
-    log_error "Le bucket $BUCKET_NAME n'existe pas. Création en cours..."
-    exit 1
-fi
-
 # Initialiser Terraform avec le backend S3
 log_info "Initialisation de Terraform avec backend S3..."
 terraform init \

@@ -25,12 +25,14 @@ var points: Array[PanelContainer] = []
 var jeton_points: Array[TextureRect] = []
 var manches: Array[PanelContainer] = []
 var jeton_manches: Array[TextureRect] = []
+var chouine_infos: Dictionary = {}
 var scene_partie: Resource = preload("res://Scenes/partie.tscn")
 var scene_regles: Resource = preload("res://Scenes/texte.tscn")
 var scene_options: Resource = preload("res://Scenes/options.tscn")
 
 func _ready() -> void:
 	# lecture du fichier d'options, s'il existe
+	get_info_chouine()
 	Global.lecture_options()
 	Global.lecture_stats()
 	$Stats/Statistiques.update()
@@ -43,7 +45,7 @@ func _ready() -> void:
 
 	$Intro.text = Settings.TEXT_INTRO
 	if FileAccess.file_exists(Settings.SAVE_FILE):
-		$PartieEnCours.visible = true
+		$PlayButtons/PartieEnCours.visible = true
 
 func select_nb_points(nb_points: int) -> void:
 	Global.options["nb_points"] = nb_points
@@ -125,3 +127,31 @@ func _on_stats_folding_changed(is_folded: bool) -> void:
 func _on_credits_pressed() -> void:
 	Global.texte = Global.TypeTexte.CREDITS
 	get_tree().change_scene_to_packed(scene_regles)
+
+func get_info_chouine() -> void:
+	$HTTPRequest.request_completed.connect(_on_request_completed)
+	$HTTPRequest.request("https://a9gp1j20u3.execute-api.eu-west-1.amazonaws.com/prod/info")
+
+func _on_request_completed(_result: int,
+						_response_code: int,
+						_headers: PackedStringArray,
+						body: PackedByteArray) -> void:
+	var json: Variant = JSON.parse_string(body.get_string_from_utf8())
+	# classement des infos
+	for info: Variant in json:
+		print(info)
+		if not info.has("Id"):
+			return
+		chouine_infos[info["Id"]["N"]] = {
+			"enabled": info["Enabled"]["BOOL"],
+			"text": info["Text"]["S"]
+		}
+	print(chouine_infos)
+	# lecture des ré&sulatats si tout est arrivé
+	for i: int in range(0, 2):
+		if not chouine_infos[str(i)]["enabled"]:
+			continue
+		if chouine_infos[str(i)]["text"] == "":
+			continue
+		$Intro.text = chouine_infos[str(i)]["text"]
+		break

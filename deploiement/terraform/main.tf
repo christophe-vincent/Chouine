@@ -1,4 +1,7 @@
 terraform {
+  backend "s3" {
+    # La configuration sera fournie via -backend-config
+  }
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -84,7 +87,8 @@ resource "aws_iam_role_policy" "api_gateway_dynamodb_policy" {
         Effect = "Allow"
         Action = [
           "dynamodb:GetItem",
-          "dynamodb:PutItem"
+          "dynamodb:PutItem",
+          "dynamodb:Scan"
         ]
         Resource = [
           aws_dynamodb_table.chouine_info.arn,
@@ -95,6 +99,15 @@ resource "aws_iam_role_policy" "api_gateway_dynamodb_policy" {
   })
 }
 
+resource "aws_api_gateway_rest_api" "chouine_api" {
+  name        = "ChouineAPI"
+  description = "API REST pour le jeu de la Chouine"
+
+  endpoint_configuration {
+    types = ["REGIONAL"]
+  }
+}
+
 # Resource /info
 resource "aws_api_gateway_resource" "info" {
   rest_api_id = aws_api_gateway_rest_api.chouine_api.id
@@ -102,41 +115,36 @@ resource "aws_api_gateway_resource" "info" {
   path_part   = "info"
 }
 
-# Method GET /info
-resource "aws_api_gateway_method" "get_info" {
+# Method GET /info (retrieve all items)
+resource "aws_api_gateway_method" "get_all_info" {
   rest_api_id   = aws_api_gateway_rest_api.chouine_api.id
   resource_id   = aws_api_gateway_resource.info.id
   http_method   = "GET"
   authorization = "NONE"
 }
 
-# Integration GET /info avec DynamoDB
-resource "aws_api_gateway_integration" "get_info_integration" {
+# Integration GET /info avec DynamoDB Scan
+resource "aws_api_gateway_integration" "get_all_info_integration" {
   rest_api_id             = aws_api_gateway_rest_api.chouine_api.id
   resource_id             = aws_api_gateway_resource.info.id
-  http_method             = aws_api_gateway_method.get_info.http_method
+  http_method             = aws_api_gateway_method.get_all_info.http_method
   type                    = "AWS"
   integration_http_method = "POST"
-  uri                     = "arn:aws:apigateway:${data.aws_region.current.name}:dynamodb:action/GetItem"
+  uri                     = "arn:aws:apigateway:${data.aws_region.current.name}:dynamodb:action/Scan"
   credentials             = aws_iam_role.api_gateway_dynamodb_role.arn
 
   request_templates = {
     "application/json" = jsonencode({
       TableName = aws_dynamodb_table.chouine_info.name
-      Key = {
-        Id = {
-          N = "0"
-        }
-      }
     })
   }
 }
 
 # Method Response GET /info
-resource "aws_api_gateway_method_response" "get_info_response_200" {
+resource "aws_api_gateway_method_response" "get_all_info_response_200" {
   rest_api_id = aws_api_gateway_rest_api.chouine_api.id
   resource_id = aws_api_gateway_resource.info.id
-  http_method = aws_api_gateway_method.get_info.http_method
+  http_method = aws_api_gateway_method.get_all_info.http_method
   status_code = "200"
 
   response_parameters = {
@@ -145,9 +153,84 @@ resource "aws_api_gateway_method_response" "get_info_response_200" {
 }
 
 # Integration Response GET /info
-resource "aws_api_gateway_integration_response" "get_info_integration_response" {
+resource "aws_api_gateway_integration_response" "get_all_info_integration_response" {
   rest_api_id = aws_api_gateway_rest_api.chouine_api.id
   resource_id = aws_api_gateway_resource.info.id
+  http_method = aws_api_gateway_method.get_all_info.http_method
+  status_code = aws_api_gateway_method_response.get_all_info_response_200.status_code
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = "'*'"
+  }
+
+  response_templates = {
+    "application/json" = "#set($inputRoot = $input.path('$'))\n$input.json('$.Items')"
+  }
+
+  depends_on = [aws_api_gateway_integration.get_all_info_integration]
+}
+
+# Resource /info/{index}
+resource "aws_api_gateway_resource" "info_index" {
+  rest_api_id = aws_api_gateway_rest_api.chouine_api.id
+  parent_id   = aws_api_gateway_resource.info.id
+  path_part   = "{index}"
+}
+
+# Method GET /info/{index}
+resource "aws_api_gateway_method" "get_info" {
+  rest_api_id   = aws_api_gateway_rest_api.chouine_api.id
+  resource_id   = aws_api_gateway_resource.info_index.id
+  http_method   = "GET"
+  authorization = "NONE"
+
+  request_parameters = {
+    "method.request.path.index" = true
+  }
+}
+
+# Integration GET /info/{index} avec DynamoDB
+resource "aws_api_gateway_integration" "get_info_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.chouine_api.id
+  resource_id             = aws_api_gateway_resource.info_index.id
+  http_method             = aws_api_gateway_method.get_info.http_method
+  type                    = "AWS"
+  integration_http_method = "POST"
+  uri                     = "arn:aws:apigateway:${data.aws_region.current.name}:dynamodb:action/GetItem"
+  credentials             = aws_iam_role.api_gateway_dynamodb_role.arn
+
+  request_parameters = {
+    "integration.request.path.index" = "method.request.path.index"
+  }
+
+  request_templates = {
+    "application/json" = jsonencode({
+      TableName = aws_dynamodb_table.chouine_info.name
+      Key = {
+        Id = {
+          N = "$input.params('index')"
+        }
+      }
+    })
+  }
+}
+
+# Method Response GET /info/{index}
+resource "aws_api_gateway_method_response" "get_info_response_200" {
+  rest_api_id = aws_api_gateway_rest_api.chouine_api.id
+  resource_id = aws_api_gateway_resource.info_index.id
+  http_method = aws_api_gateway_method.get_info.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = true
+  }
+}
+
+# Integration Response GET /info/{index}
+resource "aws_api_gateway_integration_response" "get_info_integration_response" {
+  rest_api_id = aws_api_gateway_rest_api.chouine_api.id
+  resource_id = aws_api_gateway_resource.info_index.id
   http_method = aws_api_gateway_method.get_info.http_method
   status_code = aws_api_gateway_method_response.get_info_response_200.status_code
 
@@ -160,6 +243,79 @@ resource "aws_api_gateway_integration_response" "get_info_integration_response" 
   }
 
   depends_on = [aws_api_gateway_integration.get_info_integration]
+}
+
+# Method POST /info/{index}
+resource "aws_api_gateway_method" "post_info" {
+  rest_api_id   = aws_api_gateway_rest_api.chouine_api.id
+  resource_id   = aws_api_gateway_resource.info_index.id
+  http_method   = "POST"
+  authorization = "NONE"
+
+  request_parameters = {
+    "method.request.path.index" = true
+  }
+}
+
+# Integration POST /info/{index} avec DynamoDB
+resource "aws_api_gateway_integration" "post_info_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.chouine_api.id
+  resource_id             = aws_api_gateway_resource.info_index.id
+  http_method             = aws_api_gateway_method.post_info.http_method
+  type                    = "AWS"
+  integration_http_method = "POST"
+  uri                     = "arn:aws:apigateway:${data.aws_region.current.name}:dynamodb:action/PutItem"
+  credentials             = aws_iam_role.api_gateway_dynamodb_role.arn
+
+  request_parameters = {
+    "integration.request.path.index" = "method.request.path.index"
+  }
+
+  request_templates = {
+    "application/json" = <<EOF
+{
+  "TableName": "${aws_dynamodb_table.chouine_info.name}",
+  "Item": {
+    "Id": {
+      "N": "$input.params('index')"
+    },
+    "Text": {
+      "S": "$input.path('$.Text')"
+    }
+  }
+}
+EOF
+  }
+}
+
+# Method Response POST /info/{index}
+resource "aws_api_gateway_method_response" "post_info_response_200" {
+  rest_api_id = aws_api_gateway_rest_api.chouine_api.id
+  resource_id = aws_api_gateway_resource.info_index.id
+  http_method = aws_api_gateway_method.post_info.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = true
+  }
+}
+
+# Integration Response POST /info/{index}
+resource "aws_api_gateway_integration_response" "post_info_integration_response" {
+  rest_api_id = aws_api_gateway_rest_api.chouine_api.id
+  resource_id = aws_api_gateway_resource.info_index.id
+  http_method = aws_api_gateway_method.post_info.http_method
+  status_code = aws_api_gateway_method_response.post_info_response_200.status_code
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = "'*'"
+  }
+
+  response_templates = {
+    "application/json" = "{\"message\": \"Info créée/mise à jour avec succès\"}"
+  }
+
+  depends_on = [aws_api_gateway_integration.post_info_integration]
 }
 
 # Resource /partie
@@ -238,8 +394,26 @@ resource "aws_api_gateway_integration_response" "post_partie_integration_respons
 resource "aws_api_gateway_deployment" "chouine_deployment" {
   rest_api_id = aws_api_gateway_rest_api.chouine_api.id
 
+  triggers = {
+    redeployment = sha1(jsonencode([
+      aws_api_gateway_resource.info.id,
+      aws_api_gateway_method.get_all_info.id,
+      aws_api_gateway_integration.get_all_info_integration.id,
+      aws_api_gateway_resource.info_index.id,
+      aws_api_gateway_method.get_info.id,
+      aws_api_gateway_integration.get_info_integration.id,
+      aws_api_gateway_method.post_info.id,
+      aws_api_gateway_integration.post_info_integration.id,
+      aws_api_gateway_resource.partie.id,
+      aws_api_gateway_method.post_partie.id,
+      aws_api_gateway_integration.post_partie_integration.id,
+    ]))
+  }
+
   depends_on = [
+    aws_api_gateway_integration.get_all_info_integration,
     aws_api_gateway_integration.get_info_integration,
+    aws_api_gateway_integration.post_info_integration,
     aws_api_gateway_integration.post_partie_integration
   ]
 
@@ -284,9 +458,19 @@ output "api_endpoint" {
   description = "URL de l'API Gateway"
 }
 
-output "get_info_url" {
+output "get_all_info_url" {
   value       = "${aws_api_gateway_stage.chouine_stage.invoke_url}/info"
-  description = "URL GET /info"
+  description = "URL GET /info (retrieve all items)"
+}
+
+output "get_info_url" {
+  value       = "${aws_api_gateway_stage.chouine_stage.invoke_url}/info/{index}"
+  description = "URL GET /info/{index}"
+}
+
+output "post_info_url" {
+  value       = "${aws_api_gateway_stage.chouine_stage.invoke_url}/info/{index}"
+  description = "URL POST /info/{index}"
 }
 
 output "post_partie_url" {

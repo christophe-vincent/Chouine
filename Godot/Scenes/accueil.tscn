@@ -84,6 +84,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_mwf61")
 
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
+
 [node name="TextureRect" type="TextureRect" parent="."]
 modulate = Color(1, 1, 1, 0.13725491)
 layout_mode = 1
@@ -94,36 +96,17 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_p3653")
 
-[node name="Chouine" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.50100005
-anchor_top = 0.5
-anchor_right = 0.50100005
-anchor_bottom = 0.5
-offset_left = -342.9201
-offset_top = -495.0
-offset_right = 341.0799
-offset_bottom = -352.0
-grow_horizontal = 2
-theme = ExtResource("3_2kwed")
-theme_override_colors/font_color = Color(0.9019608, 0.7607843, 0.16078432, 1)
-theme_override_colors/font_outline_color = Color(0.9411765, 0.85882354, 0.49803922, 1)
-theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 120
-text = "LA CHOUINE"
-
 [node name="Parties" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.26700002
-anchor_top = 0.49600002
-anchor_right = 0.26700002
-anchor_bottom = 0.49600002
-offset_left = -352.64
-offset_top = -307.68005
-offset_right = 343.36
-offset_bottom = -8.680054
+anchor_left = 0.24900001
+anchor_top = 0.5
+anchor_right = 0.24900001
+anchor_bottom = 0.5
+offset_left = -348.08002
+offset_top = -413.0
+offset_right = 347.91998
+offset_bottom = -114.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -266,10 +249,10 @@ anchor_left = 0.26700002
 anchor_top = 0.49600002
 anchor_right = 0.26700002
 anchor_bottom = 0.49600002
-offset_left = -311.64
-offset_top = 57.319946
-offset_right = 290.36
-offset_bottom = 351.31995
+offset_left = -343.64
+offset_top = -54.680054
+offset_right = 258.36
+offset_bottom = 239.31995
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 150
@@ -362,6 +345,56 @@ texture = ExtResource("15_aujfu")
 expand_mode = 1
 stretch_mode = 5
 
+[node name="PlayButtons" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.24700001
+anchor_top = 0.5
+anchor_right = 0.24700001
+anchor_bottom = 0.5
+offset_left = -331.24002
+offset_top = 384.0
+offset_right = 330.75998
+offset_bottom = 504.0
+theme_override_constants/separation = 60
+alignment = 1
+
+[node name="Jouer" type="Button" parent="PlayButtons"]
+custom_minimum_size = Vector2(260, 0)
+layout_mode = 2
+theme = ExtResource("3_2kwed")
+theme_override_font_sizes/font_size = 80
+text = "JOUER"
+
+[node name="PartieEnCours" type="Button" parent="PlayButtons"]
+visible = false
+custom_minimum_size = Vector2(260, 0)
+layout_mode = 2
+theme = ExtResource("3_2kwed")
+theme_override_constants/line_spacing = -22
+theme_override_font_sizes/font_size = 55
+text = "Partie 
+en cours"
+
+[node name="Chouine" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.50100005
+anchor_top = 0.5
+anchor_right = 0.50100005
+anchor_bottom = 0.5
+offset_left = 78.079895
+offset_top = -493.0
+offset_right = 762.0799
+offset_bottom = -350.0
+grow_horizontal = 2
+theme = ExtResource("3_2kwed")
+theme_override_colors/font_color = Color(0.9019608, 0.7607843, 0.16078432, 1)
+theme_override_colors/font_outline_color = Color(0.9411765, 0.85882354, 0.49803922, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 120
+text = "LA CHOUINE"
+
 [node name="Intro" type="RichTextLabel" parent="."]
 layout_mode = 1
 anchors_preset = -1
@@ -370,47 +403,18 @@ anchor_top = 0.5
 anchor_right = 0.725
 anchor_bottom = 0.5
 offset_left = -493.0
-offset_top = -333.0
+offset_top = -351.0
 offset_right = 494.0
-offset_bottom = 61.0
+offset_bottom = 288.0
 theme = ExtResource("3_2kwed")
+theme_override_constants/line_separation = 10
 theme_override_font_sizes/normal_font_size = 50
-text = "blabla
-bla
+bbcode_enabled = true
+text = "Le jeu de la Chouine est un jeu de cartes très ancien qui se pratique dans le centre-ouest de la France, notamment dans la vallée du Loir.
+Ce jeu a pour ancêtres les jeux de Brisque ou Mariage. Ces derniers étant contemporains de Rabelais et cités dans Gargantua.
 "
-
-[node name="Jouer" type="Button" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.26000002
-anchor_top = 0.5
-anchor_right = 0.26000002
-anchor_bottom = 0.5
-offset_left = -134.20004
-offset_top = 385.0
-offset_right = 132.79996
-offset_bottom = 503.0
-theme = ExtResource("3_2kwed")
-theme_override_font_sizes/font_size = 80
-text = "JOUER"
-
-[node name="PartieEnCours" type="Button" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.094000004
-anchor_top = 0.5
-anchor_right = 0.094000004
-anchor_bottom = 0.5
-offset_left = -133.48001
-offset_top = 386.0
-offset_right = 133.51999
-offset_bottom = 504.0
-theme = ExtResource("3_2kwed")
-theme_override_constants/line_spacing = -22
-theme_override_font_sizes/font_size = 55
-text = "Partie 
-en cours"
+horizontal_alignment = 3
+vertical_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
@@ -523,8 +527,8 @@ layout_mode = 2
 [connection signal="pressed" from="Parties/Cinq/CinqPoints" to="." method="_on_cinq_points_pressed"]
 [connection signal="pressed" from="Manches/Une/UneManche" to="." method="_on_une_manche_pressed"]
 [connection signal="pressed" from="Manches/Deux/DeuxManches" to="." method="_on_deux_manches_pressed"]
-[connection signal="pressed" from="Jouer" to="." method="_on_jouer_pressed"]
-[connection signal="pressed" from="PartieEnCours" to="." method="_on_partie_en_cours_pressed"]
+[connection signal="pressed" from="PlayButtons/Jouer" to="." method="_on_jouer_pressed"]
+[connection signal="pressed" from="PlayButtons/PartieEnCours" to="." method="_on_partie_en_cours_pressed"]
 [connection signal="pressed" from="HBoxContainer/Options" to="." method="_on_options_pressed"]
 [connection signal="pressed" from="HBoxContainer/Aide" to="." method="_on_aide_pressed"]
 [connection signal="pressed" from="HBoxContainer/Regles" to="." method="_on_regles_pressed"]

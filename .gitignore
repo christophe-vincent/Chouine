@@ -44,6 +44,11 @@ Godot/html
 .gitattributes
 Godot/Exports/*
 
+# terraform
+*.tfstate*
+.terraform
+*.lock.hcl
+
 # =========================
 # Operating System Files
 # =========================
