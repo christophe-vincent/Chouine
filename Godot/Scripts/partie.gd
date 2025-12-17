@@ -277,9 +277,9 @@ func melanger() -> void:
 		cartes_pioche.append(c)
 		pioche.ajouter_carte(cartes[c])
 	game_save.set_pioche(cartes_pioche)
-	game_save.coup_joueur("7-coeur")
-	game_save.coup_ordi("8-pic", "", false)
-	game_save.save_game()
+	# game_save.coup_joueur("7-coeur")
+	# game_save.coup_ordi("8-pic", "", false)
+	# game_save.save_game()
 
 
 func center_cartes() -> void:

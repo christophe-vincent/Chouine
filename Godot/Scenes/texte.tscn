@@ -90,12 +90,12 @@ frv"
 
 [node name="Version" type="Label" parent="."]
 layout_mode = 0
-offset_left = 27.0
-offset_top = 1023.0
-offset_right = 141.0
-offset_bottom = 1074.0
+offset_left = 26.0
+offset_top = 1032.0
+offset_right = 140.0
+offset_bottom = 1069.0
 theme = ExtResource("2_3wr2c")
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 30
 text = "v 0.0.0"
 
 [connection signal="pressed" from="Retour" to="." method="_on_retour_pressed"]

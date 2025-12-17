@@ -125,6 +125,7 @@ func save_game() -> void:
 	var data: Dictionary = {
 		"UserId": Global.options["user_id"],
 		"Timestamp": Time.get_datetime_string_from_system(),
+		"Version": Version.get_version(),
 		"Pioche": pioche,
 		"Starter": starter,
 		"J0": coups_ordi,
@@ -135,7 +136,8 @@ func save_game() -> void:
 	}
 	var json: String = JSON.stringify(data)
 	var headers: Array = ["Content-Type: application/json", "x-api-key: " + key]
-	http_request.request_completed.connect(_on_request_completed)
+	if not http_request.request_completed.is_connected(_on_request_completed):
+		http_request.request_completed.connect(_on_request_completed)
 	var error:Error = http_request.request(url + "/partie", headers, HTTPClient.METHOD_POST, json)
 	if error != 0:
 		print(error)

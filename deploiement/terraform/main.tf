@@ -356,6 +356,9 @@ resource "aws_api_gateway_integration" "post_partie_integration" {
     "Timestamp": {
       "S": "$input.path('$.Timestamp')"
     },
+    "Version": {
+      "S": "$input.path('$.Version')"
+    },
     "Pioche": {
       "BS": [
         #foreach($item in $input.path('$.Pioche'))
