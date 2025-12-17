@@ -14,16 +14,17 @@ grow_vertical = 2
 script = ExtResource("1_ixip3")
 
 [node name="Retour" type="Button" parent="."]
+custom_minimum_size = Vector2(100, 50)
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.947
 anchor_top = 0.95400006
 anchor_right = 0.947
 anchor_bottom = 0.95400006
-offset_left = -41.23999
-offset_top = -30.320068
-offset_right = 40.76001
-offset_bottom = 29.679932
+offset_left = -58.23999
+offset_top = -42.32007
+offset_right = 54.76001
+offset_bottom = 40.67993
 theme = ExtResource("2_3wr2c")
 theme_override_constants/icon_max_width = 42
 theme_override_font_sizes/font_size = 45
@@ -86,6 +87,16 @@ fdv
 rte
 ge
 frv"
+
+[node name="Version" type="Label" parent="."]
+layout_mode = 0
+offset_left = 27.0
+offset_top = 1023.0
+offset_right = 141.0
+offset_bottom = 1074.0
+theme = ExtResource("2_3wr2c")
+theme_override_font_sizes/font_size = 36
+text = "v 0.0.0"
 
 [connection signal="pressed" from="Retour" to="." method="_on_retour_pressed"]
 [connection signal="meta_clicked" from="Regles" to="." method="_on_regles_meta_clicked"]

@@ -29,6 +29,8 @@ var chouine_infos: Dictionary = {}
 var scene_partie: Resource = preload("res://Scenes/partie.tscn")
 var scene_regles: Resource = preload("res://Scenes/texte.tscn")
 var scene_options: Resource = preload("res://Scenes/options.tscn")
+var alt_api: bool = false
+
 
 func _ready() -> void:
 	# lecture du fichier d'options, s'il existe
@@ -130,24 +132,32 @@ func _on_credits_pressed() -> void:
 
 func get_info_chouine() -> void:
 	$HTTPRequest.request_completed.connect(_on_request_completed)
-	$HTTPRequest.request("https://a9gp1j20u3.execute-api.eu-west-1.amazonaws.com/prod/info")
+	var url:String = ""
+	if alt_api:
+		url = Global.api_config["alt"]["url"]
+	else:
+		url = Global.api_config["main"]["url"]
+	$HTTPRequest.request(url + "/info")
 
 func _on_request_completed(_result: int,
-						_response_code: int,
+						response_code: int,
 						_headers: PackedStringArray,
 						body: PackedByteArray) -> void:
 	var json: Variant = JSON.parse_string(body.get_string_from_utf8())
+	if response_code != 200:
+		if not alt_api:
+			alt_api = true
+			get_info_chouine()
+		return
 	# classement des infos
 	for info: Variant in json:
-		print(info)
 		if not info.has("Id"):
 			return
 		chouine_infos[info["Id"]["N"]] = {
 			"enabled": info["Enabled"]["BOOL"],
 			"text": info["Text"]["S"]
 		}
-	print(chouine_infos)
-	# lecture des ré&sulatats si tout est arrivé
+	# lecture des infos
 	for i: int in range(0, 2):
 		if not chouine_infos[str(i)]["enabled"]:
 			continue
@@ -155,3 +165,4 @@ func _on_request_completed(_result: int,
 			continue
 		$Intro.text = chouine_infos[str(i)]["text"]
 		break
+	

@@ -4,6 +4,8 @@ ehthumbs.db
 
  #git
 .gitconfig
+Godot/api_config.json
+Godot/version.txt
 
 # Folder config file
 Desktop.ini

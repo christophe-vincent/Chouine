@@ -103,6 +103,7 @@ var offset: float = -0.42
 
 
 func _ready() -> void:
+	$Version.text = "v" + Version.get_version()
 	if Global.texte == Global.TypeTexte.REGLES:
 		$Regles.text = regles
 	else:

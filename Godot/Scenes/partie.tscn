@@ -11,7 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://cvnc0r14i4max" path="res://Scenes/scores.tscn" id="7_kcvnu"]
 [ext_resource type="Texture2D" uid="uid://4hnyodmak7su" path="res://Assets/home.png" id="9_8crny"]
 [ext_resource type="PackedScene" uid="uid://7nyoesuce12r" path="res://Scenes/confirmation.tscn" id="10_qapei"]
-[ext_resource type="PackedScene" path="res://Scenes/help.tscn" id="12_gtolj"]
+[ext_resource type="PackedScene" uid="uid://btw00rqumin08" path="res://Scenes/help.tscn" id="12_gtolj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qapei"]
 size = Vector2(280.5, 456.5)
@@ -663,6 +663,8 @@ offset_left = -582.0
 offset_top = -196.0
 offset_right = 583.0
 offset_bottom = 167.0
+
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
 
 [connection signal="area_shape_entered" from="ZoneJeu/ZoneJeu" to="ZoneJeu/ZoneJeu" method="_on_area_shape_entered"]
 [connection signal="area_shape_exited" from="ZoneJeu/ZoneJeu" to="ZoneJeu/ZoneJeu" method="_on_area_shape_exited"]

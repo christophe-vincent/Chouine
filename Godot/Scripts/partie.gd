@@ -61,6 +61,7 @@ var joueur_gagnees_position: Vector4 = Vector4(0, 0, 0, 0)
 var ordi_gagnees_position: Vector4 = Vector4(0, 0, 0, 0)
 var jeu_cartes: Variant = ""
 var rng:RandomNumberGenerator = RandomNumberGenerator.new()
+var game_save: GameSave = GameSave.new()
 
 
 enum JOUEURS {
@@ -69,6 +70,7 @@ enum JOUEURS {
 }
 
 func _ready() -> void:
+	game_save.set_scene(self)
 	var json_as_text: String = FileAccess.get_file_as_string("res://Assets/Data/jeu-carte.json")
 	jeu_cartes = JSON.parse_string(json_as_text)
 	$Tapis.texture = textures_tapis[Global.options["couleur_tapis"]]
@@ -259,6 +261,7 @@ func demarrer_jeu() -> void:
 	
 	if not Global.help_mode:
 		await get_tree().create_timer(1).timeout
+	game_save.premier_joueur(chouine.gagnant_pli())
 	if chouine.gagnant_pli() == JOUEURS.ORDI:
 		coup_ordi()
 	zone_jeu.disabled = false
@@ -273,6 +276,10 @@ func melanger() -> void:
 		c = c.replace('*', '')
 		cartes_pioche.append(c)
 		pioche.ajouter_carte(cartes[c])
+	game_save.set_pioche(cartes_pioche)
+	game_save.coup_joueur("7-coeur")
+	game_save.coup_ordi("8-pic", "", false)
+	game_save.save_game()
 
 
 func center_cartes() -> void:
@@ -307,7 +314,6 @@ func enregistrer_partie() -> void:
 
 func restauration_partie() -> bool:
 	if not FileAccess.file_exists(Settings.SAVE_FILE):
-		print("Pas de backup")
 		return false
 
 	var save_file: FileAccess = FileAccess.open(Settings.SAVE_FILE, FileAccess.READ)
@@ -317,6 +323,7 @@ func restauration_partie() -> bool:
 		var parse_result: Error = json.parse(json_string)
 		if not parse_result == OK:
 			print("Error de backup de la partie")
+			game_save.add_error("Ficher backup corrumpu")
 			return false
 		Global.options["nb_points"] = int(json.data['points'])
 		nb_points_joueur = int(json.data['points_joueur'])
@@ -348,6 +355,7 @@ func carte_jouee(nom: String, duree: float=0.5*Settings.DUREE_MOUVEMENT) -> int:
 	if ret != 0:
 		print("ERREUR: Erreur dans le choix du joueur")
 		return -1
+	game_save.coup_joueur(nom)
 	coup_joueur = false
 	
 	tapis.ajouter_carte(cartes[nom], duree)
@@ -379,6 +387,7 @@ func zone_pioche_actif(actif: bool) -> void:
 
 func echange_atout_joueur() -> void:
 	"""une carte est déposée dans la main du joueur, ca ne peut être que la carte d'atout"""
+	game_save.atout_joueur()
 	# chercher le sept d'atout
 	main_joueur.ajouter_carte(carte_atout)
 	carte_atout.retourne = false
@@ -399,6 +408,7 @@ func annonce_joueur(annonce: String) -> void:
 	var ret: int = chouine.annonce_joueur(annonce)
 	if ret == 0:
 		# annonce autorisee
+		game_save.set_annonce_joueur(annonce)
 		annonces_joueur.add(annonce)
 		print("Joueur      : " + annonce)
 		if chouine.fin_partie():
@@ -443,6 +453,7 @@ func coup_ordi() -> void:
 	if echange_sept_atout != "" && carte_atout != null:
 		if retourne.cartes().size() == 0:
 			print("ERREUR: La retourne est vide")
+			game_save.add_error("Prise 7 atout mais pioche vide")
 		else:
 			# la carte de joueur rejoint la retourne
 			main_ordi.supprimer_carte(sept_atout.card_name)
@@ -462,6 +473,7 @@ func coup_ordi() -> void:
 		print("Annonce Ordi: " + annonce)
 		await annonce_ordi(annonce)
 
+	game_save.coup_ordi(choix_carte, annonce, echange_sept_atout != "")
 	main_ordi.supprimer_carte(choix_carte)
 	tapis.ajouter_carte(cartes[choix_carte], 1 * Settings.DUREE_MOUVEMENT)
 	
@@ -557,6 +569,7 @@ func fin_pli() -> void:
 # Gestion des parties
 #
 func fin_partie() -> void:
+	game_save.save_game()
 	zone_jeu.disabled = true
 	$Scores/Panel/Defaite.visible = false
 	$Scores/Panel/Victoire.visible = false

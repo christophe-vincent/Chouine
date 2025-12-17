@@ -6,9 +6,12 @@ La Chouine is distributed in the hope that it will be useful, but WITHOUT ANY WA
 You should have received a copy of the GNU General Public License along with Foobar. If not, see <https://www.gnu.org/licenses/>
 """
 extends Node
+var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+
 
 # Options
 var options: Dictionary = {
+	"user_id": "%X%X" % [rng.randi(), rng.randi()],
 	"nb_points": 3,
 	"nb_manches": 1,
 	"cartes_visibles": false,
@@ -39,6 +42,8 @@ var stats: Dictionary = {
 	}
 }
 
+var api_config: Dictionary = {}
+
 # Regles ou credits
 enum TypeTexte {REGLES, CREDITS}
 var texte: TypeTexte = TypeTexte.REGLES
@@ -57,6 +62,7 @@ var help_mode: bool = false
 
 
 func _ready() -> void:
+	load_api_config()
 	selected_panel.bg_color = Color(0.635, 0.635, 0.635, 0.196)
 	selected_panel.border_width_left = 1
 	selected_panel.border_width_top = 1
@@ -65,6 +71,19 @@ func _ready() -> void:
 	selected_panel.border_color = Color.WHITE_SMOKE
 	selected_panel.set_corner_radius_all(30)
 	non_selected_panel.bg_color = Color(0, 0, 0, 0)
+
+
+func load_api_config() -> void:
+	var file: FileAccess = FileAccess.open("res://api_config.json", FileAccess.READ)
+	if file:
+		var json: JSON = JSON.new()
+		var parse_result: Variant = json.parse(file.get_as_text())
+		if parse_result == OK:
+			api_config = json.data
+		file.close()
+	else:
+		push_error("Impossible de charger config.json")
+
 
 func lecture_fichier(filename: String, data: Variant) -> Variant:
 	if not FileAccess.file_exists(filename):
@@ -80,9 +99,13 @@ func enregistrer_fichier(filename: String, data: Variant) -> void:
 
 func lecture_options() -> void:
 	options = lecture_fichier(Settings.OPTIONS_FILE, options)
-	
+	if not options.has("user_id"):
+		options['user_id'] = "%X%X" % [rng.randi(), rng.randi()]
+
+
 func enregistrer_options() -> void:
 	enregistrer_fichier(Settings.OPTIONS_FILE, options)
+
 
 func lecture_stats() -> void:
 	stats = lecture_fichier(Settings.STATS_FILE, stats)
