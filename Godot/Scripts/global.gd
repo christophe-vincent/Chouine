@@ -8,6 +8,8 @@ You should have received a copy of the GNU General Public License along with Foo
 extends Node
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
+# info from internet
+var chouine_infos: Dictionary = {}
 
 # Options
 var options: Dictionary = {

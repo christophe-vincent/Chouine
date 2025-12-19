@@ -96,6 +96,21 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_p3653")
 
+[node name="NouvelleVersion" type="RichTextLabel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.259
+anchor_top = 0.5
+anchor_right = 0.259
+anchor_bottom = 0.5
+offset_left = -486.28
+offset_top = -529.0
+offset_right = 522.72
+offset_bottom = -429.0
+theme = ExtResource("3_2kwed")
+theme_override_font_sizes/normal_font_size = 35
+bbcode_enabled = true
+
 [node name="Parties" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = -1
@@ -403,9 +418,9 @@ anchor_top = 0.5
 anchor_right = 0.725
 anchor_bottom = 0.5
 offset_left = -493.0
-offset_top = -351.0
+offset_top = -360.0
 offset_right = 494.0
-offset_bottom = 288.0
+offset_bottom = 279.0
 theme = ExtResource("3_2kwed")
 theme_override_constants/line_separation = 10
 theme_override_font_sizes/normal_font_size = 50
@@ -415,6 +430,31 @@ Ce jeu a pour ancêtres les jeux de Brisque ou Mariage. Ces derniers étant cont
 "
 horizontal_alignment = 3
 vertical_alignment = 1
+
+[node name="Stats" type="FoldableContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.75100005
+anchor_top = 0.5
+anchor_right = 0.75100005
+anchor_bottom = 0.5
+offset_left = -442.92004
+offset_top = -325.0
+offset_right = 443.07996
+offset_bottom = 405.0
+theme = ExtResource("3_2kwed")
+theme_override_colors/font_color = Color(0.91764706, 0.8, 0.28235295, 1)
+theme_override_colors/hover_font_color = Color(0.91764706, 0.8, 0.28235295, 1)
+theme_override_constants/outline_size = 0
+theme_override_constants/h_separation = 10
+theme_override_font_sizes/font_size = 45
+folded = true
+title = "Stats"
+title_position = 1
+
+[node name="Statistiques" parent="Stats" instance=ExtResource("13_p3653")]
+visible = false
+layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
@@ -456,72 +496,6 @@ theme = ExtResource("3_2kwed")
 theme_override_font_sizes/font_size = 60
 text = "Crédits"
 
-[node name="RichTextLabel" type="RichTextLabel" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 1189.0
-offset_top = 635.0
-offset_right = 1253.0
-offset_bottom = 884.0
-theme = ExtResource("3_2kwed")
-theme_override_constants/paragraph_separation = -15
-theme_override_font_sizes/normal_font_size = 35
-text = "0
-1
-2
-3
-4%
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-20
-30
-40
-50
-60
-70
-80
-90
-100"
-scroll_active = false
-horizontal_alignment = 1
-
-[node name="Stats" type="FoldableContainer" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.75100005
-anchor_top = 0.5
-anchor_right = 0.75100005
-anchor_bottom = 0.5
-offset_left = -442.92004
-offset_top = -325.0
-offset_right = 443.07996
-offset_bottom = 405.0
-theme = ExtResource("3_2kwed")
-theme_override_colors/font_color = Color(0.91764706, 0.8, 0.28235295, 1)
-theme_override_colors/hover_font_color = Color(0.91764706, 0.8, 0.28235295, 1)
-theme_override_constants/outline_size = 0
-theme_override_constants/h_separation = 10
-theme_override_font_sizes/font_size = 45
-folded = true
-title = "Stats"
-title_position = 1
-
-[node name="Statistiques" parent="Stats" instance=ExtResource("13_p3653")]
-visible = false
-layout_mode = 2
-
 [connection signal="pressed" from="Parties/Une/UnPoint" to="." method="_on_un_point_pressed"]
 [connection signal="pressed" from="Parties/Trois/TroisPoints" to="." method="_on_trois_points_pressed"]
 [connection signal="pressed" from="Parties/Cinq/CinqPoints" to="." method="_on_cinq_points_pressed"]
@@ -529,8 +503,8 @@ layout_mode = 2
 [connection signal="pressed" from="Manches/Deux/DeuxManches" to="." method="_on_deux_manches_pressed"]
 [connection signal="pressed" from="PlayButtons/Jouer" to="." method="_on_jouer_pressed"]
 [connection signal="pressed" from="PlayButtons/PartieEnCours" to="." method="_on_partie_en_cours_pressed"]
+[connection signal="folding_changed" from="Stats" to="." method="_on_stats_folding_changed"]
 [connection signal="pressed" from="HBoxContainer/Options" to="." method="_on_options_pressed"]
 [connection signal="pressed" from="HBoxContainer/Aide" to="." method="_on_aide_pressed"]
 [connection signal="pressed" from="HBoxContainer/Regles" to="." method="_on_regles_pressed"]
 [connection signal="pressed" from="HBoxContainer/Crédits" to="." method="_on_credits_pressed"]
-[connection signal="folding_changed" from="Stats" to="." method="_on_stats_folding_changed"]

@@ -89,11 +89,16 @@ ge
 frv"
 
 [node name="Version" type="Label" parent="."]
-layout_mode = 0
-offset_left = 26.0
-offset_top = 1032.0
-offset_right = 140.0
-offset_bottom = 1069.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.043
+anchor_top = 0.5
+anchor_right = 0.043
+anchor_bottom = 0.5
+offset_left = -56.560005
+offset_top = 492.0
+offset_right = 57.439995
+offset_bottom = 529.0
 theme = ExtResource("2_3wr2c")
 theme_override_font_sizes/font_size = 30
 text = "v 0.0.0"

@@ -25,7 +25,6 @@ var points: Array[PanelContainer] = []
 var jeton_points: Array[TextureRect] = []
 var manches: Array[PanelContainer] = []
 var jeton_manches: Array[TextureRect] = []
-var chouine_infos: Dictionary = {}
 var scene_partie: Resource = preload("res://Scenes/partie.tscn")
 var scene_regles: Resource = preload("res://Scenes/texte.tscn")
 var scene_options: Resource = preload("res://Scenes/options.tscn")
@@ -131,6 +130,10 @@ func _on_credits_pressed() -> void:
 	get_tree().change_scene_to_packed(scene_regles)
 
 func get_info_chouine() -> void:
+	if Global.chouine_infos.size() > 0:
+		# on a deja récupérer les infos
+		_mise_a_jour_infos()
+		return
 	$HTTPRequest.request_completed.connect(_on_request_completed)
 	var url:String = ""
 	if alt_api:
@@ -138,6 +141,7 @@ func get_info_chouine() -> void:
 	else:
 		url = Global.api_config["main"]["url"]
 	$HTTPRequest.request(url + "/info")
+
 
 func _on_request_completed(_result: int,
 						response_code: int,
@@ -153,16 +157,56 @@ func _on_request_completed(_result: int,
 	for info: Variant in json:
 		if not info.has("Id"):
 			return
-		chouine_infos[info["Id"]["N"]] = {
-			"enabled": info["Enabled"]["BOOL"],
-			"text": info["Text"]["S"]
+		Global.chouine_infos[info["Id"]["N"]] = {
+			"Enabled": info["Enabled"]["BOOL"],
+			"Text": info["Text"]["S"]
 		}
-	# lecture des infos
+		if "StartDate" in info:
+			Global.chouine_infos[info["Id"]["N"]]["StartDate"] = info["StartDate"]["S"]
+		if "EndDate" in info:
+			Global.chouine_infos[info["Id"]["N"]]["EndDate"] = info["EndDate"]["S"]
+		if "Version" in info:
+			Global.chouine_infos[info["Id"]["N"]]["Version"] = info["Version"]["S"]
+	_mise_a_jour_infos()
+
+func _mise_a_jour_infos() -> void:
+	# infos principales
 	for i: int in range(0, 2):
-		if not chouine_infos[str(i)]["enabled"]:
-			continue
-		if chouine_infos[str(i)]["text"] == "":
-			continue
-		$Intro.text = chouine_infos[str(i)]["text"]
+		if Global.chouine_infos.has(str(i)):
+			if not Global.chouine_infos[str(i)]["Enabled"]:
+				continue
+			if Global.chouine_infos[str(i)]["Text"] == "":
+				continue
+			if Global.chouine_infos[str(i)].has("StartDate") and Global.chouine_infos[str(i)].has("EndDate"):
+				var start: int = Time.get_unix_time_from_datetime_string(Global.chouine_infos[str(i)]["StartDate"])
+				var end: int = Time.get_unix_time_from_datetime_string(Global.chouine_infos[str(i)]["EndDate"])
+				var now: float = Time.get_unix_time_from_system()
+				if now < start or now > end:
+					continue
+			$Intro.text = Global.chouine_infos[str(i)]["Text"]
 		break
+
+	# vérification de la version
+	if Global.chouine_infos.has("100") and Global.chouine_infos["100"].has("Enabled") and Global.chouine_infos["100"]["Enabled"]:
+		var new_version: Dictionary = Global.chouine_infos["100"]
+		var start: int = Time.get_unix_time_from_datetime_string(new_version["StartDate"])
+		var end: int = Time.get_unix_time_from_datetime_string(new_version["EndDate"])
+		var now: float = Time.get_unix_time_from_system()
+		if now > start and now < end and _is_version_greater(new_version["Version"], Version.get_version()):
+			$NouvelleVersion.text = new_version["Text"]
 	
+
+func _is_version_greater(version1: String, version2: String) -> bool:
+	var v1_parts: Array = version1.split(".")
+	var v2_parts: Array = version2.split(".")
+	
+	for i: int in range(max(v1_parts.size(), v2_parts.size())):
+		var v1_num: int = int(v1_parts[i]) if i < v1_parts.size() else 0
+		var v2_num: int = int(v2_parts[i]) if i < v2_parts.size() else 0
+		
+		if v1_num > v2_num:
+			return true
+		elif v1_num < v2_num:
+			return false
+	
+	return false
