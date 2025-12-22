@@ -108,10 +108,16 @@ resource "aws_api_gateway_rest_api" "chouine_api" {
   }
 }
 
+resource "aws_api_gateway_resource" "api" {
+  rest_api_id = aws_api_gateway_rest_api.chouine_api.id
+  parent_id   = aws_api_gateway_rest_api.chouine_api.root_resource_id
+  path_part   = "api"
+}
+
 # Resource /info
 resource "aws_api_gateway_resource" "info" {
   rest_api_id = aws_api_gateway_rest_api.chouine_api.id
-  parent_id   = aws_api_gateway_rest_api.chouine_api.root_resource_id
+  parent_id   = aws_api_gateway_resource.api.id
   path_part   = "info"
 }
 
@@ -322,7 +328,7 @@ resource "aws_api_gateway_integration_response" "post_info_integration_response"
 # Resource /partie
 resource "aws_api_gateway_resource" "partie" {
   rest_api_id = aws_api_gateway_rest_api.chouine_api.id
-  parent_id   = aws_api_gateway_rest_api.chouine_api.root_resource_id
+  parent_id   = aws_api_gateway_resource.api.id
   path_part   = "partie"
 }
 

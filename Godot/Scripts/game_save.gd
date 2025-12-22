@@ -69,6 +69,17 @@ var http_request: HTTPRequest = HTTPRequest.new()
 var alt_api: bool = false
 
 
+func init() -> void:
+	pioche = []
+	starter = 0
+	coups_joueur = []
+	coups_ordi = []
+	annonces_joueur = []
+	annonces_ordi = []
+	echange_atout_joueur = false
+	annonce_joueur = ""
+	errors = []
+
 func set_scene(scene: Node) -> void:
 	scene.add_child(http_request)
 
@@ -138,6 +149,7 @@ func save_game() -> void:
 	var headers: Array = ["Content-Type: application/json", "x-api-key: " + key]
 	if not http_request.request_completed.is_connected(_on_request_completed):
 		http_request.request_completed.connect(_on_request_completed)
+	# print("URL: " + url + "/partie")
 	var error:Error = http_request.request(url + "/partie", headers, HTTPClient.METHOD_POST, json)
 	if error != 0:
 		print(error)
@@ -146,9 +158,11 @@ func _on_request_completed(_result: int,
 						response_code: int,
 						_headers: PackedStringArray,
 						_body: PackedByteArray) -> void:
-	print("Reponse code: " + str(response_code))
+	# print("Reponse code: " + str(response_code))
+	# print("Status code : " + str(_result))
 	if response_code != 200:
 		if not alt_api:
 			alt_api = true
 			save_game()
 		return
+	init()
